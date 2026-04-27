@@ -1,22 +1,24 @@
-import { Route, Routes } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
-import Navbar from "./components/Home/00_Navbar";
-import Footer from "./components/Home/08_Footer";
+
+// สร้าง Router Map จ้ะ
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />, // ใช้ Layout คลุมไว้
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      // ถ้ามีหน้าอื่น เช่น /about ก็เอามาใส่ตรงนี้จ้ะ
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <Navbar />
-
-      <div className="min-h-screen">
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </div>
-
-      <Footer />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
