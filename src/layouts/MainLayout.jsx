@@ -6,7 +6,7 @@ const MainLayout = () => (
   <>
     <Navbar />
     <div className="min-h-screen">
-      <Outlet /> {/* ตรงนี้แหละที่ Home หรือหน้าอื่นๆ จะมาเสียบแทนจ้ะ */}
+      <Outlet /> {/* ตรงนี้แหละที่ Home หรือหน้าอื่นๆ จะมาเสียบแทน*/}
     </div>
     <Footer />
   </>
