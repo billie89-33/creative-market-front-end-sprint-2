@@ -1,10 +1,12 @@
 const ArtistInfo = () => {
   return (
     <section className="w-full text-[#2f2b78]">
-      <div className="flex flex-col gap-4">
-        <h3 className="text-4xl font-bold md:text-5xl">From Artist</h3>
+      <div className="flex flex-col gap-3 md:gap-4">
+        <h3 className="text-3xl font-bold sm:text-4xl md:text-5xl">
+          From Artist
+        </h3>
 
-        <div className="space-y-3 text-sm leading-6 text-[#34324f] md:text-base">
+        <div className="space-y-3 text-sm leading-6 text-[#34324f] sm:text-[15px] md:text-base">
           <p>
             Description ใช้สำหรับเล่าที่มาของชิ้นงาน แรงบันดาลใจ
             หรือมุมมองจาก artist เพื่อเพิ่มความรู้สึกเชื่อมโยงกับสินค้า

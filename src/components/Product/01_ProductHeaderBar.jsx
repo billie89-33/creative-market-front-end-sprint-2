@@ -1,18 +1,18 @@
 const ProductHeaderBar = () => {
   return (
     <section className="w-full bg-[#eeecfb]">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-8 md:px-8">
-        <div className="flex flex-col items-stretch gap-5 md:flex-row md:items-center md:justify-between">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:gap-6 md:px-8 md:py-8">
+        <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
           <form className="w-full md:max-w-md">
             <label htmlFor="product-search" className="sr-only">
               Search product
             </label>
-            <div className="flex items-center rounded-xl border-2 border-[#393276] bg-white px-4 py-3">
+            <div className="flex items-center rounded-xl border-2 border-[#393276] bg-white px-3 py-2.5 md:px-4 md:py-3">
               <input
                 id="product-search"
                 type="text"
                 placeholder="Search product"
-                className="w-full bg-transparent text-base text-[#393276] outline-none placeholder:text-[#6c67b0]"
+                className="w-full bg-transparent text-sm text-[#393276] outline-none placeholder:text-[#6c67b0] md:text-base"
               />
               <button
                 type="submit"
@@ -25,7 +25,7 @@ const ProductHeaderBar = () => {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  className="h-6 w-6"
+                  className="h-5 w-5 md:h-6 md:w-6"
                 >
                   <circle cx="11" cy="11" r="7" />
                   <path d="m20 20-3.5-3.5" />
@@ -34,7 +34,7 @@ const ProductHeaderBar = () => {
             </div>
           </form>
 
-          <h1 className="text-center text-3xl font-bold text-[#4b45a3] md:flex-1">
+          <h1 className="text-center text-2xl font-bold text-[#4b45a3] sm:text-3xl md:flex-1">
             Handmade
           </h1>
 

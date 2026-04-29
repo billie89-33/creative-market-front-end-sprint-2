@@ -10,13 +10,13 @@ const Product = () => {
     <main className="min-h-screen w-full bg-[#eeecfb]">
       <ProductHeaderBar />
 
-      <section className="mx-auto flex max-w-7xl flex-col gap-8 px-6 pb-12 md:px-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1fr] lg:items-start">
+      <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-10 sm:px-6 md:gap-8 md:px-8 md:pb-12">
+        <div className="grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-[1.02fr_1fr] lg:items-start">
           <div className="w-full">
             <ProductGallery />
           </div>
 
-          <div className="flex w-full flex-col gap-8">
+          <div className="flex w-full flex-col gap-6 md:gap-8">
             <ProductInfo />
             <ArtistInfo />
             <ProductPurchasePanel />
