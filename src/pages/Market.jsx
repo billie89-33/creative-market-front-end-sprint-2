@@ -6,7 +6,6 @@ import sellerSample from "../assets/logos/market-sellerSample.svg";
 const Market = () => {
   const [isFilterActive, setIsFilterActive] = useState(false);
 
-  // ข้อมูลจำลองสำหรับสินค้า (ทำ Array ไว้จะได้ map ง่ายๆ จ้ะ)
   const products = Array.from({ length: 12 }).map((_, index) => ({
     id: index + 1,
     name: "Cybernecklace",
@@ -19,7 +18,6 @@ const Market = () => {
   }));
 
   return (
-    // พื้นหลังสีม่วงอ่อนๆ แบบในรูปจ้ะ
     <div className="min-h-screen bg-[#F8F7FF] py-8 px-4 md:px-12 font-['Anuphan',_sans-serif]">
       <div className="max-w-7xl mx-auto">
         {/* ================= 1. HEADER (Search, Title, Filter) ================= */}

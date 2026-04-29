@@ -16,9 +16,11 @@ const Navbar = () => {
       </Link>
       {/* 2. Menu Links Section */}
       <ul className="hidden md:flex items-center gap-3 text-xl h-auto font-medium ">
-        <li className="hover:text-gray-400 cursor-pointer transition-all">
-          Home
-        </li>
+        <Link to="/">
+          <li className="hover:text-gray-400 cursor-pointer transition-all">
+            Home
+          </li>
+        </Link>
         <span className="text-gray-500">|</span>
         <li className="hover:text-gray-400 cursor-pointer transition-all">
           About

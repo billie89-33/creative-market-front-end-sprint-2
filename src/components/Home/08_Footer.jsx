@@ -23,9 +23,6 @@ const Footer = () => {
             {/* Column 1 */}
             <ul className="flex flex-col gap-2">
               <li className="hover:text-white cursor-pointer transition-colors">
-                About Us
-              </li>
-              <li className="hover:text-white cursor-pointer transition-colors">
                 Artist
               </li>
               <li className="hover:text-white cursor-pointer transition-colors">
