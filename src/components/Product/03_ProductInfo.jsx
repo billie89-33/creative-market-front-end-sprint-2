@@ -1,3 +1,6 @@
+import artistIcon from "../../assets/images/artist-icon.png";
+import starIcon from "../../assets/images/star-icon.png";
+
 const ProductInfo = () => {
   return (
     <section className="w-full text-[#2f2b78]">
@@ -7,11 +10,19 @@ const ProductInfo = () => {
             <h2 className="text-3xl font-bold sm:text-4xl">Cybernecklace</h2>
 
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full border-2 border-[#7bdc27] bg-[#d9ffd8] sm:h-9 sm:w-9" />
+              <img
+                src={artistIcon}
+                alt="Artist icon"
+                className="h-8 w-8 rounded-full object-cover sm:h-9 sm:w-9"
+              />
               <p className="text-lg font-medium text-[#4b45a3] sm:text-xl">
                 Starchaser
               </p>
-              <div className="h-4 w-4 rounded-full bg-[#f5a18d]" />
+              <img
+                src={starIcon}
+                alt="Star icon"
+                className="h-4 w-4 object-contain sm:h-5 sm:w-5"
+              />
             </div>
           </div>
 
