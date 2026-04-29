@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
+import Product from "./pages/Product";
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -12,7 +13,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
+      {
+        path: "/product",
+        element: <Product />,
+      },
     ],
   },
 ]);
