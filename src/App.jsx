@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
+import Market from "./pages/Market";
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/market",
+        element: <Market />,
       },
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
     ],
