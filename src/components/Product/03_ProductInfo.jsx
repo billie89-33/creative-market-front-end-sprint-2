@@ -7,15 +7,17 @@ const ProductInfo = () => {
       <div className="flex flex-col gap-4 md:gap-5">
         <div className="flex flex-col gap-4 border-b-2 border-[#6b648b] pb-4 md:pb-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex flex-col gap-3">
-            <h2 className="text-3xl font-bold sm:text-4xl">Cybernecklace</h2>
+            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-[#2f2b78] sm:text-4xl md:text-[2.75rem]">
+              Cybernecklace
+            </h2>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               <img
                 src={artistIcon}
                 alt="Artist icon"
                 className="h-8 w-8 rounded-full object-cover sm:h-9 sm:w-9"
               />
-              <p className="text-lg font-medium text-[#4b45a3] sm:text-xl">
+              <p className="text-base font-medium tracking-[-0.01em] text-[#4b45a3] sm:text-lg">
                 Starchaser
               </p>
               <img
@@ -26,12 +28,12 @@ const ProductInfo = () => {
             </div>
           </div>
 
-          <p className="text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
+          <p className="text-3xl font-semibold tracking-[-0.04em] text-[#38338a] sm:text-4xl md:text-5xl lg:text-[4rem]">
             #Cybercore
           </p>
         </div>
 
-        <div className="space-y-3 text-sm leading-6 text-[#34324f] sm:text-[15px] md:text-base">
+        <div className="space-y-3 text-[13px] font-normal leading-6 text-[#3e3a55] sm:text-[15px] md:text-base md:leading-7">
           <p>
             Description ใช้สำหรับแสดงรายละเอียดสินค้า ข้อมูลทั่วไปของชิ้นงาน
             และจุดเด่นที่อยากให้ผู้ชมเข้าใจก่อนตัดสินใจซื้อ

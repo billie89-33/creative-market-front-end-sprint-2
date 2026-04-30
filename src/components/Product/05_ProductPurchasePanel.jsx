@@ -3,18 +3,22 @@ const ProductPurchasePanel = () => {
     <section className="w-full text-[#2f2b78]">
       <div className="flex flex-col gap-5 md:gap-6">
         <div className="flex flex-wrap gap-3">
-          <span className="inline-flex min-w-28 items-center justify-center rounded-md border border-[#b7b2d7] px-3 py-2 text-xs font-medium text-[#5a5596] sm:min-w-32 sm:px-4 sm:text-sm">
+          <span className="inline-flex min-w-28 items-center justify-center rounded-md border border-[#b7b2d7] px-3 py-2 text-[11px] font-medium tracking-[0.01em] text-[#5a5596] sm:min-w-32 sm:px-4 sm:text-sm">
             #Handmade
           </span>
-          <span className="inline-flex min-w-24 items-center justify-center rounded-md border border-[#b7b2d7] px-3 py-2 text-xs font-medium text-[#5a5596] sm:min-w-28 sm:px-4 sm:text-sm">
+          <span className="inline-flex min-w-24 items-center justify-center rounded-md border border-[#b7b2d7] px-3 py-2 text-[11px] font-medium tracking-[0.01em] text-[#5a5596] sm:min-w-28 sm:px-4 sm:text-sm">
             #Jewery
           </span>
         </div>
 
         <div className="flex items-end justify-between gap-4 sm:gap-6">
           <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
-            <p className="text-4xl font-bold leading-none sm:text-5xl">300.-</p>
-            <p className="text-4xl font-bold leading-none sm:text-5xl">บาท</p>
+            <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-[#2f2b78] sm:text-5xl md:text-[3.5rem]">
+              300.-
+            </p>
+            <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-[#2f2b78] sm:text-5xl md:text-[3.5rem]">
+              บาท
+            </p>
           </div>
 
           <button
@@ -39,7 +43,7 @@ const ProductPurchasePanel = () => {
 
         <button
           type="button"
-          className="w-full rounded-lg bg-[#393276] px-6 py-3.5 text-xl font-bold text-white transition hover:bg-[#2f295f] sm:py-4 sm:text-2xl"
+          className="w-full rounded-lg bg-[#393276] px-6 py-3.5 text-lg font-semibold tracking-[0.01em] text-white transition hover:bg-[#2f295f] sm:py-4 sm:text-xl"
         >
           BUY NOW
         </button>

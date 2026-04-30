@@ -12,7 +12,7 @@ const ProductHeaderBar = () => {
                 id="product-search"
                 type="text"
                 placeholder="Search product"
-                className="w-full bg-transparent text-sm text-[#393276] outline-none placeholder:text-[#6c67b0] md:text-base"
+                className="w-full bg-transparent text-sm font-medium tracking-[0.01em] text-[#393276] outline-none placeholder:font-normal placeholder:text-[#6c67b0] md:text-base"
               />
               <button
                 type="submit"
@@ -34,7 +34,7 @@ const ProductHeaderBar = () => {
             </div>
           </form>
 
-          <h1 className="text-center text-2xl font-bold text-[#4b45a3] sm:text-3xl md:flex-1">
+          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1">
             Handmade
           </h1>
 
