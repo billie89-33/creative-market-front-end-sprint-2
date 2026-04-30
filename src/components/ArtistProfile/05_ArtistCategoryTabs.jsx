@@ -1,27 +1,47 @@
-const ArtistCategoryTabs = () => {
+const tabs = [
+  {
+    id: "buddha-is-punk",
+    label: "Buddha is punk",
+  },
+  {
+    id: "cybercore",
+    label: "Cybercore",
+  },
+  {
+    id: "collection-name-3",
+    label: "Collection name 3",
+  },
+];
+
+const ArtistCategoryTabs = ({ activeTab, onTabChange }) => {
   return (
     <section className="w-full text-[#2f2b78]">
-      <div className="grid grid-cols-1 gap-4 text-center md:grid-cols-3">
-        <button type="button" className="flex flex-col items-center gap-2">
-          <span className="text-3xl font-semibold tracking-[-0.03em]">
-            Buddha is punk
-          </span>
-          <span className="h-[3px] w-full bg-[#4b45a3]" />
-        </button>
+      <div className="grid grid-cols-1 gap-5 text-center md:grid-cols-3 md:gap-3">
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
 
-        <button type="button" className="flex flex-col items-center gap-2">
-          <span className="text-3xl font-semibold tracking-[-0.03em]">
-            Cybercore
-          </span>
-          <span className="h-[3px] w-full bg-[#f39a73]" />
-        </button>
-
-        <button type="button" className="flex flex-col items-center gap-2">
-          <span className="text-3xl font-semibold tracking-[-0.03em]">
-            Collection name 3
-          </span>
-          <span className="h-[3px] w-full bg-[#4b45a3]" />
-        </button>
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => onTabChange(tab.id)}
+              className="flex flex-col items-center gap-2"
+            >
+              <span
+                className={`text-lg font-semibold tracking-[-0.03em] lg:text-[1.45rem] ${
+                  isActive ? "text-[#2f2b78]" : "text-[#5f5b88]"
+                }`}
+              >
+                {tab.label}
+              </span>
+              <span
+                className={`h-[3px] w-full ${
+                  isActive ? "bg-[#f39a73]" : "bg-[#b8b4da]"
+                }`}
+              />
+            </button>
+          );
+        })}
       </div>
     </section>
   );
