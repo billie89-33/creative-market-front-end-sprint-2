@@ -16,7 +16,7 @@ const tabs = [
 const ArtistCategoryTabs = ({ activeTab, onTabChange }) => {
   return (
     <section className="w-full text-[#2f2b78]">
-      <div className="grid grid-cols-1 gap-5 text-center md:grid-cols-3 md:gap-3">
+      <div className="grid grid-cols-3 gap-0 text-center">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
 
@@ -28,7 +28,7 @@ const ArtistCategoryTabs = ({ activeTab, onTabChange }) => {
               className="flex flex-col items-center gap-2"
             >
               <span
-                className={`text-lg font-semibold tracking-[-0.03em] lg:text-[1.45rem] ${
+                className={`text-[0.9rem] font-semibold tracking-[-0.03em] sm:text-lg lg:text-[1.45rem] ${
                   isActive ? "text-[#2f2b78]" : "text-[#5f5b88]"
                 }`}
               >

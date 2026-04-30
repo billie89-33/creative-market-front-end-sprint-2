@@ -37,8 +37,8 @@ const ArtistProductGrid = ({ activeTab }) => {
   const products = productGroups[activeTab] ?? productGroups["buddha-is-punk"];
 
   return (
-    <section className="w-full">
-      <div className="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+    <section className="w-full px-4 sm:px-0">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-2 md:gap-x-6 md:gap-y-8 xl:grid-cols-3">
         {products.map((product) => (
           <ArtistProductCard
             key={product.image}

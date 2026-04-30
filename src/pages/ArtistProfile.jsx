@@ -12,13 +12,13 @@ const ArtistProfile = () => {
     <main className="min-h-screen w-full bg-[#eeecfb]">
       <ArtistHeroBanner />
 
-      <section className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 pb-16 sm:px-6 md:px-8 lg:grid-cols-[0.78fr_1.42fr] lg:gap-14">
-        <div className="flex flex-col gap-8 lg:-mt-10">
+      <section className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-0 pb-16 sm:px-6 md:px-8 lg:grid-cols-[0.78fr_1.42fr] lg:gap-14 lg:px-8">
+        <div className="flex flex-col gap-6 px-4 lg:-mt-10 lg:gap-8 lg:px-0">
           <ArtistProfileCard />
           <ArtistLinks />
         </div>
 
-        <div className="flex flex-col gap-8 pt-2 md:pt-4 lg:pt-12">
+        <div className="flex flex-col gap-6 pt-0 lg:pt-12">
           <ArtistCategoryTabs
             activeTab={activeTab}
             onTabChange={setActiveTab}

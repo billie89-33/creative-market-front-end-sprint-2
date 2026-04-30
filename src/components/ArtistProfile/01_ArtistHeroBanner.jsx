@@ -4,7 +4,7 @@ const ArtistHeroBanner = () => {
   return (
     <section className="w-full">
       <div className="overflow-hidden border-b border-[#6b648b] bg-[#d9d7ee]">
-        <div className="h-52 w-full sm:h-64 md:h-72 lg:h-[22rem]">
+        <div className="h-32 w-full sm:h-64 md:h-72 lg:h-[22rem]">
           <img
             src={heroImg}
             alt="Artist profile banner"
