@@ -3,6 +3,7 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
 import ArtistProfile from "./pages/ArtistProfile";
+import NewArtistProfile from "./pages/NewArtistProfile";
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/artist-profile",
         element: <ArtistProfile />,
+      },
+      {
+        path: "/new-artist-profile",
+        element: <NewArtistProfile />,
       },
     ],
   },
