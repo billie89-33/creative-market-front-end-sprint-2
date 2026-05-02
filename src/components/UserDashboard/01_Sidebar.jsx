@@ -1,95 +1,53 @@
-import { useState } from "react";
-import overviewIcon from "../../assets/icons/user-dashboard-myaddress-icon.svg";
+import overviewIcon from "../../assets/icons/user-dashboard-overview-icon.svg";
 import myOrdersIcon from "../../assets/icons/user-dashboard-myorder-icon.svg";
 import myAddressIcon from "../../assets/icons/user-dashboard-myaddress-icon.svg";
 import artistStudioIcon from "../../assets/icons/user-dashboard-artisrt-studio-icon.svg";
 
 const navItems = [
   { id: "overview", label: "Overview", icon: overviewIcon },
-  {
-    id: "my-orders",
-    label: "My Orders",
-    icon: myOrdersIcon,
-  },
-  {
-    id: "my-address",
-    label: "My Address",
-    icon: myAddressIcon,
-  },
-  {
-    id: "artist-studio",
-    label: "Artist Studio",
-    labelTh: null,
-    icon: artistStudioIcon,
-    accent: true,
-  },
+  { id: "my-orders", label: "My Orders", icon: myOrdersIcon },
+  { id: "my-address", label: "My Address", icon: myAddressIcon },
 ];
 
-export default function Sidebar({ activePage = "overview", onNavigate }) {
-  const [active, setActive] = useState(activePage);
-
-  const handleNav = (id) => {
-    setActive(id);
-    onNavigate?.(id);
-  };
-
+const Sidebar = ({ activePage, onNavigate }) => {
   return (
-    <aside className="w-40 min-h-screen bg-[#ffffff] flex flex-col py-6 shrink-0">
-      {/* Header */}
-      <div className="px-4 pb-6 border-b border-gray-200 mb-2">
-        <p className="text-black-900 text-sm font-semibold tracking-tight m-0">
-          My Account
-        </p>
-        <p className="text-gray-400 text-[11px] mt-0.5 m-0">บัญชีของฉัน</p>
+    <aside className="flex min-h-screen w-full max-w-72 shrink-0 flex-col border-r border-gray-100 bg-white px-4 py-6">
+      <div className="border-b border-gray-100 px-3 pb-5">
+        <p className="text-lg font-bold text-gray-900">My Account</p>
+        <p className="text-[11px] text-gray-400">บัญชีของฉัน</p>
       </div>
 
-      {/* Nav */}
-      <nav className="flex flex-col gap-0.5 px-2">
+      <nav className="mt-5 flex flex-col gap-2">
         {navItems.map((item) => {
-          const isActive = active === item.id;
+          const isActive = activePage === item.id;
 
           return (
             <button
               key={item.id}
-              onClick={() => handleNav(item.id)}
-              className={`
-                flex items-center gap-2.5 px-2.5 py-2 rounded-lg border-none w-full text-left
-                transition-colors duration-150 cursor-pointer
-                ${
-                  isActive
-                    ? "bg-violet-400/10"
-                    : item.accent
-                      ? "bg-linear-to-r from-indigo-900 to-transparent"
-                      : "bg-transparent hover:bg-white/5"
-                }
-              `}
+              type="button"
+              onClick={() => onNavigate(item.id)}
+              className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-left transition ${
+                isActive
+                  ? "bg-violet-100 text-violet-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
             >
-              <img
-                src={item.icon}
-                width={16}
-                height={16}
-                alt=""
-                className="shrink-0"
-              />
-
-              <span className="flex flex-col gap-0">
-                <span
-                  className={`text-[13px] font-medium leading-snug
-                 ${isActive ? "text-violet-600" : item.accent ? "text-white" : "text-gray-700"}
-                `}
-                >
-                  {item.label}
-                </span>
-                {item.labelTh && (
-                  <span className="text-[10px] text-gray-400 leading-tight">
-                    {item.labelTh}
-                  </span>
-                )}
-              </span>
+              <img src={item.icon} alt="" className="h-5 w-5 shrink-0" />
+              <span className="text-sm font-medium">{item.label}</span>
             </button>
           );
         })}
       </nav>
+
+      <button
+        type="button"
+        className="mt-2 flex items-center gap-3 rounded-2xl bg-linear-to-r from-indigo-900 to-transparent px-4 py-4 text-left text-white transition hover:brightness-90 active:brightness-75"
+      >
+        <img src={artistStudioIcon} alt="" className="h-5 w-5 shrink-0" />
+        <span className="text-sm font-medium">Artist Studio</span>
+      </button>
     </aside>
   );
-}
+};
+
+export default Sidebar;

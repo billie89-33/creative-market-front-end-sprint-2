@@ -1,18 +1,28 @@
+import { useState } from "react";
 import Sidebar from "../components/UserDashboard/01_Sidebar";
+import Overview from "../components/UserDashboard/Overview/00_Overview";
+import MyOrders from "../components/UserDashboard/MyOrders/00_MyOrders";
+import MyAddress from "../components/UserDashboard/MyAddress/00_MyAddress";
 
 const UserDashboard = () => {
+  const [activePage, setActivePage] = useState("overview");
+
+  const renderPage = () => {
+    switch (activePage) {
+      case "my-orders":
+        return <MyOrders />;
+      case "my-address":
+        return <MyAddress />;
+      case "overview":
+      default:
+        return <Overview />;
+    }
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        backgroundColor: "#eeedf8",
-      }}
-    >
-      <Sidebar />
-      <main style={{ flex: 1, padding: "32px" }}>
-        {/* content จะมาอยู่ตรงนี้ */}
-      </main>
+    <div className="flex min-h-screen bg-[#eeedf8]">
+      <Sidebar activePage={activePage} onNavigate={setActivePage} />
+      <main className="flex-1 p-6 lg:p-10">{renderPage()}</main>
     </div>
   );
 };
