@@ -7,12 +7,12 @@ const statusClasses = {
 
 const OrderCard = ({ order }) => {
   return (
-    <article className="flex flex-col gap-5 rounded-2xl bg-white p-6 lg:flex-row lg:items-center">
+    <article className="flex flex-col gap-5 rounded-2xl bg-white p-5 md:flex-row md:items-center md:p-6">
       {/* เปลี่ยนจาก div ไล่สี มาเป็นรูปภาพ */}
       <img
         src={order.image}
         alt={order.product}
-        className="h-24 w-24 shrink-0 rounded-2xl object-cover shadow-sm"
+        className="h-20 w-20 shrink-0 rounded-2xl object-cover shadow-sm md:h-24 md:w-24"
       />
 
       <div className="min-w-0 flex-1">
@@ -21,7 +21,7 @@ const OrderCard = ({ order }) => {
         <p className="mt-3 text-sm text-gray-400">{order.items} items</p>
       </div>
 
-      <div className="grid gap-3 text-sm text-gray-500 sm:grid-cols-2 lg:min-w-80">
+      <div className="grid gap-3 text-sm text-gray-500 md:min-w-80 md:grid-cols-2">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
             Order ID

@@ -88,22 +88,22 @@ const MyOrders = () => {
   return (
     <section className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
+        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">My Orders</h1>
         <p className="mt-1 text-sm text-gray-400">คำสั่งซื้อของฉัน</p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">
         {orderStats.map((stat) => (
-          <div key={stat.label} className="rounded-2xl bg-white px-6 py-5">
+          <div key={stat.label} className="rounded-2xl bg-white p-5 md:px-6 md:py-5">
             <p className="text-sm text-gray-400">{stat.label}</p>
-            <p className="mt-3 text-3xl font-bold text-gray-900">
+            <p className="mt-3 text-2xl font-bold text-gray-900 md:text-3xl">
               {stat.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-2 md:gap-3">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
 
@@ -112,7 +112,7 @@ const MyOrders = () => {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition md:px-5 md:py-2.5 ${
                 isActive
                   ? "bg-[#1e1b4b] text-white"
                   : "bg-white text-gray-600 hover:bg-gray-100"

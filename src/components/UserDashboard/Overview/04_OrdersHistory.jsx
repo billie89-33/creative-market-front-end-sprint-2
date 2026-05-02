@@ -32,14 +32,16 @@ const OrdersHistory = () => {
         </p>
       </div>
 
-      <div className="rounded-2xl bg-white pb-4 overflow-hidden">
+      <div className="overflow-hidden rounded-2xl bg-white pb-4">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left">
+          <table className="w-full text-left">
             <thead className="bg-gray-200/50">
               <tr className="border-b border-gray-100 text-xs uppercase tracking-[0.2em] text-gray-500">
-                <th className="pl-8 py-3 font-semibold">Product</th>
+                <th className="py-3 pl-4 font-semibold md:pl-8">Product</th>
                 <th className="py-4 font-semibold">ID</th>
-                <th className="pr-8 py-4 font-semibold text-right">Amount</th>
+                <th className="py-4 pr-4 text-right font-semibold md:pr-8">
+                  Amount
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -48,7 +50,7 @@ const OrdersHistory = () => {
                   key={order.id}
                   className="border-b border-gray-200 last:border-b-0"
                 >
-                  <td className="pl-8 py-4">
+                  <td className="py-4 pl-4 md:pl-8">
                     <div className="flex items-center gap-3">
                       <img
                         src={order.image}
@@ -61,7 +63,7 @@ const OrdersHistory = () => {
                     </div>
                   </td>
                   <td className="py-4 text-sm text-gray-500">{order.id}</td>
-                  <td className="pr-8 py-4 text-right text-sm font-semibold text-gray-900">
+                  <td className="py-4 pr-4 text-right text-sm font-semibold text-gray-900 md:pr-8">
                     {order.amount}
                   </td>
                 </tr>

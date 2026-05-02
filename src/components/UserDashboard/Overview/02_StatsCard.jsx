@@ -10,13 +10,13 @@ const StatsCard = ({ label, value, theme = "light" }) => {
   const selectedTheme = themeStyles[theme];
 
   return (
-    <div className={`rounded-2xl px-6 py-6 ${selectedTheme}`}>
+    <div className={`rounded-2xl p-5 md:px-6 md:py-6 ${selectedTheme}`}>
       <p
         className={`text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70`}
       >
         {label}
       </p>
-      <p className="mt-4 text-4xl font-bold">{value}</p>
+      <p className="mt-4 text-3xl font-bold md:text-4xl">{value}</p>
     </div>
   );
 };
