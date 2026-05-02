@@ -18,6 +18,8 @@ const orders = [
     date: "12 Mar 2026",
     price: "฿1,250",
     status: "COMPLETED",
+    image:
+      "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=200&auto=format&fit=crop",
   },
   {
     id: "#CM-20192",
@@ -27,6 +29,8 @@ const orders = [
     date: "16 Mar 2026",
     price: "฿2,900",
     status: "PROCESSING",
+    image:
+      "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=200&auto=format&fit=crop",
   },
   {
     id: "#CM-20193",
@@ -36,6 +40,8 @@ const orders = [
     date: "18 Mar 2026",
     price: "฿980",
     status: "PENDING",
+    image:
+      "https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=200&auto=format&fit=crop",
   },
   {
     id: "#CM-20194",
@@ -45,6 +51,8 @@ const orders = [
     date: "21 Mar 2026",
     price: "฿1,880",
     status: "PROCESSING",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROdtT-UNxZlU4Ci6zK4X3FmDhXaMIYKatVRg&s",
   },
   {
     id: "#CM-20195",
@@ -54,6 +62,8 @@ const orders = [
     date: "25 Mar 2026",
     price: "฿1,640",
     status: "PENDING",
+    image:
+      "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=200&auto=format&fit=crop",
   },
   {
     id: "#CM-20196",
@@ -63,6 +73,7 @@ const orders = [
     date: "28 Mar 2026",
     price: "฿900",
     status: "PROCESSING",
+    image: "https://www.lovisa.sg/cdn/shop/files/51098858.jpg?v=1733770126",
   },
 ];
 

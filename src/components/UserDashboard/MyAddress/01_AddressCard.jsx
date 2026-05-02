@@ -1,53 +1,49 @@
+import { LucideHome, LucidePencil, LucideTrash2 } from "lucide-react";
+
 const AddressCard = ({ address }) => {
   return (
-    <article className="flex flex-col gap-5 rounded-2xl bg-white p-6 md:flex-row md:items-start">
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="h-6 w-6"
-        >
-          <path d="M12 3.75a5.25 5.25 0 0 0-5.25 5.25v11.25a.75.75 0 0 0 1.28.53l3.97-3.97 3.97 3.97a.75.75 0 0 0 1.28-.53V9A5.25 5.25 0 0 0 12 3.75Z" />
-        </svg>
+    <article className="flex flex-col gap-6 rounded-[40px] border border-violet-200 bg-white p-10 md:flex-row md:items-center">
+      {/* 1. ไอคอนรูปบ้านในวงกลมสีม่วงอ่อน */}
+      <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-[#f0effb] text-violet-700">
+        <LucideHome size={48} strokeWidth={1.5} />
       </div>
 
-      <div className="flex-1">
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h3 className="text-lg font-bold text-gray-900">{address.label}</h3>
-            <p className="mt-1 text-sm font-medium text-gray-700">
-              {address.name}
-            </p>
-          </div>
-
+      <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        {/* 2. ส่วนข้อมูลชื่อและเบอร์โทร */}
+        <div className="space-y-1">
           {address.isCurrent && (
-            <span className="inline-flex rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-600">
+            <span className="mb-4 inline-flex rounded-lg bg-[#9a94e1] px-3 py-1 text-sm font-medium text-white">
               Current address
             </span>
           )}
+          <h3 className="text-xl font-bold text-gray-900">{address.label}</h3>
+          <p className="text-lg text-gray-500">{address.name}</p>
+          <p className="text-lg text-gray-500">Tel: {address.tel}</p>
         </div>
 
-        <div className="mt-4 space-y-1 text-sm text-gray-500">
+        {/* 3. ส่วนที่อยู่ (จัดวางตรงกลาง) */}
+        <div className="max-w-xs space-y-0.5 text-lg text-gray-500">
           <p>{address.street}</p>
-          <p>
-            {address.city}, {address.postcode}
-          </p>
-          <p>{address.country}</p>
-          <p>Tel: {address.tel}</p>
+          <p>The National Gallery, Trafalgar Square</p>
+          <p>Greater London</p>
+          <p>{address.city}</p>
+          <p>{address.postcode}</p>
         </div>
 
-        <div className="mt-5 flex gap-4 text-sm font-semibold">
+        {/* 4. ปุ่ม Edit และ Delete ด้านขวาสุด */}
+        <div className="flex flex-col gap-4">
           <button
             type="button"
-            className="text-violet-600 transition hover:text-violet-700"
+            className="flex items-center gap-3 text-lg font-medium text-violet-600 transition hover:opacity-80"
           >
+            <LucidePencil size={20} />
             Edit
           </button>
           <button
             type="button"
-            className="text-rose-500 transition hover:text-rose-600"
+            className="flex items-center gap-3 text-lg font-medium text-violet-600 transition hover:opacity-80"
           >
+            <LucideTrash2 size={20} />
             Delete
           </button>
         </div>

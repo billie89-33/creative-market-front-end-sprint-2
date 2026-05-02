@@ -8,7 +8,12 @@ const statusClasses = {
 const OrderCard = ({ order }) => {
   return (
     <article className="flex flex-col gap-5 rounded-2xl bg-white p-6 lg:flex-row lg:items-center">
-      <div className="h-24 w-24 shrink-0 rounded-2xl bg-gradient-to-br from-violet-300 via-pink-100 to-amber-100" />
+      {/* เปลี่ยนจาก div ไล่สี มาเป็นรูปภาพ */}
+      <img
+        src={order.image}
+        alt={order.product}
+        className="h-24 w-24 shrink-0 rounded-2xl object-cover shadow-sm"
+      />
 
       <div className="min-w-0 flex-1">
         <h3 className="text-lg font-bold text-gray-900">{order.product}</h3>
