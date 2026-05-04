@@ -29,6 +29,7 @@ const Navbar = () => {
 
         {/* ================= Category (Hover Version) ================= */}
         <li className="relative cursor-pointer group py-2">
+          {/* Category */}
           <div className="flex items-center gap-1 hover:text-gray-400 transition-all">
             Category
             <svg
@@ -143,9 +144,11 @@ const Navbar = () => {
       {isOpen && (
         <div className="w-full md:hidden flex flex-col mt-4 border-t border-gray-800 pt-4 pb-2 animate-fade-in">
           <ul className="flex flex-col gap-4 text-lg font-medium px-2">
-            <li className="hover:text-gray-400 cursor-pointer transition-all">
-              Home
-            </li>
+            <Link to="/">
+              <li className="hover:text-gray-400 cursor-pointer transition-all">
+                Home
+              </li>
+            </Link>
             <li className="hover:text-gray-400 cursor-pointer transition-all">
               About
             </li>
@@ -153,15 +156,25 @@ const Navbar = () => {
             <div className="mt-2 mb-1 text-sm text-gray-500 tracking-widest font-bold uppercase">
               Categories
             </div>
-            <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-              Visual Art
-            </li>
-            <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-              Craft & Handmade
-            </li>
-            <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-              Music & Sound
-            </li>
+            <Link to="/market?category=Visual Art">
+              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
+                Visual Art
+              </li>
+            </Link>
+            <Link
+              to={`/market?category=${encodeURIComponent("Craft & Handmade")}`}
+            >
+              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
+                Craft & Handmade
+              </li>
+            </Link>
+            <Link
+              to={`/market?category=${encodeURIComponent("Music & Sound")}`}
+            >
+              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
+                Music & Sound
+              </li>
+            </Link>
           </ul>
 
           <div className="flex gap-4 mt-8 px-2">
