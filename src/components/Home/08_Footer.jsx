@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logos/logo.svg";
 import { FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -22,9 +23,11 @@ const Footer = () => {
           <div className="flex gap-12 md:gap-20 text-sm md:text-base text-gray-300">
             {/* Column 1 */}
             <ul className="flex flex-col gap-2">
-              <li className="hover:text-white cursor-pointer transition-colors">
-                Artist
-              </li>
+              <Link to="/artist-profile">
+                <li className="hover:text-white cursor-pointer transition-colors">
+                  Artist
+                </li>
+              </Link>
               <li className="hover:text-white cursor-pointer transition-colors">
                 Contact Us
               </li>

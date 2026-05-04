@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import ProductCard from "../components/Market/ProductCard";
 import MarketHeader from "../components/Market/MarketHeader";
@@ -118,7 +118,9 @@ const Market = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <Link to={`/product`}>
+                <ProductCard key={product.id} product={product} />
+              </Link>
             ))
           ) : (
             <div className="col-span-full text-center py-20 bg-white rounded-xl border-2 border-dashed border-gray-200">
