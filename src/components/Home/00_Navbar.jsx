@@ -16,9 +16,11 @@ const Navbar = () => {
       </Link>
       {/* 2. Menu Links Section */}
       <ul className="hidden md:flex items-center gap-3 text-xl h-auto font-medium ">
-        <li className="hover:text-gray-400 cursor-pointer transition-all">
-          Home
-        </li>
+        <Link to="/">
+          <li className="hover:text-gray-400 cursor-pointer transition-all">
+            Home
+          </li>
+        </Link>
         <span className="text-gray-500">|</span>
         <li className="hover:text-gray-400 cursor-pointer transition-all">
           About
@@ -50,13 +52,21 @@ const Navbar = () => {
             <div className="bg-black border border-gray-800 py-3 rounded-sm shadow-2xl animate-fade-in">
               <ul className="flex flex-col text-base text-white">
                 <li className="px-6 py-2 hover:bg-gray-900 hover:text-white transition-colors">
-                  Visual Art
+                  <Link to="/market?category=Visual Art">Visual Art</Link>
                 </li>
                 <li className="px-6 py-2 hover:bg-gray-900 hover:text-white transition-colors">
-                  Craft & Handmade
+                  <Link
+                    to={`/market?category=${encodeURIComponent("Craft & Handmade")}`}
+                  >
+                    Craft & Handmade
+                  </Link>
                 </li>
                 <li className="px-6 py-2 hover:bg-gray-900 hover:text-white transition-colors">
-                  Music & Sound
+                  <Link
+                    to={`/market?category=${encodeURIComponent("Music & Sound")}`}
+                  >
+                    Music & Sound
+                  </Link>
                 </li>
               </ul>
             </div>
