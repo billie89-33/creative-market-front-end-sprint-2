@@ -5,6 +5,10 @@ import Product from "./pages/Product";
 import ArtistProfile from "./pages/ArtistProfile";
 import NewArtistProfile from "./pages/NewArtistProfile";
 import Market from "./pages/Market";
+import Cart from "./pages/Cart"; //bank
+import Checkout from "./pages/Checkout"; //bank
+import Payment from "./pages/Payment"; //bank
+import Complete from "./pages/Complete"; //bank
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -31,6 +35,22 @@ const router = createBrowserRouter([
       {
         path: "/market",
         element: <Market />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />,
+      },
+      {
+        path: "/payment",
+        element: <Payment />,
+      },
+      {
+        path: "/complete",
+        element: <Complete /> 
       },
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
     ],
