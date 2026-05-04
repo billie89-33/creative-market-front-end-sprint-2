@@ -15,8 +15,8 @@ const tabs = [
 
 const ArtistCategoryTabs = ({ activeTab, onTabChange }) => {
   return (
-    <section className="w-full text-[#2f2b78]">
-      <div className="grid grid-cols-3 gap-0 text-center">
+    <section className="w-full text-[#2f2b78] ">
+      <div className="grid grid-cols-3 gap-0 text-center ">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
 
@@ -25,7 +25,7 @@ const ArtistCategoryTabs = ({ activeTab, onTabChange }) => {
               key={tab.id}
               type="button"
               onClick={() => onTabChange(tab.id)}
-              className="flex flex-col items-center gap-2"
+              className="flex flex-col items-center gap-2 hover:cursor-pointer"
             >
               <span
                 className={`text-[0.9rem] font-semibold tracking-[-0.03em] sm:text-lg lg:text-[1.45rem] ${
