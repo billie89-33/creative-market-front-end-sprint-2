@@ -4,7 +4,6 @@ import Home from "./pages/Home";
 import Product from "./pages/Product";
 import Market from "./pages/Market";
 
-
 // สร้าง Router Map
 const router = createBrowserRouter([
   {
@@ -19,6 +18,7 @@ const router = createBrowserRouter([
         path: "/product",
         element: <Product />,
       },
+      {
         path: "/market",
         element: <Market />,
       },
