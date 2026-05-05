@@ -22,7 +22,7 @@ function MarketHeader({
           />
           <FaSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#373373]" />
         </div>
-
+        {/* Dynamic Title */}
         <div className="w-full md:w-1/3 flex justify-center text-center">
           <h1 className="text-3xl font-bold text-[#373373] tracking-wide">
             {activeCategory !== "All" ? activeCategory : " "}
@@ -43,21 +43,23 @@ function MarketHeader({
           </button>
         </div>
       </div>
+
+      {/* Filter Options */}
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${isFilterActive ? "max-h-20 opacity-100 mb-8" : "max-h-0 opacity-0 mb-0"}`}
       >
         <div className="flex justify-end gap-3 flex-wrap">
-          {categories.map((product) => (
+          {categories.map((categoryName) => (
             <button
-              key={product}
-              onClick={() => setActiveCategory(product)}
+              key={categoryName}
+              onClick={() => setActiveCategory(categoryName)}
               className={`px-5 py-1.5 rounded-full text-sm font-semibold border transition-colors ${
-                activeCategory === product
+                activeCategory === categoryName
                   ? "bg-[#6D5DD3] text-white border-[#6D5DD3]" // สีปุ่มตอนถูกกด
                   : "bg-transparent text-[#373373] border-[#373373] hover:bg-[#EBE9FF]"
               }`}
             >
-              {product}
+              {categoryName}
             </button>
           ))}
         </div>

@@ -28,14 +28,17 @@ const ProductCard = ({ product }) => {
               className="w-6 h-6 rounded-full border border-gray-300"
             />
             <div className="flex gap-1">
-              {product.tags.map((tag) => (
+              <span className="bg-gray-200 text-[10px] text-gray-600 px-1.5 py-0.5 rounded-sm font-semibold">
+                {product.tags}
+              </span>
+              {/* {product.tags.map((tag) => (
                 <span
                   key={tag}
                   className="bg-gray-200 text-[10px] text-gray-600 px-1.5 py-0.5 rounded-sm font-semibold"
                 >
                   {tag}
                 </span>
-              ))}
+              ))} */}
             </div>
           </div>
           <span className="text-xl font-bold text-[#373373]">

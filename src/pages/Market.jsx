@@ -89,8 +89,6 @@ const Market = () => {
     },
   ];
 
-  // ACTIVE FUNCTION
-
   const filteredProducts = products.filter((product) => {
     // เช็คเงื่อนไขที่ 1: ชื่อตรงกับช่องค้นหาไหม?
     const matchSearch = product.name
@@ -122,6 +120,10 @@ const Market = () => {
             filteredProducts.map((product) => (
               <Link to={`/product`}>
                 <ProductCard key={product.id} product={product} />
+                {/* the first product mean the name of the props that ProductCard
+                will read  */}
+                {/* second product is the product value get from the
+                .map loop */}
               </Link>
             ))
           ) : (
