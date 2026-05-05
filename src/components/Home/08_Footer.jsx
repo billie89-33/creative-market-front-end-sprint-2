@@ -1,5 +1,7 @@
 import React from "react";
+
 import { Link } from "react-router-dom";
+
 import logo from "../../assets/logos/logo.svg";
 import { FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -28,6 +30,7 @@ const Footer = () => {
                   Artist
                 </li>
               </Link>
+
               <li className="hover:text-white cursor-pointer transition-colors">
                 Contact Us
               </li>
