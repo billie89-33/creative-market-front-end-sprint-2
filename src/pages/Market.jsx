@@ -7,7 +7,7 @@ import productSample1 from "../assets/images/market-productSample.png";
 import productSample2 from "../assets/images/market-productSample2.png";
 import productSample3 from "../assets/images/market-productSample3.png";
 import sellerSample from "../assets/logos/market-sellerSample.svg";
-
+// SETUP FUNCTION
 const Market = () => {
   const [isFilterActive, setIsFilterActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -88,6 +88,8 @@ const Market = () => {
       productImage: productSample3,
     },
   ];
+
+  // ACTIVE FUNCTION
 
   const filteredProducts = products.filter((product) => {
     // เช็คเงื่อนไขที่ 1: ชื่อตรงกับช่องค้นหาไหม?
