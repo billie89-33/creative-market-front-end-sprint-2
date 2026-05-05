@@ -50,7 +50,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/complete",
-        element: <Complete /> 
+        element: <Complete />,
       },
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
     ],
