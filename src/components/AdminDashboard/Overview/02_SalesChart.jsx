@@ -1,10 +1,19 @@
-const points = [
-  { x: 20, y: 118 },
-  { x: 126, y: 76 },
-  { x: 236, y: 34 },
-];
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-const axisLabels = ["MAY 12", "MAY 20", "MAY 10", "JUN 08"];
+const chartData = [
+  { label: "May 12", sales: 2100 },
+  { label: "May 20", sales: 3450 },
+  { label: "May 29", sales: 4920 },
+  { label: "Jun 08", sales: 6240 },
+];
 
 const SalesChart = () => {
   return (
@@ -20,45 +29,66 @@ const SalesChart = () => {
           type="button"
           className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600"
         >
-          Last 30 Days ▾
+          Last 30 Days
         </button>
       </div>
 
-      <div className="mt-6">
-        <svg viewBox="0 0 280 160" className="h-40 w-full">
-          <defs>
-            <linearGradient id="sales-line" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#818cf8" />
-              <stop offset="100%" stopColor="#6366f1" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M20 118 C64 112, 88 94, 126 76 S198 44, 236 34"
-            fill="none"
-            stroke="url(#sales-line)"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-          {points.map((point) => (
-            <g key={`${point.x}-${point.y}`}>
-              <circle cx={point.x} cy={point.y} r="8" fill="white" />
-              <circle
-                cx={point.x}
-                cy={point.y}
-                r="5"
-                fill="white"
-                stroke="#6366f1"
-                strokeWidth="3"
-              />
-            </g>
-          ))}
-        </svg>
-
-        <div className="mt-3 grid grid-cols-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-          {axisLabels.map((label) => (
-            <span key={label}>{label}</span>
-          ))}
-        </div>
+      <div className="mt-6 h-52 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="salesAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#6366f1" stopOpacity={0.28} />
+                <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              vertical={false}
+              stroke="#e5e7eb"
+              strokeDasharray="4 4"
+            />
+            <XAxis
+              dataKey="label"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#9ca3af", fontSize: 10, fontWeight: 600 }}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#9ca3af", fontSize: 10 }}
+              tickFormatter={(value) => `${value / 1000}k`}
+            />
+            <Tooltip
+              cursor={{ stroke: "#c7d2fe", strokeWidth: 1 }}
+              formatter={(value) => [
+                `THB ${Number(value).toLocaleString()}`,
+                "Sales",
+              ]}
+              contentStyle={{
+                borderRadius: "16px",
+                border: "1px solid #e5e7eb",
+                boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
+              }}
+            />
+            <Area
+              type="monotone"
+              dataKey="sales"
+              stroke="#6366f1"
+              strokeWidth={3}
+              fill="url(#salesAreaGradient)"
+              activeDot={{
+                r: 6,
+                fill: "#6366f1",
+                stroke: "#fff",
+                strokeWidth: 3,
+              }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </article>
   );

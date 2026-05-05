@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/AdminDashboard/01_Sidebar";
 import Overview from "../components/AdminDashboard/Overview/00_Overview";
-import MyStore from "../components/AdminDashboard/MyStore/00_MyStore";
 import Orders from "../components/AdminDashboard/Orders/00_Orders";
 import Sales from "../components/AdminDashboard/Sales/00_Sales";
 
@@ -18,8 +17,6 @@ const AdminDashboard = () => {
 
   const renderPage = () => {
     switch (activePage) {
-      case "my-store":
-        return <MyStore />;
       case "orders":
         return <Orders />;
       case "sales":

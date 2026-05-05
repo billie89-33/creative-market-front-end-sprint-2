@@ -25,7 +25,6 @@ const OrderRow = ({
     <tr className="hover:bg-gray-50/50 transition-colors">
       <td className="px-4 py-4 md:px-6">
         <div className="flex items-center gap-3">
-          {/* เปลี่ยนสี่เหลี่ยมไล่สีเป็นรูปภาพสินค้า */}
           <img
             src={image}
             alt={product}
@@ -34,7 +33,7 @@ const OrderRow = ({
           <span className="text-sm font-medium text-gray-800">{product}</span>
         </div>
       </td>
-      <td className="px-4 py-4 text-sm text-gray-500 font-mono">{id}</td>
+      <td className="px-4 py-4 text-sm text-gray-500 ">{id}</td>
       <td className="px-4 py-4 text-sm text-gray-400">{date}</td>
       <td className="px-4 py-4 text-sm font-medium text-gray-700">{qty}</td>
       <td className="px-4 py-4">

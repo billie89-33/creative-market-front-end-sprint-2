@@ -1,3 +1,4 @@
+import { LayoutDashboard } from "lucide-react";
 import StatsCard from "./01_StatsCard";
 import SalesChart from "./02_SalesChart";
 import ProductBreakdown from "./03_ProductBreakdown";
@@ -7,7 +8,7 @@ import TopSellingArt from "./05_TopSellingArt";
 const stats = [
   {
     label: "TOTAL SALES",
-    value: "฿8,624.50",
+    value: "THB 8,624.50",
     change: "18.6% from last 30 days",
     changeDirection: "up",
   },
@@ -34,8 +35,18 @@ const stats = [
 const Overview = () => {
   return (
     <section className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">Overview</h1>
+      <header className="flex items-center gap-3">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600">
+          <LayoutDashboard className="h-5 w-5" strokeWidth={1.8} />
+        </span>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
+            Overview
+          </h1>
+          <p className="text-sm text-gray-500">
+            Store snapshot for the last 30 days
+          </p>
+        </div>
       </header>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">

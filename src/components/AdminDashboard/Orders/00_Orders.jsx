@@ -1,3 +1,4 @@
+import { ShoppingCart } from "lucide-react";
 import OrderRow from "./01_OrderRow";
 
 const stats = [
@@ -17,7 +18,7 @@ const orders = [
     date: "12 May 2026",
     qty: 1,
     customer: "Sarah Jenkins",
-    amount: "฿1,250",
+    amount: "THB 1,250",
     status: "COMPLETED",
   },
   {
@@ -28,7 +29,7 @@ const orders = [
     date: "14 May 2026",
     qty: 2,
     customer: "Mila Stone",
-    amount: "฿1,980",
+    amount: "THB 1,980",
     status: "PROCESSING",
   },
   {
@@ -39,7 +40,7 @@ const orders = [
     date: "16 May 2026",
     qty: 1,
     customer: "Nina Park",
-    amount: "฿840",
+    amount: "THB 840",
     status: "PENDING",
   },
   {
@@ -50,7 +51,7 @@ const orders = [
     date: "18 May 2026",
     qty: 3,
     customer: "Ava Morgan",
-    amount: "฿2,420",
+    amount: "THB 2,420",
     status: "SHIPPED",
   },
   {
@@ -61,7 +62,7 @@ const orders = [
     date: "19 May 2026",
     qty: 2,
     customer: "Ethan Cole",
-    amount: "฿1,420",
+    amount: "THB 1,420",
     status: "PROCESSING",
   },
   {
@@ -72,7 +73,7 @@ const orders = [
     date: "21 May 2026",
     qty: 1,
     customer: "Liam Ford",
-    amount: "฿760",
+    amount: "THB 760",
     status: "COMPLETED",
   },
 ];
@@ -80,15 +81,25 @@ const orders = [
 const Orders = () => {
   return (
     <section className="space-y-4">
-      <header>
-        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">Orders</h1>
+      <header className="flex items-center gap-3">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-sky-600">
+          <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
+        </span>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
+            Orders
+          </h1>
+          <p className="text-sm text-gray-500">
+            Track every order from payment to delivery
+          </p>
+        </div>
       </header>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
         {stats.map((stat) => (
           <article
             key={stat.label}
-            className="rounded-2xl bg-white p-5 md:p-6 shadow-sm"
+            className="rounded-2xl bg-white p-5 shadow-sm md:p-6"
           >
             <p className="text-[10px] uppercase tracking-widest text-gray-400">
               {stat.label}
@@ -100,10 +111,10 @@ const Orders = () => {
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100">
+      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="border-b border-gray-100 bg-gray-50">
               <tr className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
                 <th className="px-4 py-4 font-semibold md:px-6">Product</th>
                 <th className="px-4 py-4 font-semibold">ID</th>

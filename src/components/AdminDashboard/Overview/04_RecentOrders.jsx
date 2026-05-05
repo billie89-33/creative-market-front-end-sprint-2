@@ -93,7 +93,6 @@ const RecentOrders = () => {
                 >
                   <td className="px-4 py-4 md:px-6">
                     <div className="flex items-center gap-3">
-                      {/* แสดงรูปภาพสินค้าแทนสี่เหลี่ยมไล่สี */}
                       <img
                         src={order.image}
                         alt={order.product}
@@ -104,7 +103,7 @@ const RecentOrders = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-500 font-mono">
+                  <td className="px-4 py-4 text-sm text-gray-500 ">
                     {order.id}
                   </td>
                   <td className="px-4 py-4">
