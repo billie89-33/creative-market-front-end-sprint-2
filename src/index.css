@@ -5,7 +5,7 @@
 @import "tailwindcss";
 
 * {
-  /* ใส่ฟอนอนุพัน */
+  font-family: "Anuphan", sans-serif;
 }
 
 @keyframes scroll {

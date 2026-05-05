@@ -76,12 +76,16 @@ const Navbar = () => {
       </ul>
       {/* 3. Buttons Section */}
       <div className="hidden md:flex items-center gap-4">
-        <button className="bg-white text-black px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30">
-          Login
-        </button>
-        <button className="bg-black text-white px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30 border">
-          Register
-        </button>
+        <Link to="/login">
+          <button className="bg-white text-black px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30">
+            Login
+          </button>
+        </Link>
+        <Link to="/register">
+          <button className="bg-black text-white px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30 border">
+            Register
+          </button>
+        </Link>
       </div>
 
       {/* 4. Mobile Menu Icons  */}
