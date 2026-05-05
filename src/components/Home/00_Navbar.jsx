@@ -82,7 +82,7 @@ const Navbar = () => {
           </button>
         </Link>
         <Link to="/register">
-          <button className="bg-black text-white px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30 border">
+          <button className="bg-black text-white px-4 py-2 hover:bg-white hover:text-black cursor-pointer transition-all w-30 border">
             Register
           </button>
         </Link>
