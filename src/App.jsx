@@ -9,6 +9,8 @@ import Cart from "./pages/Cart"; //bank
 import Checkout from "./pages/Checkout"; //bank
 import Payment from "./pages/Payment"; //bank
 import Complete from "./pages/Complete"; //bank
+import Register from "./pages/Register";
+import LoginPage from "./pages/LoginPage";
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -52,7 +54,14 @@ const router = createBrowserRouter([
         path: "/complete",
         element: <Complete />,
       },
-      // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
+      {
+        path: "/register",
+        element: <Register />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
     ],
   },
 ]);
