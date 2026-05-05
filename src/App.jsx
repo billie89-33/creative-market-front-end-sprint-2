@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import UserDashboard from "./pages/UserDashboard";
-import ArtistDashboard from "./pages/ArtistDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -20,8 +20,8 @@ const router = createBrowserRouter([
         element: <UserDashboard />,
       },
       {
-        path: "/artistdashboard",
-        element: <ArtistDashboard />,
+        path: "/admindashboard",
+        element: <AdminDashboard />,
       },
     ],
   },

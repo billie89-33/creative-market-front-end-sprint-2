@@ -51,8 +51,8 @@ const Sidebar = ({ activePage, onNavigate }) => {
   return (
     <aside className="flex min-h-screen w-36 shrink-0 flex-col bg-[#1e1b4b] px-3 py-5 md:w-44 md:px-4 md:py-6">
       <div className="mb-2 border-b border-white/10 pb-5">
-        <p className="text-base font-bold text-white md:text-lg">Artist Studio</p>
-        <p className="mt-1 text-[11px] text-white/40">ร้านค้าของฉัน</p>
+        <p className="text-base font-bold text-white md:text-lg">Admin Dashboard</p>
+        <p className="mt-1 text-[11px] text-white/40">Admin workspace</p>
       </div>
 
       <nav className="space-y-2">

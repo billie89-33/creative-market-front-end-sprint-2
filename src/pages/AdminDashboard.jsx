@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/ArtistDashboard/01_Sidebar";
-import Overview from "../components/ArtistDashboard/Overview/00_Overview";
-import MyStore from "../components/ArtistDashboard/MyStore/00_MyStore";
-import Orders from "../components/ArtistDashboard/Orders/00_Orders";
-import Sales from "../components/ArtistDashboard/Sales/00_Sales";
+import Sidebar from "../components/AdminDashboard/01_Sidebar";
+import Overview from "../components/AdminDashboard/Overview/00_Overview";
+import MyStore from "../components/AdminDashboard/MyStore/00_MyStore";
+import Orders from "../components/AdminDashboard/Orders/00_Orders";
+import Sales from "../components/AdminDashboard/Sales/00_Sales";
 
-const ArtistDashboard = () => {
+const AdminDashboard = () => {
   const [activePage, setActivePage] = useState("overview");
   const navigate = useNavigate();
 
@@ -38,4 +38,4 @@ const ArtistDashboard = () => {
   );
 };
 
-export default ArtistDashboard;
+export default AdminDashboard;

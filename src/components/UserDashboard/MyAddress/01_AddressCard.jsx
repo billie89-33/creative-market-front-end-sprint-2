@@ -2,7 +2,7 @@ import { LucideHome, LucidePencil, LucideTrash2 } from "lucide-react";
 
 const AddressCard = ({ address }) => {
   return (
-    <article className="flex flex-col gap-5 rounded-[32px] border border-violet-200 bg-white p-5 md:flex-row md:items-center md:gap-6 md:rounded-[40px] md:p-8">
+    <article className="flex flex-col gap-5 rounded-4xl border border-violet-200 bg-white p-5 md:flex-row md:items-center md:gap-6 md:rounded-[40px] md:p-8">
       {/* 1. ไอคอนรูปบ้านในวงกลมสีม่วงอ่อน */}
       <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#f0effb] text-violet-700 md:h-24 md:w-24">
         <LucideHome size={40} strokeWidth={1.5} />
@@ -16,9 +16,13 @@ const AddressCard = ({ address }) => {
               Current address
             </span>
           )}
-          <h3 className="text-lg font-bold text-gray-900 md:text-xl">{address.label}</h3>
+          <h3 className="text-lg font-bold text-gray-900 md:text-xl">
+            {address.label}
+          </h3>
           <p className="text-base text-gray-500 md:text-lg">{address.name}</p>
-          <p className="text-base text-gray-500 md:text-lg">Tel: {address.tel}</p>
+          <p className="text-base text-gray-500 md:text-lg">
+            Tel: {address.tel}
+          </p>
         </div>
 
         {/* 3. ส่วนที่อยู่ (จัดวางตรงกลาง) */}

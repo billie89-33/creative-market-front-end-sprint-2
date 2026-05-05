@@ -1,7 +1,6 @@
 import overviewIcon from "../../assets/icons/user-dashboard-overview-icon.svg";
 import myOrdersIcon from "../../assets/icons/user-dashboard-myorder-icon.svg";
 import myAddressIcon from "../../assets/icons/user-dashboard-myaddress-icon.svg";
-import artistStudioIcon from "../../assets/icons/user-dashboard-artisrt-studio-icon.svg";
 
 const navItems = [
   { id: "overview", label: "Overview", icon: overviewIcon },
@@ -13,7 +12,9 @@ const Sidebar = ({ activePage, onNavigate }) => {
   return (
     <aside className="flex min-h-screen w-full max-w-20 shrink-0 flex-col border-r border-gray-100 bg-white px-2 py-4 md:max-w-72 md:px-4 md:py-6">
       <div className="border-b border-gray-100 px-1 pb-4 text-center md:px-3 md:pb-5 md:text-left">
-        <p className="hidden text-lg font-bold text-gray-900 md:block">My Account</p>
+        <p className="hidden text-lg font-bold text-gray-900 md:block">
+          My Account
+        </p>
         <p className="text-[11px] text-gray-400">บัญชีของฉัน</p>
       </div>
 
@@ -33,19 +34,13 @@ const Sidebar = ({ activePage, onNavigate }) => {
               }`}
             >
               <img src={item.icon} alt="" className="h-5 w-5 shrink-0" />
-              <span className="hidden text-sm font-medium md:inline">{item.label}</span>
+              <span className="hidden text-sm font-medium md:inline">
+                {item.label}
+              </span>
             </button>
           );
         })}
       </nav>
-
-      <button
-        type="button"
-        className="mt-2 flex items-center justify-center rounded-2xl bg-linear-to-r from-indigo-900 to-transparent px-3 py-3 text-left text-white transition hover:brightness-90 active:brightness-75 md:justify-start md:gap-3 md:px-4 md:py-4"
-      >
-        <img src={artistStudioIcon} alt="" className="h-5 w-5 shrink-0" />
-        <span className="hidden text-sm font-medium md:inline">Artist Studio</span>
-      </button>
     </aside>
   );
 };
