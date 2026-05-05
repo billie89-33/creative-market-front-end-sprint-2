@@ -16,9 +16,11 @@ const Navbar = () => {
       </Link>
       {/* 2. Menu Links Section */}
       <ul className="hidden md:flex items-center gap-3 text-xl h-auto font-medium ">
-        <li className="hover:text-gray-400 cursor-pointer transition-all">
-          Home
-        </li>
+        <Link to="/">
+          <li className="hover:text-gray-400 cursor-pointer transition-all">
+            Home
+          </li>
+        </Link>
         <span className="text-gray-500">|</span>
         <li className="hover:text-gray-400 cursor-pointer transition-all">
           About
@@ -27,6 +29,7 @@ const Navbar = () => {
 
         {/* ================= Category (Hover Version) ================= */}
         <li className="relative cursor-pointer group py-2">
+          {/* Category */}
           <div className="flex items-center gap-1 hover:text-gray-400 transition-all">
             Category
             <svg
@@ -50,13 +53,21 @@ const Navbar = () => {
             <div className="bg-black border border-gray-800 py-3 rounded-sm shadow-2xl animate-fade-in">
               <ul className="flex flex-col text-base text-white">
                 <li className="px-6 py-2 hover:bg-gray-900 hover:text-white transition-colors">
-                  Visual Art
+                  <Link to="/market?category=Visual Art">Visual Art</Link>
                 </li>
                 <li className="px-6 py-2 hover:bg-gray-900 hover:text-white transition-colors">
-                  Craft & Handmade
+                  <Link
+                    to={`/market?category=${encodeURIComponent("Craft & Handmade")}`}
+                  >
+                    Craft & Handmade
+                  </Link>
                 </li>
                 <li className="px-6 py-2 hover:bg-gray-900 hover:text-white transition-colors">
-                  Music & Sound
+                  <Link
+                    to={`/market?category=${encodeURIComponent("Music & Sound")}`}
+                  >
+                    Music & Sound
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -65,12 +76,16 @@ const Navbar = () => {
       </ul>
       {/* 3. Buttons Section */}
       <div className="hidden md:flex items-center gap-4">
-        <button className="bg-white text-black px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30">
-          Login
-        </button>
-        <button className="bg-black text-white px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30 border">
-          Register
-        </button>
+        <Link to="/login">
+          <button className="bg-white text-black px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30">
+            Login
+          </button>
+        </Link>
+        <Link to="/register">
+          <button className="bg-black text-white px-4 py-2 hover:bg-white hover:text-black cursor-pointer transition-all w-30 border">
+            Register
+          </button>
+        </Link>
       </div>
 
       {/* 4. Mobile Menu Icons  */}
@@ -133,9 +148,11 @@ const Navbar = () => {
       {isOpen && (
         <div className="w-full md:hidden flex flex-col mt-4 border-t border-gray-800 pt-4 pb-2 animate-fade-in">
           <ul className="flex flex-col gap-4 text-lg font-medium px-2">
-            <li className="hover:text-gray-400 cursor-pointer transition-all">
-              Home
-            </li>
+            <Link to="/">
+              <li className="hover:text-gray-400 cursor-pointer transition-all">
+                Home
+              </li>
+            </Link>
             <li className="hover:text-gray-400 cursor-pointer transition-all">
               About
             </li>
@@ -143,15 +160,25 @@ const Navbar = () => {
             <div className="mt-2 mb-1 text-sm text-gray-500 tracking-widest font-bold uppercase">
               Categories
             </div>
-            <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-              Visual Art
-            </li>
-            <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-              Craft & Handmade
-            </li>
-            <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-              Music & Sound
-            </li>
+            <Link to="/market?category=Visual Art">
+              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
+                Visual Art
+              </li>
+            </Link>
+            <Link
+              to={`/market?category=${encodeURIComponent("Craft & Handmade")}`}
+            >
+              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
+                Craft & Handmade
+              </li>
+            </Link>
+            <Link
+              to={`/market?category=${encodeURIComponent("Music & Sound")}`}
+            >
+              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
+                Music & Sound
+              </li>
+            </Link>
           </ul>
 
           <div className="flex gap-4 mt-8 px-2">
