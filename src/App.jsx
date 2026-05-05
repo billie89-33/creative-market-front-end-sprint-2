@@ -1,6 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
+
+import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+
 import Product from "./pages/Product";
 import ArtistProfile from "./pages/ArtistProfile";
 import NewArtistProfile from "./pages/NewArtistProfile";
@@ -64,6 +68,14 @@ const router = createBrowserRouter([
       },
 
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
+      {
+        path: "/userdashboard",
+        element: <UserDashboard />,
+      },
+      {
+        path: "/admindashboard",
+        element: <AdminDashboard />,
+      },
     ],
   },
 ]);
