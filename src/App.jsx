@@ -11,6 +11,8 @@ import Payment from "./pages/Payment"; //bank
 import Complete from "./pages/Complete"; //bank
 import Register from "./pages/Register";
 import LoginPage from "./pages/LoginPage";
+import ArtistDrop from "./pages/ArtistDrop";
+import ArtistRegisterForm from "./pages/ArtistRegister";
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -61,6 +63,14 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/artist-drop",
+        element: <ArtistDrop />,
+      },
+      {
+        path: "/artist-register",
+        element: <ArtistRegisterForm />,
       },
 
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
