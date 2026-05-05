@@ -20,12 +20,29 @@ const LoginPage = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleLogin = () => {
+const handleLogin = () => {
+
+{/* ↓↓↓ Start : Here, I add alert for Email User And Password ↓↓↓ */}
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      alert("Please enter your email.");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      alert("Invalid email format. Please include '@' and '.' (e.g., user@example.com)");
+      return;
+    }
+
+  if (!password) {
+      alert("Please enter your password.");
+      return;
+    }
+ {/* ↑↑↑ End : Here, I add alert for Email User And Password ↑↑↑*/}
+ 
     const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
     const allUsers = [...mockUsers, ...storedUsers];
-    const user = allUsers.find(
-      (u) => u.email === email && u.password === password,
-    );
+    const user = allUsers.find((u) => u.email === email && u.password === password);
 
     if (user) {
       localStorage.setItem("currentUser", JSON.stringify(user));
