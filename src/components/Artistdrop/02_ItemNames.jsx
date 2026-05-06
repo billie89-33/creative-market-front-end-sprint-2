@@ -12,6 +12,9 @@ export default function ItemDetails() {
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState("");
 
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
   // ------------------------------------------------------------------
   // 2. แทรก useEffect ตรงนี้: สำหรับดึงข้อมูลตอนเปิดหน้าเว็บ
   // ------------------------------------------------------------------
@@ -174,6 +177,48 @@ export default function ItemDetails() {
             </button>
           </div>
         )}
+      </div>
+      {/* 4. Category */}
+      <div>
+        <label className="block text-base font-bold text-black mb-1">
+          Category
+        </label>
+        <span className="block text-sm text-gray-500 mb-3">
+          Select a category to help users find your item.
+        </span>
+        <div className="relative">
+          <select
+            className="w-full border border-gray-400 p-3 appearance-none outline-none focus:border-black focus:ring-1 focus:ring-black bg-white cursor-pointer text-gray-800"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="" disabled hidden>
+              Select category
+            </option>
+            <option value="visual art">Visual Art</option>
+            <option value="craft and handmade">Craft & Handmade</option>
+            <option value="music and sound">Music & Sound</option>
+          </select>
+          <IoChevronDown className="absolute right-4 top-[1.1rem] text-gray-600 text-xl pointer-events-none" />
+        </div>
+      </div>
+
+      {/* 5. Quantity */}
+      <div>
+        <label className="block text-base font-bold text-black mb-1">
+          Quantity
+        </label>
+        <span className="block text-sm text-gray-500 mb-3">
+          The number of items that can be minted. No hidden costs.
+        </span>
+        <input
+          type="number"
+          min="1"
+          placeholder="e.g. 1"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          className="w-full border border-gray-400 p-3 outline-none focus:border-black focus:ring-1 focus:ring-black placeholder-gray-400 text-gray-800"
+        />
       </div>
 
       <hr className="border-gray-100" />
