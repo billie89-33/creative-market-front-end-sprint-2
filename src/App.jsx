@@ -79,11 +79,11 @@ const router = createBrowserRouter([
 
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
       {
-        path: "/userdashboard",
+        path: "/user-dashboard",
         element: <UserDashboard />,
       },
       {
-        path: "/admindashboard",
+        path: "/admin-dashboard",
         element: <AdminDashboard />,
       },
     ],
