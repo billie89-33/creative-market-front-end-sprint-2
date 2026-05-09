@@ -1,4 +1,4 @@
-const ProductHeaderBar = () => {
+const ProductHeaderBar = ({ category = "Craft & Handmade" }) => {
   return (
     <section className="w-full bg-[#eeecfb]">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:gap-6 md:px-8 md:py-8">
@@ -35,7 +35,7 @@ const ProductHeaderBar = () => {
           </form>
 
           <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1 md:text-right">
-            Craft & Handmade
+            {category}
           </h1>
         </div>
 
