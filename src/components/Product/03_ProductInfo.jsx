@@ -6,11 +6,11 @@ const ProductInfo = () => {
     <section className="w-full text-[#2f2b78]">
       <div className="flex flex-col gap-4 md:gap-5">
         <div className="flex flex-col gap-4 border-b-2 border-[#6b648b] pb-4 md:pb-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex flex-col gap-3">
-            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-[#2f2b78] sm:text-4xl md:text-[2.75rem]">
-              Cybernecklace
-            </h2>
+          <h2 className="text-3xl font-semibold tracking-[-0.03em] text-[#2f2b78] sm:text-4xl md:text-[2.75rem]">
+            Cybernecklace
+          </h2>
 
+          <div className="flex flex-col gap-3 lg:items-end">
             <div className="flex items-center gap-2.5 sm:gap-3">
               <img
                 src={artistIcon}
@@ -27,10 +27,6 @@ const ProductInfo = () => {
               />
             </div>
           </div>
-
-          <p className="text-3xl font-semibold tracking-[-0.04em] text-[#38338a] sm:text-4xl md:text-5xl lg:text-[4rem]">
-            #Cybercore
-          </p>
         </div>
 
         <div className="space-y-3 text-[13px] font-normal leading-6 text-[#3e3a55] sm:text-[15px] md:text-base md:leading-7">

@@ -34,11 +34,9 @@ const ProductHeaderBar = () => {
             </div>
           </form>
 
-          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1">
-            Handmade
+          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1 md:text-right">
+            Craft & Handmade
           </h1>
-
-          <div className="hidden md:block md:w-[26rem]" />
         </div>
 
         <div className="h-[2px] w-full bg-[#6b648b]" />
