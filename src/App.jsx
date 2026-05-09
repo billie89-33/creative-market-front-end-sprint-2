@@ -6,8 +6,6 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 
 import Product from "./pages/Product";
-import ArtistProfile from "./pages/ArtistProfile";
-import NewArtistProfile from "./pages/NewArtistProfile";
 import Market from "./pages/Market";
 import Cart from "./pages/Cart"; //bank
 import Checkout from "./pages/Checkout"; //bank
@@ -31,14 +29,6 @@ const router = createBrowserRouter([
       {
         path: "/product",
         element: <Product />,
-      },
-      {
-        path: "/artist-profile",
-        element: <ArtistProfile />,
-      },
-      {
-        path: "/new-artist-profile",
-        element: <NewArtistProfile />,
       },
       {
         path: "/market",

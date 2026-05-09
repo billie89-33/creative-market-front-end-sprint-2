@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import spotlightSvg from "../../assets/logos/highlight-artist-spotlight.svg";
 import spotlightUnderlineSvg from "../../assets/logos/highlight-artist-spotlight-underline.svg";
 import artistImg from "../../assets/images/highlight-artist.png";
@@ -44,12 +43,10 @@ const Highlight = () => {
           </div>
 
           {/* 4. Button */}
-          <Link to="/artist-profile">
-            <button className="bg-black text-white px-8 py-5 rounde rounded-xl font-bold flex items-center justify-center gap-3 w-full hover:bg-gray-800 transition-all text-base tracking-widest cursor-pointer">
-              <span className="text-xl">VIEW ARTIST</span>
-              <span className="text-xl leading-none">↗</span>
-            </button>
-          </Link>
+          <button className="bg-black text-white px-8 py-5 rounde rounded-xl font-bold flex items-center justify-center gap-3 w-full hover:bg-gray-800 transition-all text-base tracking-widest cursor-pointer">
+            <span className="text-xl">VIEW ARTIST</span>
+            <span className="text-xl leading-none">↗</span>
+          </button>
         </div>
 
         {/* ================= RIGHT ================= */}
