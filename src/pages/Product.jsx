@@ -15,6 +15,7 @@ const Product = () => {
 const navigate = useNavigate(); 
 const { productSlug } = useParams();
 const product = productSamples[productSlug] || defaultProductSample;
+const products = Object.values(productSamples);
 
   //bank
   const handleAction = (event) => {
@@ -59,7 +60,7 @@ const product = productSamples[productSlug] || defaultProductSample;
 
   return (
     <main className="min-h-screen w-full bg-[#eeecfb]">
-      <ProductHeaderBar category={product.category} />
+      <ProductHeaderBar category={product.category} products={products} />
 
       <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-10 sm:px-6 md:gap-8 md:px-8 md:pb-12">
         <div className="grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-[1.02fr_1fr] lg:items-start">
