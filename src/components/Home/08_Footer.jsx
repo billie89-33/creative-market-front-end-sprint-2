@@ -21,31 +21,15 @@ const Footer = () => {
         <div className="flex-1 flex flex-col items-center gap-8">
           {/* Link Columns */}
           <div className="flex gap-12 md:gap-20 text-sm md:text-base text-gray-300">
-            {/* Column 1 */}
+            {/* Column */}
             <ul className="flex flex-col gap-2">
               <li className="hover:text-white cursor-pointer transition-colors">
-                Artist
-              </li>
-
-              <li className="hover:text-white cursor-pointer transition-colors">
-                Contact Us
-              </li>
-            </ul>
-            {/* Column 2 */}
-            <ul className="flex flex-col gap-2">
-              <li className="hover:text-white cursor-pointer transition-colors">
-                Help & Support
-              </li>
-              <li className="hover:text-white cursor-pointer transition-colors">
-                Term & Conditions
-              </li>
-              <li className="hover:text-white cursor-pointer transition-colors">
-                Become an artist
+                From small commits to meaningful creations
               </li>
             </ul>
           </div>
 
-          {/* Copyright - ปรับให้จางลงนิดนึงเพื่อให้ดูหรูจ้ะ */}
+          {/* Copyright */}
           <p className="text-gray-500 text-xs md:text-sm tracking-wide">
             © 2026 Creative Market. All rights reserved.
           </p>
@@ -55,7 +39,7 @@ const Footer = () => {
         <div className="w-full md:w-auto flex flex-col items-center md:items-end gap-4">
           <h4 className="text-xl font-bold tracking-tight">Follow us</h4>
           <div className="flex gap-4">
-            {/* Social Icons - พี่สาวทำวงกลมล้อมรอบให้เหมือนในแบบนะจ๊ะ */}
+            {/* Social Icons */}
             <a
               href="#"
               className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center hover:bg-white hover:text-black transition-all"
