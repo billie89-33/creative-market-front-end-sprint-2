@@ -57,7 +57,11 @@ const AboutUs = () => {
   ];
 
   return (
-    <section className=" hidden md:block w-full bg-[#111016] text-white py-24 px-6 font-['Anuphan',_sans-serif]">
+    <section
+      section
+      id="about-section"
+      className=" w-full bg-[#111016] text-white py-24 px-6 font-['Anuphan',_sans-serif]"
+    >
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* ================= 1. ABOUT US HEADER ================= */}
         <h2 className="text-3xl font-bold mb-10 tracking-wide">About us</h2>

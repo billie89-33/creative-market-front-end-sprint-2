@@ -22,9 +22,12 @@ const Navbar = () => {
           </li>
         </Link>
         <span className="text-gray-500">|</span>
-        <li className="hover:text-gray-400 cursor-pointer transition-all">
+        <Link
+          to="/#about-section"
+          className="hover:text-gray-400 cursor-pointer transition-all"
+        >
           About
-        </li>
+        </Link>
         <span className="text-gray-500">|</span>
 
         {/* ================= Category (Hover Version) ================= */}
@@ -153,9 +156,12 @@ const Navbar = () => {
                 Home
               </li>
             </Link>
-            <li className="hover:text-gray-400 cursor-pointer transition-all">
+            <a
+              href="#about-section"
+              className="hover:text-gray-400 cursor-pointer transition-all"
+            >
               About
-            </li>
+            </a>
 
             <div className="mt-2 mb-1 text-sm text-gray-500 tracking-widest font-bold uppercase">
               Categories

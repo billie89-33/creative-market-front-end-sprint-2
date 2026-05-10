@@ -6,7 +6,23 @@ import ArtistLove from "../components/Home/05_Artist-love";
 import Register from "../components/Home/06_Register";
 import AboutUs from "../components/Home/07_AboutUs";
 
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+
 const Home = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#about-section") {
+      const element = document.getElementById("about-section");
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+        });
+      }
+    }
+  }, [location]);
+
   return (
     <main>
       <Hero />
