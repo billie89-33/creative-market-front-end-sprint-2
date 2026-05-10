@@ -156,12 +156,12 @@ const Navbar = () => {
                 Home
               </li>
             </Link>
-            <a
-              href="#about-section"
+            <Link
+              to="/#about-section"
               className="hover:text-gray-400 cursor-pointer transition-all"
             >
               About
-            </a>
+            </Link>
 
             <div className="mt-2 mb-1 text-sm text-gray-500 tracking-widest font-bold uppercase">
               Categories

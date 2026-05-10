@@ -16,9 +16,7 @@ const Home = () => {
     if (location.hash === "#about-section") {
       const element = document.getElementById("about-section");
       if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: "smooth" });
-        });
+        element.scrollIntoView({ behavior: "smooth" });
       }
     }
   }, [location]);
