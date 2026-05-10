@@ -4,11 +4,18 @@ import ProductInfo from "../components/Product/03_ProductInfo";
 import ArtistInfo from "../components/Product/04_ArtistInfo";
 import ProductPurchasePanel from "../components/Product/05_ProductPurchasePanel";
 import ProductShowcase from "../components/Product/06_ProductShowcase";
-import { useNavigate } from "react-router-dom"; //bank
+import { useNavigate, useParams } from "react-router-dom"; //bank
+import {
+  defaultProductSample,
+  productSamples,
+} from "../data/productSamples";
 
 const Product = () => {
   
 const navigate = useNavigate(); 
+const { productSlug } = useParams();
+const product = productSamples[productSlug] || defaultProductSample;
+const products = Object.values(productSamples);
 
   //bank
   const handleAction = (event) => {
@@ -19,8 +26,8 @@ const navigate = useNavigate();
     // จำลองข้อมูลสินค้า 
     const productData = { 
       id: Date.now(), 
-      name: 'Cybernecklace Dark Magician', 
-      price: 300, 
+      name: product.cartName || product.name, 
+      price: product.price, 
       quantity: 1 
     };
     
@@ -53,26 +60,26 @@ const navigate = useNavigate();
 
   return (
     <main className="min-h-screen w-full bg-[#eeecfb]">
-      <ProductHeaderBar />
+      <ProductHeaderBar category={product.category} products={products} />
 
       <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-10 sm:px-6 md:gap-8 md:px-8 md:pb-12">
         <div className="grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-[1.02fr_1fr] lg:items-start">
           <div className="w-full">
-            <ProductGallery />
+            <ProductGallery images={product.images} />
           </div>
 
           <div className="flex w-full flex-col gap-6 md:gap-8">
-            <ProductInfo />
-            <ArtistInfo />
+            <ProductInfo product={product} />
+            <ArtistInfo paragraphs={product.fromArtist} />
 
             <div onClick={handleAction} >   
-            <ProductPurchasePanel />
+            <ProductPurchasePanel product={product} />
             </div>
             
           </div>
         </div>
 
-        <ProductShowcase />
+        <ProductShowcase image={product.images[0]} />
       </section>
     </main>
   );

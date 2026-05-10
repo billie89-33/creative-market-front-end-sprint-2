@@ -1,9 +1,32 @@
-const ProductHeaderBar = () => {
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+
+const MAX_SUGGESTIONS = 5;
+
+const ProductHeaderBar = ({ category = "Craft & Handmade", products = [] }) => {
+  const [searchText, setSearchText] = useState("");
+  const normalizedSearch = searchText.trim().toLowerCase();
+
+  const suggestions = useMemo(() => {
+    if (!normalizedSearch) return [];
+
+    return products
+      .filter((product) =>
+        product.name.toLowerCase().startsWith(normalizedSearch)
+      )
+      .slice(0, MAX_SUGGESTIONS);
+  }, [normalizedSearch, products]);
+
+  const shouldShowDropdown = searchText.trim().length > 0;
+
   return (
     <section className="w-full bg-[#eeecfb]">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:gap-6 md:px-8 md:py-8">
         <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
-          <form className="w-full md:max-w-md">
+          <form
+            className="relative w-full md:max-w-md"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <label htmlFor="product-search" className="sr-only">
               Search product
             </label>
@@ -12,6 +35,8 @@ const ProductHeaderBar = () => {
                 id="product-search"
                 type="text"
                 placeholder="Search product"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
                 className="w-full bg-transparent text-sm font-medium tracking-[0.01em] text-[#393276] outline-none placeholder:font-normal placeholder:text-[#6c67b0] md:text-base"
               />
               <button
@@ -32,13 +57,58 @@ const ProductHeaderBar = () => {
                 </svg>
               </button>
             </div>
+
+            {shouldShowDropdown && (
+              <div className="absolute left-0 right-0 top-full z-30 mt-2 max-h-80 overflow-y-auto rounded-xl border border-[#b7b2d7] bg-white shadow-xl">
+                {suggestions.length > 0 ? (
+                  <ul className="divide-y divide-[#eeecfb]">
+                    {suggestions.map((product) => {
+                      const thumbnail = product.images?.[0];
+                      const productDetail =
+                        product.description?.[0] || product.category;
+
+                      return (
+                        <li key={product.slug}>
+                          <Link
+                            to={`/product/${product.slug}`}
+                            className="flex gap-3 px-3 py-3 transition hover:bg-[#f5f3ff]"
+                            onClick={() => setSearchText("")}
+                          >
+                            {thumbnail ? (
+                              <img
+                                src={thumbnail}
+                                alt={product.name}
+                                className="h-12 w-12 shrink-0 rounded-md object-cover"
+                              />
+                            ) : (
+                              <div className="h-12 w-12 shrink-0 rounded-md bg-[#eeecfb]" />
+                            )}
+
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold text-[#2f2b78]">
+                                {product.name}
+                              </p>
+                              <p className="mt-1 truncate text-xs leading-5 text-[#6b648b]">
+                                {productDetail}
+                              </p>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="px-4 py-4 text-sm font-medium text-[#6b648b]">
+                    No products found
+                  </p>
+                )}
+              </div>
+            )}
           </form>
 
-          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1">
-            Handmade
+          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1 md:text-right">
+            {category}
           </h1>
-
-          <div className="hidden md:block md:w-[26rem]" />
         </div>
 
         <div className="h-[2px] w-full bg-[#6b648b]" />
