@@ -57,7 +57,7 @@ export default function Cart() {
         </div>
       </main>
 
-      {/* สามารถยัดส่วน Footer ของเพื่อนมาใส่ตรงนี้ได้เลยนะครับ */}
+      
     </div>
   );
 }
