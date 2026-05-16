@@ -7,18 +7,14 @@ const statusLabels = {
   COMPLETED: "สำเร็จแล้ว",
 };
 
-const orderStats = [
-  { label: "Total orders", value: "3" },
-  { label: "Total spend", value: "฿9,550" },
-  { label: "Completed", value: "1" },
-];
-
 const tabs = [
   { label: "All", value: "All" },
   { label: "ที่ต้องชำระ", value: "PAYABLE" },
   { label: "ที่ต้องได้รับ", value: "RECEIVABLE" },
   { label: "สำเร็จแล้ว", value: "COMPLETED" },
 ];
+
+const ordersPerPage = 5;
 
 const orders = [
   {
@@ -92,15 +88,188 @@ const orders = [
     status: "PAYABLE",
     image: "https://www.lovisa.sg/cdn/shop/files/51098858.jpg?v=1733770126",
   },
+  {
+    id: "#CM-20197",
+    product: "Ocean Mist Wall Art",
+    artist: "Mori House",
+    items: 1,
+    date: "30 Mar 2026",
+    price: "฿1,720",
+    status: "COMPLETED",
+    courier: "Flash Express",
+    trackingNumber: "FEX562810437TH",
+    image:
+      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20198",
+    product: "Velvet Bloom Scarf",
+    artist: "Nara Studio",
+    items: 1,
+    date: "01 Apr 2026",
+    price: "฿850",
+    status: "PAYABLE",
+    image:
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20199",
+    product: "Sunline Ceramic Bowl",
+    artist: "Tri Ceramic",
+    items: 2,
+    date: "03 Apr 2026",
+    price: "฿1,460",
+    status: "RECEIVABLE",
+    courier: "Thailand Post",
+    trackingNumber: "THP917365204TH",
+    image:
+      "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20200",
+    product: "Terracotta Lamp",
+    artist: "Clay Room",
+    items: 1,
+    date: "05 Apr 2026",
+    price: "฿2,150",
+    status: "COMPLETED",
+    courier: "J&T Express",
+    trackingNumber: "JNT630284751TH",
+    image:
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20201",
+    product: "Amber Note Notebook",
+    artist: "Paper Trails",
+    items: 3,
+    date: "07 Apr 2026",
+    price: "฿720",
+    status: "PAYABLE",
+    image:
+      "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20202",
+    product: "Quiet Rain Hoodie",
+    artist: "North Basic",
+    items: 1,
+    date: "09 Apr 2026",
+    price: "฿1,390",
+    status: "RECEIVABLE",
+    courier: "DHL eCommerce",
+    trackingNumber: "DHL748201563TH",
+    image:
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20203",
+    product: "Luna Glass Set",
+    artist: "House of Form",
+    items: 2,
+    date: "11 Apr 2026",
+    price: "฿1,980",
+    status: "COMPLETED",
+    courier: "Kerry Express",
+    trackingNumber: "KRX452871906TH",
+    image:
+      "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20204",
+    product: "Pebble Ring",
+    artist: "Sign Handmade",
+    items: 1,
+    date: "13 Apr 2026",
+    price: "฿690",
+    status: "PAYABLE",
+    image:
+      "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20205",
+    product: "Garden Sketch Print",
+    artist: "Bank Works",
+    items: 2,
+    date: "15 Apr 2026",
+    price: "฿1,120",
+    status: "RECEIVABLE",
+    courier: "Ninja Van",
+    trackingNumber: "NJV385104267TH",
+    image:
+      "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20206",
+    product: "Dune Table Clock",
+    artist: "Mono Living",
+    items: 1,
+    date: "18 Apr 2026",
+    price: "฿1,540",
+    status: "COMPLETED",
+    courier: "Flash Express",
+    trackingNumber: "FEX215630894TH",
+    image:
+      "https://images.unsplash.com/photo-1503602642458-232111445657?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20207",
+    product: "Rosy Thread Bag",
+    artist: "Luna Atelier",
+    items: 1,
+    date: "20 Apr 2026",
+    price: "฿1,310",
+    status: "RECEIVABLE",
+    courier: "Thailand Post",
+    trackingNumber: "THP624830571TH",
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=200&auto=format&fit=crop",
+  },
+  {
+    id: "#CM-20208",
+    product: "Studio Brush Pack",
+    artist: "Asha Studio",
+    items: 4,
+    date: "22 Apr 2026",
+    price: "฿560",
+    status: "COMPLETED",
+    courier: "DHL eCommerce",
+    trackingNumber: "DHL801254369TH",
+    image:
+      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=200&auto=format&fit=crop",
+  },
 ];
 
 const MyOrders = () => {
   const [activeTab, setActiveTab] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredOrders =
     activeTab === "All"
       ? orders
       : orders.filter((order) => order.status === activeTab);
+
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * ordersPerPage,
+    currentPage * ordersPerPage,
+  );
+
+  const totalSpend = orders
+    .reduce(
+      (sum, order) => sum + Number(order.price.replace(/[^\d]/g, "")),
+      0,
+    )
+    .toLocaleString("en-US");
+
+  const orderStats = [
+    { label: "Total orders", value: String(orders.length) },
+    { label: "Total spend", value: `฿${totalSpend}` },
+    {
+      label: "Completed",
+      value: String(orders.filter((order) => order.status === "COMPLETED").length),
+    },
+  ];
 
   return (
     <section className="space-y-6">
@@ -133,7 +302,10 @@ const MyOrders = () => {
             <button
               key={tab.value}
               type="button"
-              onClick={() => setActiveTab(tab.value)}
+              onClick={() => {
+                setActiveTab(tab.value);
+                setCurrentPage(1);
+              }}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition md:px-5 md:py-2.5 ${
                 isActive
                   ? "bg-[#1e1b4b] text-white"
@@ -147,7 +319,7 @@ const MyOrders = () => {
       </div>
 
       <div className="space-y-4">
-        {filteredOrders.map((order) => (
+        {paginatedOrders.map((order) => (
           <OrderCard
             key={order.id}
             order={order}
@@ -155,6 +327,50 @@ const MyOrders = () => {
           />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 pt-2">
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => Math.max(page - 1, 1))}
+            disabled={currentPage === 1}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            &lt;
+          </button>
+
+          {Array.from({ length: totalPages }, (_, index) => {
+            const page = index + 1;
+            const isActive = currentPage === page;
+
+            return (
+              <button
+                key={page}
+                type="button"
+                onClick={() => setCurrentPage(page)}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium transition ${
+                  isActive
+                    ? "bg-[#8df0a9] text-gray-900"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            type="button"
+            onClick={() =>
+              setCurrentPage((page) => Math.min(page + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            &gt;
+          </button>
+        </div>
+      )}
     </section>
   );
 };
