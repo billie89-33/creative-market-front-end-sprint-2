@@ -29,6 +29,8 @@ const orders = [
     date: "12 Mar 2026",
     price: "฿1,250",
     status: "COMPLETED",
+    courier: "Kerry Express",
+    trackingNumber: "KRX128640591TH",
     image:
       "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=200&auto=format&fit=crop",
   },
@@ -51,6 +53,8 @@ const orders = [
     date: "18 Mar 2026",
     price: "฿980",
     status: "RECEIVABLE",
+    courier: "Thailand Post",
+    trackingNumber: "THP730615248TH",
     image:
       "https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=200&auto=format&fit=crop",
   },
@@ -72,7 +76,9 @@ const orders = [
     items: 1,
     date: "25 Mar 2026",
     price: "฿1,640",
-    status: "PENDING",
+    status: "RECEIVABLE",
+    courier: "DHL eCommerce",
+    trackingNumber: "DHL204865317TH",
     image:
       "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=200&auto=format&fit=crop",
   },
