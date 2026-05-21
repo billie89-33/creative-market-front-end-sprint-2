@@ -6,8 +6,6 @@ import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 
 import Product from "./pages/Product";
-import ArtistProfile from "./pages/ArtistProfile";
-import NewArtistProfile from "./pages/NewArtistProfile";
 import Market from "./pages/Market";
 import Cart from "./pages/Cart"; //bank
 import Checkout from "./pages/Checkout"; //bank
@@ -17,6 +15,9 @@ import Register from "./pages/Register";
 import LoginPage from "./pages/LoginPage";
 import ArtistDrop from "./pages/ArtistDrop";
 import ArtistRegisterForm from "./pages/ArtistRegister";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 
 // สร้าง Router Map
 const router = createBrowserRouter([
@@ -33,12 +34,8 @@ const router = createBrowserRouter([
         element: <Product />,
       },
       {
-        path: "/artist-profile",
-        element: <ArtistProfile />,
-      },
-      {
-        path: "/new-artist-profile",
-        element: <NewArtistProfile />,
+        path: "/product/:productSlug",
+        element: <Product />,
       },
       {
         path: "/market",
@@ -79,12 +76,20 @@ const router = createBrowserRouter([
 
       // ถ้ามีหน้าอื่น เช่น /register ก็เอามาใส่ตรงนี้
       {
-        path: "/userdashboard",
+        path: "/user-dashboard",
         element: <UserDashboard />,
       },
       {
-        path: "/admindashboard",
+        path: "/admin-dashboard",
         element: <AdminDashboard />,
+      },
+      {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+      },
+      {
+    path: "/reset-password",
+    element: <ResetPassword />,
       },
     ],
   },

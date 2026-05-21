@@ -1,12 +1,18 @@
-import { useState } from "react";
-import product1 from "../../assets/images/product-1.png";
-import product2 from "../../assets/images/product-2.png";
-import product3 from "../../assets/images/product-3.png";
-import product4 from "../../assets/images/product-4.png";
+import { useEffect, useState } from "react";
+import product1 from "../../assets/images/cyber-necklace-01.png";
+import product2 from "../../assets/images/cyber-necklace-02.png";
+import product3 from "../../assets/images/cyber-necklace-03.png";
+import product4 from "../../assets/images/cyber-necklace-04.png";
 
-const ProductGallery = () => {
-  const productImages = [product1, product2, product3, product4];
+const defaultProductImages = [product1, product2, product3, product4];
+
+const ProductGallery = ({ images = defaultProductImages }) => {
+  const productImages = images.length ? images : defaultProductImages;
   const [selectedImage, setSelectedImage] = useState(productImages[0]);
+
+  useEffect(() => {
+    setSelectedImage(productImages[0]);
+  }, [productImages]);
 
   return (
     <section className="w-full">
@@ -28,7 +34,7 @@ const ProductGallery = () => {
                 key={image}
                 type="button"
                 onClick={() => setSelectedImage(image)}
-                className={`aspect-square overflow-hidden border ${
+                className={`aspect-square cursor-pointer overflow-hidden border transition-colors ${
                   isActive ? "border-[#393276]" : "border-[#6b648b]"
                 }`}
                 aria-label={`View product image ${index + 1}`}

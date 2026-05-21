@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Market from "../../pages/Market";
 
 const Register = () => {
   return (
@@ -39,12 +41,14 @@ const Register = () => {
         </p>
 
         {/* Button: Start Exploring */}
-        <button className="group flex items-center gap-3 border-2 border-gray-500 px-8 py-4 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all duration-300">
-          Start Exploring
-          <span className="group-hover:translate-x-2 transition-transform">
-            →
-          </span>
-        </button>
+        <Link to="/market">
+          <button className="group flex items-center gap-3 border-2 border-gray-500 px-8 py-4 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black hover:border-white transition-all duration-300">
+            Start Exploring
+            <span className="group-hover:translate-x-2 transition-transform">
+              →
+            </span>
+          </button>
+        </Link>
       </div>
     </section>
   );

@@ -45,6 +45,16 @@ const ProductCard = ({ product }) => {
             {product.price}
           </span>
         </div>
+        {/* Add to Cart Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault(); //ลองเอาออกดูดิวาปแน่  เพราะหุ้ม ProductCard ด้วย <Link to="/product"> ไว้ เวลา User กดปุ่มตะกร้า มันจะวาร์ปไปหน้ารายละเอียดสินค้าทันที
+            alert("Added to cart!");
+          }}
+          className="bg-[#6D5DD3] hover:bg-[#5b4db8] text-white p-2 rounded-lg transition-colors duration-300 shadow-md hover:cursor-pointer"
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );

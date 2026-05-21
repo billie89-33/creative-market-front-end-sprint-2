@@ -57,7 +57,11 @@ const AboutUs = () => {
   ];
 
   return (
-    <section className=" hidden md:block w-full bg-[#111016] text-white py-24 px-6 font-['Anuphan',_sans-serif]">
+    <section
+      section
+      id="about-section"
+      className=" w-full bg-[#111016] text-white py-24 px-6 font-['Anuphan',_sans-serif]"
+    >
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* ================= 1. ABOUT US HEADER ================= */}
         <h2 className="text-3xl font-bold mb-10 tracking-wide">About us</h2>
@@ -88,11 +92,13 @@ const AboutUs = () => {
 
         {/* Description Text */}
         <p className="text-center text-[#AFA9EC] max-w-4xl text-sm md:text-base leading-relaxed mb-32">
-          the ultimate marketplace dedicated 100% to human-made art, crafts, and
-          design. We firmly believe that art is a profound language used to
-          communicate human emotions, lived experiences, and the soul—a unique
-          and authentic charm that no technology or Artificial Intelligence can
-          ever replicate.
+          ศูนย์รวมตลาดออนไลน์ที่อุทิศให้แก่ผลงานศิลปะ งานฝีมือ
+          และงานออกแบบที่รังสรรค์ด้วยมือมนุษย์แบบ 100%
+          เพราะเราเชื่อมั่นอย่างแรงกล้าว่า
+          ศิลปะคือภาษากลางอันลึกซึ้งที่ใช้ถ่ายทอดอารมณ์ ประสบการณ์ชีวิต
+          และจิตวิญญาณของมนุษย์
+          ซึ่งเป็นเสน่ห์อันเป็นเอกลักษณ์และเปี่ยมด้วยความจริงแท้
+          ที่ไม่มีเทคโนโลยีหรือปัญญาประดิษฐ์ (AI) ใดๆ จะสามารถลอกเลียนแบบได้
         </p>
 
         {/* ================= 2. MEET THE TEAM ================= */}

@@ -34,6 +34,7 @@ const Market = () => {
       tags: ["Visual Art"],
       sellerAvatar: sellerSample,
       productImage: productSample2,
+      slug: "visual-art",
     },
     {
       id: 2,
@@ -44,6 +45,7 @@ const Market = () => {
       tags: ["Visual Art"],
       sellerAvatar: sellerSample,
       productImage: productSample2,
+      slug: "visual-art",
     },
     // --- หมวด Craft & Handmade ---
     {
@@ -76,6 +78,7 @@ const Market = () => {
       tags: ["Music & Sound"],
       sellerAvatar: sellerSample,
       productImage: productSample3,
+      slug: "music-sound",
     },
     {
       id: 6,
@@ -86,6 +89,7 @@ const Market = () => {
       tags: ["Music & Sound"],
       sellerAvatar: sellerSample,
       productImage: productSample3,
+      slug: "music-sound",
     },
   ];
 
@@ -118,7 +122,7 @@ const Market = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <Link to={`/product`}>
+              <Link to={`/product/${product.slug}`}>
                 <ProductCard key={product.id} product={product} />
                 {/* the first product mean the name of the props that ProductCard
                 will read  */}
