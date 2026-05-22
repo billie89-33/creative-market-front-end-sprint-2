@@ -16,18 +16,18 @@ export default function PaymentGateway({ subtotal }) {
       </button>
 
       <div>
-        <h1 className="text-2xl font-bold text-[#1E1B4B]">Secure Checkout</h1>
-        <p className="text-xs text-gray-400 mt-1">Complete your digital acquisition through our encrypted PromptPay gateway.</p>
+        <h1 className="text-2xl font-bold text-[#1E1B4B]">ชำระเงิน</h1>
+        <p className="text-xs text-gray-400 mt-1">สแกนชำระเงินอย่างปลอดภัยผ่านระบบพร้อมเพย์ของเรา</p>
       </div>
 
       <div className="flex flex-col items-center mt-6">
         <div className="bg-white border border-[#4C1D95] rounded px-4 py-1.5 flex items-center gap-2 mb-4">
           <div className="w-3 h-3 bg-black"></div>
-          <span className="text-xs font-semibold">PROMPTPAY PAYMENT</span>
+          <span className="text-xs font-semibold">ชำระเงินผ่านพร้อมเพย์</span>
         </div>
 
         <div className="text-center mb-4">
-          <p className="text-xs text-gray-500">TOTAL PAYABLE</p>
+          <p className="text-xs text-gray-500">ยอดชำระทั้งหมด</p>
           <p className="text-3xl font-bold text-[#4C1D95]">฿ {subtotal.toFixed(2)}</p>
         </div>
 

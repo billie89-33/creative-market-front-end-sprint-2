@@ -108,14 +108,14 @@ export default function CheckoutForm({
             className="flex items-center gap-2 text-[#4C1D95] text-sm font-semibold hover:underline"
           >
             <span className="material-icons text-base">add_circle_outline</span>
-            Add new location
+            เพิ่มที่อยู่ใหม่
           </button>
         )}
       </div>
 
       {/* Payment Method Section */}
       <div className="border border-[#4C1D95] rounded-lg p-5 bg-white/50">
-        <h3 className="font-bold mb-4 text-[#1E1B4B]">Choose payment method</h3>
+        <h3 className="font-bold mb-4 text-[#1E1B4B]">เลือกวิธีชำระเงิน</h3>
         <div className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
