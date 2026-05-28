@@ -58,7 +58,7 @@ const Market = () => {
         <div className="flex flex-col md:flex-row gap-8 w-full cursor-pointer h-87.5">
           <div className="w-full md:w-1/2 group h-full relative">
             {limitedProduct ? (
-              <Link to={`/product/${limitedProduct.slug}`}>
+              <Link to={`/product/${limitedProduct?.slug}`}>
                 <div className="relative overflow-hidden rounded-3xl bg-white h-full shadow-2xl">
                   <div className="absolute top-0 left-0 bg-black text-white text-xl font-bold px-4 py-2 z-30 tracking-widest">
                     LIMITED
@@ -105,7 +105,7 @@ const Market = () => {
           {/* Card 1: Just Dropped  */}
           <div className="md:flex-3 group cursor-pointer relative overflow-hidden rounded-3xl bg-[#1a1a1a] aspect-square shadow-xl">
             {droppedProduct ? (
-              <Link to={`/product/${droppedProduct.slug}`}>
+              <Link to={`/product/${droppedProduct?.slug}`}>
                 <div className="absolute top-0 left-0 bg-black text-white text-xl font-bold px-3 py-1.5 z-20 tracking-widest uppercase">
                   Just Dropped
                 </div>
@@ -134,7 +134,7 @@ const Market = () => {
           {/* Card 2: New Artist (Cybernecklace) */}
           <div className="md:flex-3 group cursor-pointer relative overflow-hidden rounded-3xl bg-[#1a1a1a] aspect-square shadow-xl">
             {newArtistProduct ? (
-              <Link to={`/product/${newArtistProduct.slug}`}>
+              <Link to={`/product/${newArtistProduct?.slug}`}>
                 <div className="absolute top-0 left-0 bg-black text-white text-xl font-bold px-3 py-1.5 z-20 tracking-widest uppercase">
                   New Artist
                 </div>
@@ -162,7 +162,7 @@ const Market = () => {
 
           {/* Card 3: Trending (รูปจานใบเดิมคงไว้ ไม่ต้องดึงจาก DB จ้ะ) */}
           <div className="md:flex-4 group cursor-pointer relative overflow-hidden rounded-3xl bg-[#1a1a1a] aspect-square shadow-xl">
-            <Link to={`/product/${trendingProduct.slug}`}>
+            <Link to={`/product/${trendingProduct?.slug}`}>
               <div className="absolute top-0 left-0 bg-black text-white text-xl font-bold px-3 py-1.5 z-20 tracking-widest uppercase">
                 Trending
               </div>
