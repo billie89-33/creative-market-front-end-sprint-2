@@ -6,9 +6,10 @@ const Market = () => {
   const [loading, setLoading] = useState(true);
 
   // ดึงค่า URL จาก Vite Env
-  const apiBaseUrl =
-    import.meta.env.VITE_API_URL || "http://localhost:7777/api";
-  const imageBaseUrl = apiBaseUrl.replace("/api", "");
+  const serverBaseUrl =
+    import.meta.env.VITE_SERVER_URL || "http://localhost:7777";
+  const apiBaseUrl = `${serverBaseUrl}/api`;
+  const imageBaseUrl = serverBaseUrl;
 
   useEffect(() => {
     const fetchProducts = async () => {
