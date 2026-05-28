@@ -64,17 +64,17 @@ const Market = () => {
                   </div>
                   <img
                     src={getImageUrl(limitedProduct?.images?.[0])}
-                    alt={limitedProduct.name}
+                    alt={limitedProduct?.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6 md:p-8 flex flex-col gap-1 z-20">
                     <h3 className="text-2xl md:text-4xl font-bold text-white truncate">
-                      {limitedProduct.name}
+                      {limitedProduct?.name}
                     </h3>
                     <p className="text-sm md:text-lg text-gray-200">
                       by{" "}
                       <span className="font-bold text-white">
-                        {limitedProduct.artist}
+                        {limitedProduct?.artist}
                       </span>
                     </p>
                   </div>
@@ -111,15 +111,15 @@ const Market = () => {
                 <img
                   src={getImageUrl(droppedProduct?.images?.[0])}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  alt={droppedProduct.name}
+                  alt={droppedProduct?.name}
                 />
                 <div className="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md p-5 border-t border-gray-100">
                   <h4 className="text-xl font-bold text-gray-900 leading-tight">
-                    {droppedProduct.name}
+                    {droppedProduct?.name}
                   </h4>
                   <p className="text-xs text-gray-600 mt-1">
                     by{" "}
-                    <span className="font-bold">{droppedProduct.artist}</span>
+                    <span className="font-bold">{droppedProduct?.artist}</span>
                   </p>
                 </div>
               </Link>
@@ -140,15 +140,17 @@ const Market = () => {
                 <img
                   src={getImageUrl(newArtistProduct?.images?.[0])}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  alt={newArtistProduct.name}
+                  alt={newArtistProduct?.name}
                 />
                 <div className="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md p-5 border-t border-gray-100">
                   <h4 className="text-xl font-bold text-gray-900 leading-tight">
-                    {newArtistProduct.name}
+                    {newArtistProduct?.name}
                   </h4>
                   <p className="text-xs text-gray-600 mt-1">
                     by{" "}
-                    <span className="font-bold">{newArtistProduct.artist}</span>
+                    <span className="font-bold">
+                      {newArtistProduct?.artist}
+                    </span>
                   </p>
                 </div>
               </Link>
@@ -172,10 +174,11 @@ const Market = () => {
               />
               <div className="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md p-5 flex flex-col border-t border-gray-100">
                 <h4 className="text-xl font-bold text-gray-900 leading-tight">
-                  {trendingProduct.name}
+                  {trendingProduct?.name}
                 </h4>
                 <p className="text-xs text-gray-600 mt-1">
-                  by <span className="font-bold">{trendingProduct.artist}</span>
+                  by{" "}
+                  <span className="font-bold">{trendingProduct?.artist}</span>
                 </p>
               </div>
             </Link>
