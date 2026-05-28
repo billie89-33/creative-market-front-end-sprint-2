@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import marketCard3 from "../../assets/images/market-card-3.png"; // เช็ค path รูปจานให้ถูกนะจ๊ะ
+import marketCard3 from "../../assets/images/market-card-3.png";
 
 const Market = () => {
   const [products, setProducts] = useState([]);
@@ -28,7 +28,6 @@ const Market = () => {
     fetchProducts();
   }, [apiBaseUrl]);
 
-  // พี่สาวแนะนำ: ค้นหาแบบยืดหยุ่น ถ้าหาจาก slug ไม่เจอ ให้ดึงตามลำดับ Array สำรองไว้ก่อน หน้าเว็บจะได้ไม่มืดจ้ะ!
   const limitedProduct = products.find(
     (p) => p._id === "6a1685fc96d193295d2a496a",
   );
