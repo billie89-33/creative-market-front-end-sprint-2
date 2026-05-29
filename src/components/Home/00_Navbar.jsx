@@ -1,14 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/logos/logo.svg";
 import { Link } from "react-router";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState("null"); // เก็บข้อมูลโปรไฟล์ผู้ใช้ (เช่นชื่อ, รูปภาพ)
+  const [user, setUser] = useState(null); // เก็บข้อมูลโปรไฟล์ผู้ใช้ (เช่นชื่อ, รูปภาพ)
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // สถานะล็อกอิน
-  const [userRole, setUserRole] = useState("visitor"); // บทบาท: "visitor", "user", "admin"
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // สถานะล็อกอิน
+  const [userRole, setUserRole] = useState("admin"); // บทบาท: "visitor", "user", "admin"
   const [cartCount, setCartCount] = useState(3); // จำนวนสินค้าในตะกร้า
+
+  const serverBaseUrl =
+    import.meta.env.VITE_SERVER_URL || "http://localhost:7777";
+  const apiBaseUrl = `${serverBaseUrl}/api`;
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      // ถ้าไม่ได้ล็อกอินก็ไม่ต้องวิ่งไปเรียก API ให้เปลืองแรง Server จ้า
+      if (!isLoggedIn) return;
+
+      try {
+        // เพื่อนร่วมทีมสามารถระบุ URL API จริงตรงนี้ได้เลย (เช่นดึงข้อมูลผ่านคุกกี้ / Token)
+        const response = await fetch(`${apiBaseUrl}/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // ถ้าในอนาคตเพื่อนใช้ระบบ Bearer Token ก็สามารถปลดคอมเมนต์ตรงนี้ได้เลยนะจ๊ะ
+            // "Authorization": `Bearer ${localStorage.getItem("token")}`
+          },
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // สมมติว่าหลังบ้านส่งมาในรูปแบบ { success: true, data: { username: "Chaiyawat" } }
+          setUser(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [isLoggedIn]); // ทำงานใหม่ทุกครั้งที่สถานะการล็อกอินเปลี่ยนไปจ้า
 
   // --- ฟังก์ชันสำหรับการล็อกเอาท์ (เตรียมไว้ให้เพื่อนร่วมทีมมาผูกต่อ) ---
   const handleLogout = async () => {
@@ -164,13 +198,20 @@ const Navbar = () => {
             {/* ส่วนของ รูปหัวคน (Profile): พาไปยัง Dashboard ตามบทบาทของผู้ใช้ */}
             <Link
               to={userRole === "admin" ? "/admin-dashboard" : "/user-dashboard"}
-              className="cursor-pointer hover:text-purple-400 transition-colors flex items-center gap-2"
+              className="cursor-pointer hover:text-purple-400 transition-colors flex items-center gap-3" // เพิ่ม gap ให้ห่างกำลังดี
               title={
                 userRole === "admin"
                   ? "Go to Admin Dashboard"
                   : "Go to User Dashboard"
               }
             >
+              {/* แทรกชื่อผู้ใช้ไว้ด้านหน้าไอคอน: ถ้า user มีข้อมูลให้โชว์ username แต่ถ้าไม่มีให้โชว์ "Loading..." รอไปก่อนจ้า */}
+              <span className="text-base font-semibold tracking-wide text-gray-200">
+                {userRole === "admin"
+                  ? "Hi, Admin"
+                  : `Hi, ${user?.username || "User"}`}
+              </span>
+
               <div
                 className={`p-1 rounded-full border-2 ${userRole === "admin" ? "border-red-500" : "border-purple-500"}`}
               >
@@ -284,8 +325,18 @@ const Navbar = () => {
           ) : (
             // ---------- กรณีที่ 2: ล็อกอินติดแล้ว โชว์เมนูลัดเข้าถึงสิทธิ์ตามรูปวาดของเธอ ----------
             <div className="flex flex-col gap-3 mt-6 border-t border-gray-800 pt-4 px-2">
-              <div className="text-sm text-gray-500 tracking-widest font-bold uppercase mb-1">
-                Account Actions
+              <div className="flex flex-col gap-1 mb-2">
+                <div className="text-sm text-gray-500 tracking-widest font-bold uppercase">
+                  Account Actions
+                </div>
+                {/* แสดงชื่อผู้ใช้ตัวหนาๆ สีม่วง/แดงตามสิทธิ์ให้ผู้ใช้ประทับใจจ้า */}
+                <div
+                  className={`text-base font-bold ${userRole === "admin" ? "text-red-400" : "text-purple-400"}`}
+                >
+                  {userRole === "admin"
+                    ? "Welcome, Admin ✨"
+                    : `Welcome, ${user?.username || "Member"} ✨`}
+                </div>
               </div>
 
               {/* เมนูตะกร้าสินค้า: โชว์เฉพาะ "user" พร้อมแสดงตัวเลขสะสมข้างๆ */}
