@@ -45,6 +45,44 @@ const Product = () => {
     }
   }, [productSlug]);
 
+  const handleAddToCart = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+
+      if (!userId) {
+        alert("คุณยังไม่ได้ล็อกอิน กรุณาล็อกอินหรือสมัครสมาชิกก่อน");
+        return;
+      }
+
+      const response = await fetch("http://localhost:7777/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          productId: product._id,
+          quantity: 1,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to add product to cart");
+      }
+
+      alert("เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    await handleAddToCart();
+    navigate("/cart");
+  };
+
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
@@ -86,7 +124,11 @@ const Product = () => {
           <div className="flex w-full flex-col gap-6 md:gap-8">
             <ProductInfo product={product} />
             <ArtistInfo paragraphs={product.fromArtist} />
-            <ProductPurchasePanel product={product} />
+            <ProductPurchasePanel
+              product={product}
+              onAddToCart={handleAddToCart}
+              onBuyNow={handleBuyNow}
+            />
           </div>
         </div>
 
