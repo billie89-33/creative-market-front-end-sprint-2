@@ -4,59 +4,77 @@ import ProductInfo from "../components/Product/03_ProductInfo";
 import ArtistInfo from "../components/Product/04_ArtistInfo";
 import ProductPurchasePanel from "../components/Product/05_ProductPurchasePanel";
 import ProductShowcase from "../components/Product/06_ProductShowcase";
-import { useNavigate, useParams } from "react-router-dom"; //bank
-import {
-  defaultProductSample,
-  productSamples,
-} from "../data/productSamples";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { productSamples } from "../data/productSamples";
 
 const Product = () => {
-  
-const navigate = useNavigate(); 
-const { productSlug } = useParams();
-const product = productSamples[productSlug] || defaultProductSample;
-const products = Object.values(productSamples);
+  const navigate = useNavigate();
+  const { productSlug } = useParams();
 
-  //bank
-  const handleAction = (event) => {
-    const target = event.target;
-    const button = target.closest('button');
-    if (!button) return;
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    // จำลองข้อมูลสินค้า 
-    const productData = { 
-      id: Date.now(), 
-      name: product.cartName || product.name, 
-      price: product.price, 
-      quantity: 1 
-    };
-    
-    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+  // ตอนนี้ยังเก็บไว้ก่อน เพราะ ProductHeaderBar ยังใช้ products สำหรับ search mock อยู่
+  const products = Object.values(productSamples);
 
-    const saveToCart = () => {
-      const existing = currentCart.find(item => item.name === productData.name);
-      if (existing) {
-        existing.quantity += 1;
-        localStorage.setItem('cart', JSON.stringify(currentCart));
-      } else {
-        localStorage.setItem('cart', JSON.stringify([...currentCart, productData]));
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `http://localhost:7777/api/products/${productSlug}`,
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to fetch product");
+        }
+
+        setProduct(result.data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    // เช็คปุ่ม Add to Cart 
-    if (button.getAttribute('aria-label') === 'Add to cart') {
-      saveToCart();
-      alert('เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว!');
+    if (productSlug) {
+      fetchProduct();
     }
+  }, [productSlug]);
 
-    // เช็คปุ่ม BUY NOW
-    if (button.innerText === 'BUY NOW') {
-      saveToCart();
-      navigate('/cart'); 
-    }
-  };
-  //bank
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
+        <p className="text-lg font-semibold text-[#2f2b78]">
+          Loading product...
+        </p>
+      </main>
+    );
+  }
 
+  if (error) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
+        <p className="text-lg font-semibold text-red-500">{error}</p>
+      </main>
+    );
+  }
+
+  if (!product) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
+        <p className="text-lg font-semibold text-[#2f2b78]">
+          Product not found
+        </p>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen w-full bg-[#eeecfb]">
@@ -71,11 +89,7 @@ const products = Object.values(productSamples);
           <div className="flex w-full flex-col gap-6 md:gap-8">
             <ProductInfo product={product} />
             <ArtistInfo paragraphs={product.fromArtist} />
-
-            <div onClick={handleAction} >   
             <ProductPurchasePanel product={product} />
-            </div>
-            
           </div>
         </div>
 
