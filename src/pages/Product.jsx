@@ -5,15 +5,21 @@ import ArtistInfo from "../components/Product/04_ArtistInfo";
 import ProductPurchasePanel from "../components/Product/05_ProductPurchasePanel";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-// import { productSamples } from "../data/productSamples"; ไม่ใช้ข้อมูลจาก mock data แล้ว
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 const Product = () => {
   const navigate = useNavigate();
   const { productSlug } = useParams();
 
+  const { isLoggedIn, userRole } = useAuth();
+  const { refreshCart } = useCart();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -44,9 +50,32 @@ const Product = () => {
     }
   }, [productSlug]);
 
-  const handleAddToCart = async () => {
+  const showToast = (type) => {
+    setToast(type);
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  const handleAddToCart = async ({ showToastMessage = true } = {}) => {
+    if (!isLoggedIn) {
+      alert("กรุณาเข้าสู่ระบบก่อนเลือกซื้อสินค้าค่ะ");
+      return false;
+    }
+
+    if (userRole !== "user") {
+      alert(
+        "ขออภัยด้วยนะคะ บัญชีประเภทผู้ดูแลระบบ (Admin) ไม่สามารถเพิ่มสินค้าลงตะกร้าได้ค่ะ ✗",
+      );
+      return false;
+    }
+
+    setAdding(true);
+
     try {
-      const response = await fetch("http://localhost:7777/api/cart/add", {
+      const serverBaseUrl =
+        import.meta.env.VITE_API_URL || "http://localhost:7777";
+      const apiBaseUrl = `${serverBaseUrl}/api`;
+
+      const response = await fetch(`${apiBaseUrl}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,16 +93,23 @@ const Product = () => {
         throw new Error(result.message || "Failed to add product to cart");
       }
 
-      alert("เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว");
+      refreshCart();
+
+      if (showToastMessage) {
+        showToast("success");
+      }
+
       return true;
     } catch (error) {
-      alert(error.message);
+      showToast("error");
       return false;
+    } finally {
+      setAdding(false);
     }
   };
 
   const handleBuyNow = async () => {
-    const added = await handleAddToCart();
+    const added = await handleAddToCart({ showToastMessage: false });
 
     if (added) {
       navigate("/cart");
@@ -125,6 +161,8 @@ const Product = () => {
               product={product}
               onAddToCart={handleAddToCart}
               onBuyNow={handleBuyNow}
+              adding={adding}
+              toast={toast}
             />
           </div>
         </div>
