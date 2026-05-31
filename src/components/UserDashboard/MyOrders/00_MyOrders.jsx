@@ -3,7 +3,7 @@ import OrderCard from "./01_OrderCard";
 
 const tabs = [
   { label: "All", value: "All" },
-  { label: "ชำระแล้ว", value: "pending" },
+  { label: "รอดำเนินการ", value: "pending" },
   { label: "สำเร็จแล้ว", value: "paid" },
   { label: "ยกเลิก", value: "cancelled" },
 ];
@@ -38,7 +38,9 @@ const MyOrders = ({ orders, summary, loading, error }) => {
   ];
 
   if (loading) {
-    return <section className="text-sm text-gray-500">Loading orders...</section>;
+    return (
+      <section className="text-sm text-gray-500">Loading orders...</section>
+    );
   }
 
   if (error) {
@@ -51,7 +53,9 @@ const MyOrders = ({ orders, summary, loading, error }) => {
         <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
           My Orders
         </h1>
-        <p className="mt-1 text-sm text-gray-400">Order items from your account</p>
+        <p className="mt-1 text-sm text-gray-400">
+          Order items from your account
+        </p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -94,7 +98,9 @@ const MyOrders = ({ orders, summary, loading, error }) => {
 
       <div className="space-y-4">
         {paginatedOrders.length > 0 ? (
-          paginatedOrders.map((order) => <OrderCard key={order.id} order={order} />)
+          paginatedOrders.map((order) => (
+            <OrderCard key={order.id} order={order} />
+          ))
         ) : (
           <div className="rounded-2xl bg-white p-6 text-sm text-gray-400">
             No orders found for this filter.
