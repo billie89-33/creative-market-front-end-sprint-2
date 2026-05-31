@@ -42,9 +42,15 @@ const OrdersStatus = ({ orders, onOpenOrders }) => {
                         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-100 text-sm font-semibold text-gray-500">
                           {order.name.charAt(0).toUpperCase()}
                         </div>
-                        <span className="text-sm font-medium text-gray-800">
-                          {order.name}
-                        </span>
+                        <div>
+                          <span className="text-sm font-medium text-gray-800">
+                            {order.name}
+                          </span>
+                          <p className="mt-1 text-xs text-gray-400">
+                            {order.quantity} item
+                            {order.quantity > 1 ? "s" : ""}
+                          </p>
+                        </div>
                       </div>
                     </td>
                     <td className="py-4">
