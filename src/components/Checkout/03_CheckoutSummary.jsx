@@ -19,8 +19,11 @@ export default function CheckoutSummary({
     }
 
     try {
+
       // 2. API: POST /orders - สร้างคำสั่งซื้อ
-      
+
+
+      /*รอ api
       const orderRes = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -30,6 +33,7 @@ export default function CheckoutSummary({
         })
       });
       const orderData = await orderRes.json();
+      
 
       // 3. API: POST /payments/promptpay/generate - สร้าง QR Code
       const qrRes = await fetch('/api/payments/promptpay/generate', {
@@ -39,14 +43,16 @@ export default function CheckoutSummary({
       });
       const qrData = await qrRes.json();
 
+      */
+
       // 4. ส่งข้อมูลทั้งหมดไปหน้า Payment ผ่าน State
       navigate('/payment', { 
-        state: { 
-          qrImage: qrData.qrImage, // URL รูปภาพ QR Code
-          orderId: orderData.id,
-          amount: subtotal
-        } 
-      });
+  state: { 
+    qrImage: "https://placehold.co", // 
+    orderId: "MOCK_ORDER_12345", // ใส่รหัสออเดอร์จำลอง
+    amount: subtotal || 2700 // 
+  } 
+});
 
     } catch (err) {
       console.error("Checkout process failed:", err);
@@ -79,19 +85,19 @@ export default function CheckoutSummary({
 
       {/* Mini Cart Summary */}
       <div className="border border-[#4C1D95] rounded-lg p-5 bg-white/50">
-        <h3 className="font-bold mb-4 text-sm text-[#1E1B4B]">Cart summary</h3>
+        <h3 className="font-bold mb-4 text-sm text-[#1E1B4B]">สรุปยอดเงินในตะกร้า</h3>
         <div className="space-y-3 text-sm border-b border-purple-200 pb-3 mb-3">
           <div className="flex justify-between">
-            <span className="text-gray-600">Subtotal</span>
+            <span className="text-gray-600">ยอดรวม</span>
             <span className="font-bold">฿ {subtotal.toLocaleString()}.-</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Shipping</span>
+            <span className="text-gray-600">ค่าจัดส่ง</span>
             <span className="text-green-600 font-bold">Free</span>
           </div>
         </div>
         <div className="flex justify-between text-sm font-bold mb-5 text-[#1E1B4B]">
-          <span>Total</span>
+          <span>ยอดรวมทั้งสิ้น</span>
           <span>฿ {subtotal.toLocaleString()}.-</span>
         </div>
 
@@ -101,12 +107,12 @@ export default function CheckoutSummary({
             onClick={handleCheckout}
             className="w-full bg-[#1E1B4B] text-white py-2.5 rounded font-semibold hover:bg-[#312E81] transition-all active:scale-[0.98]"
           >
-            Confirm & Pay
+            ยืนยันการชำระเงิน
           </button>
         ) : (
           <div className="bg-purple-50 p-2 rounded text-center">
             <p className="text-[10px] text-[#4C1D95] font-bold uppercase tracking-widest">
-              Awaiting Payment
+              รอการชำระเงิน
             </p>
           </div>
         )}
