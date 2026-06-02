@@ -3,7 +3,10 @@ import Sidebar from "../components/AdminDashboard/01_Sidebar";
 import Overview from "../components/AdminDashboard/Overview/00_Overview";
 import Orders from "../components/AdminDashboard/Orders/00_Orders";
 import Sales from "../components/AdminDashboard/Sales/00_Sales";
+import useDashboardOrders from "../hooks/useDashboardOrders";
+import ArtistDrop from "./ArtistDrop";
 import useAdminDashboard from "../hooks/useAdminDashboard";
+
 
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState("overview");
@@ -21,13 +24,9 @@ const AdminDashboard = () => {
           />
         );
       case "sales":
-        return (
-          <Sales
-            stats={dashboardData.sales}
-            loading={loading}
-            error={error}
-          />
-        );
+        return <Sales />;
+      case "artist-drop":
+        return <ArtistDrop />;
       case "overview":
       default:
         return (
