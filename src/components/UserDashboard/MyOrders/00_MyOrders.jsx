@@ -16,14 +16,44 @@ const formatCurrency = (value) =>
     maximumFractionDigits: 2,
   }).format(value || 0);
 
+const groupOrdersByOrderId = (orders) =>
+  Object.values(
+    orders.reduce((acc, item) => {
+      if (!acc[item.orderId]) {
+        acc[item.orderId] = {
+          id: item.orderId,
+          orderId: item.orderId,
+          status: item.status,
+          statusLabel: item.statusLabel,
+          createdAt: item.createdAt,
+          items: [],
+          totalAmount: 0,
+          totalQuantity: 0,
+        };
+      }
+
+      acc[item.orderId].items.push(item);
+      acc[item.orderId].totalAmount += item.lineTotal || item.price * item.quantity;
+      acc[item.orderId].totalQuantity += item.quantity || 0;
+
+      return acc;
+    }, {}),
+  ).map((group) => ({
+    ...group,
+    primaryItem: group.items[0],
+    extraItems: group.items.slice(1),
+  }));
+
 const MyOrders = ({ orders, summary, loading, error }) => {
   const [activeTab, setActiveTab] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
 
+  const groupedOrders = groupOrdersByOrderId(orders);
+
   const filteredOrders =
     activeTab === "All"
-      ? orders
-      : orders.filter((order) => order.status === activeTab);
+      ? groupedOrders
+      : groupedOrders.filter((order) => order.status === activeTab);
 
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
   const paginatedOrders = filteredOrders.slice(
