@@ -9,15 +9,26 @@ export default function CheckoutForm({
   loading 
 }) {
   const [isAdding, setIsAdding] = useState(false);
-  const [newAddr, setNewAddr] = useState({ name: "", detail: "" });
+  const [newAddr, setNewAddr] = useState({ 
+    recipientName: "", 
+    phone: "", 
+    street: "", 
+    district: "", 
+    province: "", 
+    postcode: "" 
+  });
   const [fieldErrors, setFieldErrors] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSaveNewAddress = async () => {
-    // Validation
+    // Validation ครบทุกช่องตามเพื่อน
     const errors = {};
-    if (!newAddr.name) errors.name = "กรุณาระบุชื่อเรียกที่อยู่";
-    if (!newAddr.detail) errors.detail = "กรุณาระบุรายละเอียดที่อยู่";
+    if (!newAddr.recipientName) errors.recipientName = "กรุณาระบุชื่อผู้รับ";
+    if (!newAddr.phone) errors.phone = "กรุณาระบุเบอร์โทรศัพท์";
+    if (!newAddr.street) errors.street = "กรุณาระบุที่อยู่";
+    if (!newAddr.district) errors.district = "กรุณาระบุเขต/อำเภอ";
+    if (!newAddr.province) errors.province = "กรุณาระบุจังหวัด";
+    if (!newAddr.postcode) errors.postcode = "กรุณาระบุรหัสไปรษณีย์";
     
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -25,17 +36,14 @@ export default function CheckoutForm({
     }
 
     setFieldErrors({});
-    const result = await onAddAddress({
-      name: newAddr.name,
-      detail: newAddr.detail,
-      isDefault: addresses.length === 0
-    });
+    // ⭐️ ส่งข้อมูลครบทุกช่องตาม Backend ของเพื่อน
+    const result = await onAddAddress(newAddr);
 
     if (result) {
-      setSelectedAddressId(result._id);
+      setSelectedAddressId(result._id || result.id);
       setIsAdding(false);
-      setNewAddr({ name: "", detail: "" });
-      setShowSuccessModal(true); // โชว์ Modal สำเร็จ
+      setNewAddr({ recipientName: "", phone: "", street: "", district: "", province: "", postcode: "" });
+      setShowSuccessModal(true);
     }
   };
 
@@ -47,7 +55,6 @@ export default function CheckoutForm({
 
   return (
     <div className="space-y-6">
-      {/* Success Modal จากเพื่อน */}
       <SuccessModal 
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
@@ -59,7 +66,7 @@ export default function CheckoutForm({
         <h3 className="font-bold mb-4 text-[#1E1B4B]">ที่อยู่สำหรับจัดส่ง</h3>
         <div className="space-y-4 mb-4">
           {addresses.length === 0 && !isAdding && (
-            <p className="text-sm text-gray-500 italic">ยังไม่มีข้อมูลที่อยู่ กรุณาเพิ่มที่อยู่ใหม่</p>
+            <p className="text-sm text-gray-500 italic">ยังไม่มีข้อมูลที่อยู่ กรุณาเพิ่มที่อยู่ใหม่ หรือเพิ่มได้ที่หน้า Profile</p>
           )}
 
           {addresses.map((addr) => (
@@ -73,8 +80,8 @@ export default function CheckoutForm({
                   className="mt-1 accent-[#4C1D95]"
                 />
                 <div>
-                  <h3 className="font-bold text-[#1E1B4B]">{addr.name}</h3>
-                  <p className="text-xs text-gray-400">{addr.detail}</p>
+                  <h3 className="font-bold text-[#1E1B4B]">{addr.recipientName} ({addr.phone})</h3>
+                  <p className="text-xs text-gray-400">{addr.street}, {addr.district}, {addr.province} {addr.postcode}</p>
                 </div>
               </label>
               
@@ -92,30 +99,64 @@ export default function CheckoutForm({
 
         <hr className="my-4 border-purple-100" />
 
-        {/* ฟอร์มเพิ่มที่อยู่ใหม่ (ใช้ FormInput ของเพื่อน) */}
         {isAdding ? (
           <div className="bg-purple-50/50 p-6 rounded-lg border border-purple-200 space-y-4">
             <h4 className="text-xs font-bold text-[#4C1D95] uppercase tracking-widest mb-2">เพิ่มที่อยู่ใหม่</h4>
             
+            <div className="grid grid-cols-2 gap-4">
+              <FormInput
+                label="ชื่อผู้รับ"
+                placeholder="ชื่อ-นามสกุล"
+                value={newAddr.recipientName}
+                onChange={(e) => setNewAddr({ ...newAddr, recipientName: e.target.value })}
+                error={fieldErrors.recipientName}
+                required
+              />
+              <FormInput
+                label="เบอร์โทรศัพท์"
+                placeholder="0XX-XXX-XXXX"
+                value={newAddr.phone}
+                onChange={(e) => setNewAddr({ ...newAddr, phone: e.target.value })}
+                error={fieldErrors.phone}
+                required
+              />
+            </div>
+
             <FormInput
-              label="ชื่อเรียกที่อยู่"
-              placeholder="เช่น บ้าน, คอนโด, ที่ทำงาน"
-              value={newAddr.name}
-              onChange={(e) => setNewAddr({ ...newAddr, name: e.target.value })}
-              error={fieldErrors.name}
+              label="ที่อยู่"
+              placeholder="บ้านเลขที่, ถนน, ซอย"
+              value={newAddr.street}
+              onChange={(e) => setNewAddr({ ...newAddr, street: e.target.value })}
+              error={fieldErrors.street}
               required
             />
 
-            <FormInput
-              label="รายละเอียดที่อยู่"
-              placeholder="บ้านเลขที่, ถนน, แขวง, เขต, จังหวัด, รหัสไปรษณีย์"
-              value={newAddr.detail}
-              onChange={(e) => setNewAddr({ ...newAddr, detail: e.target.value })}
-              error={fieldErrors.detail}
-              isTextArea={true}
-              rows={3}
-              required
-            />
+            <div className="grid grid-cols-3 gap-2">
+              <FormInput
+                label="เขต/อำเภอ"
+                placeholder="เขต/อำเภอ"
+                value={newAddr.district}
+                onChange={(e) => setNewAddr({ ...newAddr, district: e.target.value })}
+                error={fieldErrors.district}
+                required
+              />
+              <FormInput
+                label="จังหวัด"
+                placeholder="กรุงเทพฯ"
+                value={newAddr.province}
+                onChange={(e) => setNewAddr({ ...newAddr, province: e.target.value })}
+                error={fieldErrors.province}
+                required
+              />
+              <FormInput
+                label="รหัสไปรษณีย์"
+                placeholder="10110"
+                value={newAddr.postcode}
+                onChange={(e) => setNewAddr({ ...newAddr, postcode: e.target.value })}
+                error={fieldErrors.postcode}
+                required
+              />
+            </div>
 
             <div className="flex gap-3 pt-2">
               <button 
