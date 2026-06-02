@@ -152,8 +152,8 @@ export default function ItemDetails({ formData, onChange, errors }) {
             name="price"
             value={formData.price}
             onChange={onChange}
-            placeholder="0.00"
-            step="0.01"
+            placeholder="00"
+            step="1"
             className="w-full p-3 outline-none bg-transparent placeholder-gray-400 text-gray-800"
           />
         </div>
