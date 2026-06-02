@@ -72,15 +72,15 @@ const ForgotPassword = () => {
         }}
       />
 
-      <div className="scale-85 md:scale-75 relative z-10 bg-[#7b74c4]/60 backdrop-blur-md w-full max-w-[540px] h-auto min-h-[350px] md:min-h-[420px] rounded-[40px] shadow-2xl p-8 md:p-10 text-center border border-white/20 mx-6 -translate-y-10 md:-translate-y-15">
+      <div className="scale-90 md:scale-100 relative z-10 bg-[#7b74c4]/60 backdrop-blur-md w-full max-w-[540px] h-auto min-h-[300px] md:min-h-[300px] rounded-[40px] shadow-2xl p-8 md:p-10 text-center border border-white/20 mx-6 -translate-y-10 md:-translate-y-12">
         <h2 className="text-3xl font-bold text-white mb-6 -translate-y-0 md:-translate-y-2.5">
           Forgot Password
         </h2>
 
         {successMessage ? (
-          <div className="text-left bg-green-500/20 border border-green-500/40 p-4 rounded-xl text-white space-y-4">
+          <div className="scale-110 md:scale-110 text-left bg-green-500/20 border border-green-500/40 p-4 rounded-xl text-white space-y-4">
             <p className="text-sm font-medium">{successMessage}</p>
-            <p className="text-xs text-white/70">
+            <p className="text-sm text-white/70">
               *ไปเปิดอีเมลแล้วคลิกลิงก์เพื่อตั้งรหัสผ่านใหม่ได้เลยครับ
             </p>
           </div>
@@ -127,7 +127,7 @@ const ForgotPassword = () => {
           </>
         )}
 
-        <div className="mt-6 text-sm text-white/90 translate-y-5 md:translate-y-5">
+        <div className="mt-6 text-sm text-white/90 translate-y-5 md:translate-y-2.5">
           <p>
             Remember your password?{" "}
             <span
