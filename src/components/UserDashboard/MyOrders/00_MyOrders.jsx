@@ -26,6 +26,8 @@ const groupOrdersByOrderId = (orders) =>
           status: item.status,
           statusLabel: item.statusLabel,
           createdAt: item.createdAt,
+          courier: item.courier || "",
+          trackingNumber: item.trackingNumber || "",
           items: [],
           totalAmount: 0,
           totalQuantity: 0,

@@ -61,6 +61,23 @@ const OrderCard = ({ order }) => {
               : `View ${order.extraItems.length} more item(s)`}
           </button>
         )}
+
+        {isPrimary && (
+          <div className="mt-3 space-y-1 text-sm text-gray-500">
+            <p>
+              Courier:{" "}
+              <span className="font-medium text-gray-800">
+                {order.courier || "-"}
+              </span>
+            </p>
+            <p>
+              Tracking Number:{" "}
+              <span className="font-medium text-gray-800">
+                {order.trackingNumber || "-"}
+              </span>
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="grid shrink-0 gap-4 text-sm text-gray-500 md:min-w-105 md:grid-cols-4">

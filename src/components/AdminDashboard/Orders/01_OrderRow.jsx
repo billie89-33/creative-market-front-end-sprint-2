@@ -1,3 +1,7 @@
+import { useState } from "react";
+
+const serverBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+
 const statusClasses = {
   paid: "bg-emerald-50 text-emerald-600",
   pending: "bg-amber-50 text-amber-600",
@@ -18,6 +22,50 @@ const formatAmount = (value) =>
   })}`;
 
 const OrderRow = ({ order }) => {
+  const [courier, setCourier] = useState(order.courier || "");
+  const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || "");
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("success");
+
+  const handleSaveShipping = async () => {
+    try {
+      setSaving(true);
+      setMessage("");
+
+      const response = await fetch(
+        `${serverBaseUrl}/api/admin-dashboard/orders/${order.orderId}/shipping`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            courier,
+            trackingNumber,
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to update shipping details");
+      }
+
+      setCourier(result.data?.courier || "");
+      setTrackingNumber(result.data?.trackingNumber || "");
+      setMessage("Saved");
+      setMessageType("success");
+    } catch (error) {
+      setMessage(error.message || "Failed to update shipping details");
+      setMessageType("error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <tr className="align-top transition-colors hover:bg-gray-50/50">
       <td className="px-4 py-4 md:px-6">
@@ -55,23 +103,50 @@ const OrderRow = ({ order }) => {
         </span>
       </td>
       <td className="px-4 py-4">
-        <div className="min-w-[180px]">
+        <div className="min-w-[180px] space-y-2">
           <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
             Courier
           </p>
-          <p className="mt-2 text-sm font-semibold text-gray-300">
-            {order.courier || "-"}
-          </p>
+          <input
+            type="text"
+            value={courier}
+            onChange={(event) => setCourier(event.target.value)}
+            placeholder="e.g. Kerry Express"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+          />
         </div>
       </td>
       <td className="px-4 py-4 md:px-6">
-        <div className="min-w-[220px]">
+        <div className="min-w-[220px] space-y-2">
           <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
             Tracking Number
           </p>
-          <p className="mt-2 text-sm font-semibold text-gray-300">
-            {order.trackingNumber || "-"}
-          </p>
+          <input
+            type="text"
+            value={trackingNumber}
+            onChange={(event) => setTrackingNumber(event.target.value)}
+            placeholder="Enter tracking number"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+          />
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={handleSaveShipping}
+              disabled={saving}
+              className="rounded-xl bg-violet-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {saving ? "Saving..." : "Save"}
+            </button>
+            {message ? (
+              <span
+                className={`text-xs ${
+                  messageType === "success" ? "text-emerald-600" : "text-rose-500"
+                }`}
+              >
+                {message}
+              </span>
+            ) : null}
+          </div>
         </div>
       </td>
     </tr>
