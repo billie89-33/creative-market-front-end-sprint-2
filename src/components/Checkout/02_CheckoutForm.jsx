@@ -1,54 +1,75 @@
 import React, { useState } from "react";
+import FormInput from "../Global/FormInput";
+import SuccessModal from "../Global/SuccessModal";
 
 export default function CheckoutForm({ 
   paymentMethod, setPaymentMethod, 
-  addresses, setAddresses, 
-  selectedAddressId, setSelectedAddressId 
+  addresses, onAddAddress, onDeleteAddress,
+  selectedAddressId, setSelectedAddressId,
+  loading 
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [newAddr, setNewAddr] = useState({ name: "", detail: "" });
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  // ฟังก์ชันบันทึกที่อยู่ใหม่
-  const handleSaveNewAddress = () => {
-    if (!newAddr.name || !newAddr.detail) return;
-    const newEntry = { id: Date.now(), ...newAddr };
-    const updatedAddresses = [...addresses, newEntry];
+  const handleSaveNewAddress = async () => {
+    // Validation
+    const errors = {};
+    if (!newAddr.name) errors.name = "กรุณาระบุชื่อเรียกที่อยู่";
+    if (!newAddr.detail) errors.detail = "กรุณาระบุรายละเอียดที่อยู่";
     
-    setAddresses(updatedAddresses);
-    setSelectedAddressId(newEntry.id); // ล็อคอันที่เพิ่งเพิ่มทันที
-    setIsAdding(false);
-    setNewAddr({ name: "", detail: "" });
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    setFieldErrors({});
+    const result = await onAddAddress({
+      name: newAddr.name,
+      detail: newAddr.detail,
+      isDefault: addresses.length === 0
+    });
+
+    if (result) {
+      setSelectedAddressId(result._id);
+      setIsAdding(false);
+      setNewAddr({ name: "", detail: "" });
+      setShowSuccessModal(true); // โชว์ Modal สำเร็จ
+    }
   };
 
-  // ฟังก์ชันลบที่อยู่
-  const handleDeleteAddress = (id) => {
-    const updatedAddresses = addresses.filter(addr => addr.id !== id);
-    setAddresses(updatedAddresses);
-    
-    // ถ้าลบตัวที่เลือกอยู่ ให้ย้ายไปเลือกตัวแรกที่เหลือ (ถ้ามี)
-    if (selectedAddressId === id && updatedAddresses.length > 0) {
-      setSelectedAddressId(updatedAddresses[0].id);
+  const handleDeleteAddress = async (id) => {
+    if (window.confirm("คุณต้องการลบที่อยู่นี้ใช่หรือไม่?")) {
+      await onDeleteAddress(id);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Address Selection Area */}
+      {/* Success Modal จากเพื่อน */}
+      <SuccessModal 
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="เพิ่มที่อยู่สำเร็จ!"
+        message="ที่อยู่ของคุณถูกบันทึกลงในระบบเรียบร้อยแล้ว"
+      />
+
       <div className="border border-[#4C1D95] rounded-lg p-5 bg-white/50">
+        <h3 className="font-bold mb-4 text-[#1E1B4B]">ที่อยู่สำหรับจัดส่ง</h3>
         <div className="space-y-4 mb-4">
           {addresses.length === 0 && !isAdding && (
-            <p className="text-sm text-gray-500 italic">No address added. Please add one.</p>
+            <p className="text-sm text-gray-500 italic">ยังไม่มีข้อมูลที่อยู่ กรุณาเพิ่มที่อยู่ใหม่</p>
           )}
 
           {addresses.map((addr) => (
-            <div key={addr.id} className="flex justify-between items-center group">
+            <div key={addr._id || addr.id} className="flex justify-between items-center group">
               <label className="flex gap-3 cursor-pointer flex-grow">
                 <input
                   type="radio"
                   name="address"
-                  // ถ้าเหลืออันเดียว ให้ล็อค checked ไว้เสมอ
-                  checked={addresses.length === 1 || selectedAddressId === addr.id}
-                  onChange={() => setSelectedAddressId(addr.id)}
+                  checked={selectedAddressId === (addr._id || addr.id)}
+                  onChange={() => setSelectedAddressId(addr._id || addr.id)}
                   className="mt-1 accent-[#4C1D95]"
                 />
                 <div>
@@ -57,11 +78,11 @@ export default function CheckoutForm({
                 </div>
               </label>
               
-              {/* ปุ่มลบ (ถังขยะ) */}
               <button 
-                onClick={() => handleDeleteAddress(addr.id)}
+                onClick={() => handleDeleteAddress(addr._id || addr.id)}
                 className="text-gray-400 hover:text-red-500 transition-colors ml-2"
                 title="Delete address"
+                disabled={loading}
               >
                 <span className="material-icons text-lg">delete_outline</span>
               </button>
@@ -71,34 +92,47 @@ export default function CheckoutForm({
 
         <hr className="my-4 border-purple-100" />
 
-        {/* ฟอร์มสำหรับเพิ่มที่อยู่ */}
+        {/* ฟอร์มเพิ่มที่อยู่ใหม่ (ใช้ FormInput ของเพื่อน) */}
         {isAdding ? (
-          <div className="bg-purple-50/50 p-4 rounded-lg border border-purple-200 space-y-3">
-            <h4 className="text-xs font-bold text-[#4C1D95] uppercase">New Location</h4>
-            <input
-              placeholder="Address Name (e.g., Home, Office)"
-              className="w-full p-2 text-sm border border-purple-200 rounded focus:ring-1 focus:ring-[#4C1D95] outline-none"
+          <div className="bg-purple-50/50 p-6 rounded-lg border border-purple-200 space-y-4">
+            <h4 className="text-xs font-bold text-[#4C1D95] uppercase tracking-widest mb-2">เพิ่มที่อยู่ใหม่</h4>
+            
+            <FormInput
+              label="ชื่อเรียกที่อยู่"
+              placeholder="เช่น บ้าน, คอนโด, ที่ทำงาน"
               value={newAddr.name}
               onChange={(e) => setNewAddr({ ...newAddr, name: e.target.value })}
+              error={fieldErrors.name}
+              required
             />
-            <textarea
-              placeholder="Full address details..."
-              className="w-full p-2 text-sm border border-purple-200 rounded focus:ring-1 focus:ring-[#4C1D95] outline-none"
+
+            <FormInput
+              label="รายละเอียดที่อยู่"
+              placeholder="บ้านเลขที่, ถนน, แขวง, เขต, จังหวัด, รหัสไปรษณีย์"
               value={newAddr.detail}
               onChange={(e) => setNewAddr({ ...newAddr, detail: e.target.value })}
+              error={fieldErrors.detail}
+              isTextArea={true}
+              rows={3}
+              required
             />
-            <div className="flex gap-2">
+
+            <div className="flex gap-3 pt-2">
               <button 
                 onClick={handleSaveNewAddress} 
-                className="bg-[#4C1D95] text-white px-4 py-1.5 rounded text-xs font-bold hover:bg-[#312E81]"
+                disabled={loading}
+                className="flex-grow bg-[#4C1D95] text-white py-2.5 rounded font-bold hover:bg-[#312E81] disabled:opacity-50 transition-all"
               >
-                Save & Select
+                {loading ? "กำลังบันทึก..." : "บันทึกและเลือก"}
               </button>
               <button 
-                onClick={() => setIsAdding(false)} 
-                className="text-gray-500 text-xs hover:underline"
+                onClick={() => {
+                  setIsAdding(false);
+                  setFieldErrors({});
+                }} 
+                className="px-4 text-gray-500 text-sm hover:underline"
               >
-                Cancel
+                ยกเลิก
               </button>
             </div>
           </div>
@@ -113,7 +147,6 @@ export default function CheckoutForm({
         )}
       </div>
 
-      {/* Payment Method Section */}
       <div className="border border-[#4C1D95] rounded-lg p-5 bg-white/50">
         <h3 className="font-bold mb-4 text-[#1E1B4B]">เลือกวิธีชำระเงิน</h3>
         <div className="space-y-4">
@@ -121,12 +154,12 @@ export default function CheckoutForm({
             <input
               type="radio"
               name="payment"
-              value="Promptpay"
-              checked={paymentMethod === "Promptpay"}
+              value="promptpay"
+              checked={paymentMethod === "promptpay"}
               onChange={(e) => setPaymentMethod(e.target.value)}
               className="accent-[#4C1D95]"
             />
-            <span className="text-sm font-medium">Promptpay</span>
+            <span className="text-sm font-medium">Promptpay (พร้อมเพย์)</span>
           </label>
         </div>
       </div>
