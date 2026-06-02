@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 import logo from "../../assets/logos/logo.svg";
-import { Link } from "react-router";
+import { Link } from "react-router-dom"; // แก้ไขตัวนำเข้าจาก react-router เป็น react-router-dom จ้า
+import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext"; // 🌟 ดึงพลังตะกร้าส่วนกลางมาอัปเดตตัวเลขแบบ Real-time
 
 const Navbar = () => {
+  const { isLoggedIn, user, userRole, logout } = useAuth();
+  const { cartCount } = useCart(); // 🛒 ดึงแต้มสินค้าในตะกร้าจริงจาก MongoDB มาแสดงผลออโต้
+
   const [isOpen, setIsOpen] = useState(false);
 
+  // 🚪 ฟังก์ชันกดปุ่ม Logout ตัวจริง (เรียกพลังงานล้างคุกกี้สลายตัวจากกล่องกลาง)
+  const handleLogoutClick = () => {
+    logout();
+    setIsOpen(false); // ปิดแท็บเมนูลัดมือถือด้วยเพื่อความเนี๊ยบจ้า
+  };
+
   return (
-    <nav className="flex justify-between items-center px-8 py-4 bg-black text-white flex-wrap">
+    <nav className="flex justify-between items-center px-8 py-4 bg-black text-white flex-wrap relative z-50">
       {/* 1. Logo Section */}
       <Link
         to="/"
@@ -14,6 +25,7 @@ const Navbar = () => {
       >
         <img src={logo} alt="logo" className="h-7 w-auto " />
       </Link>
+
       {/* 2. Menu Links Section */}
       <ul className="hidden md:flex items-center gap-3 text-xl h-auto font-medium ">
         <Link to="/">
@@ -32,7 +44,6 @@ const Navbar = () => {
 
         {/* ================= Category (Hover Version) ================= */}
         <li className="relative cursor-pointer group py-2">
-          {/* Category */}
           <div className="flex items-center gap-1 hover:text-gray-400 transition-all">
             Category
             <svg
@@ -51,7 +62,6 @@ const Navbar = () => {
             </svg>
           </div>
 
-          {/* Dropdown */}
           <div className="absolute top-full left-0 pt-4 w-56 z-50 hidden group-hover:block">
             <div className="bg-black border border-gray-800 py-3 rounded-sm shadow-2xl animate-fade-in">
               <ul className="flex flex-col text-base text-white">
@@ -77,23 +87,101 @@ const Navbar = () => {
           </div>
         </li>
       </ul>
-      {/* 3. Buttons Section */}
-      <div className="hidden md:flex items-center gap-4">
-        <Link to="/login">
-          <button className="bg-white text-black px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30">
-            Login
-          </button>
-        </Link>
-        <Link to="/register">
-          <button className="bg-black text-white px-4 py-2 hover:bg-white hover:text-black cursor-pointer transition-all w-30 border">
-            Register
-          </button>
-        </Link>
+
+      {/* 3. Buttons Section (Desktop เวอร์ชันหน้าจอใหญ่) */}
+      <div className="hidden md:flex items-center gap-6">
+        {!isLoggedIn ? (
+          // ---------------- กรณีที่ 1: แขกทั่วไป (ยังไม่ได้ล็อกอิน) ----------------
+          <>
+            <Link to="/login">
+              <button className="bg-white text-black px-4 py-2 hover:bg-gray-400 cursor-pointer transition-all w-30 font-medium">
+                Login
+              </button>
+            </Link>
+            <Link to="/register">
+              <button className="bg-black text-white px-4 py-2 hover:bg-white hover:text-black cursor-pointer transition-all w-30 border border-white font-medium">
+                Register
+              </button>
+            </Link>
+          </>
+        ) : (
+          // ---------------- กรณีที่ 2: ล็อกอินเข้าระบบสำเร็จแล้ว ----------------
+          <div className="flex items-center gap-6">
+            {/* ตะกร้าสินค้าแสดงเฉพาะคนยศ "user" พร้อมตัวเลขจริงนับแต้มรวมสะสม */}
+            {userRole === "user" && (
+              <Link
+                to="/cart"
+                className="relative cursor-pointer hover:text-gray-400 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-7 h-7"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                  />
+                </svg>
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
+
+            {/* โปรไฟล์พ่นชื่อจริงทักทายอัตโนมัติจากตู้เก็บข้อมูลผู้ใช้ตัวจริงหลังบ้านจ้า */}
+            <Link
+              to={userRole === "admin" ? "/admin-dashboard" : "/user-dashboard"}
+              className="cursor-pointer hover:text-purple-400 transition-colors flex items-center gap-3"
+              title={
+                userRole === "admin"
+                  ? "Go to Admin Dashboard"
+                  : "Go to User Dashboard"
+              }
+            >
+              <span className="text-base font-semibold tracking-wide text-gray-200">
+                {userRole === "admin"
+                  ? "Hi, Admin"
+                  : `Hi, ${user?.username || "User"}`}
+              </span>
+
+              <div
+                className={`p-1 rounded-full border-2 ${userRole === "admin" ? "border-red-500" : "border-purple-500"}`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-7 h-7"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </Link>
+
+            {/* ปุ่ม Logout ปลุกคำสั่งล้างสิทธิ์แบบเบ็ดเสร็จร้อยเปอร์เซ็นต์ */}
+            <button
+              onClick={handleLogoutClick}
+              className="text-red-400 hover:text-red-500 font-medium cursor-pointer transition-colors text-base border border-red-500/30 px-3 py-1 rounded-sm hover:bg-red-500/10"
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* 4. Mobile Menu Icons  */}
-      {/* Hamburger */}
-      <div className="flex md:hidden items-center gap-4">
+      {/* 4. Mobile Menu Icons */}
+      <div className="flex md:hidden items-center gap-4 relative z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="cursor-pointer hover:text-gray-400 transition-colors"
@@ -131,70 +219,188 @@ const Navbar = () => {
           )}
         </button>
 
-        {/* User Profile Icon */}
-        <button className="cursor-pointer hover:text-gray-400 transition-colors">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-7 h-7"
+        {!isLoggedIn && (
+          <Link
+            to="/login"
+            className="cursor-pointer hover:text-gray-400 transition-colors"
+            title="Login / Register"
           >
-            <path
-              fillRule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-7 h-7"
+            >
+              <path
+                fillRule="evenodd"
+                d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </Link>
+        )}
       </div>
-      {/* 5.Mobile Dropdown Menu  */}
+
+      {/* 5. Mobile Dropdown Menu */}
       {isOpen && (
-        <div className="w-full md:hidden flex flex-col mt-4 border-t border-gray-800 pt-4 pb-2 animate-fade-in">
-          <ul className="flex flex-col gap-4 text-lg font-medium px-2">
-            <Link to="/">
-              <li className="hover:text-gray-400 cursor-pointer transition-all">
-                Home
-              </li>
+        <div className="w-full md:hidden flex flex-col mt-4 border-t border-gray-800 pt-4 pb-4 animate-fade-in relative z-40 bg-black">
+          {/* 🌟 [เพิ่มเข้าหลัก]: ลิงก์พื้นฐานและหมวดหมู่โชว์ให้ทุกคนเห็น ไม่ว่าจะล็อกอินหรือไม่ก็ตาม จ้า */}
+          <div className="flex flex-col gap-4 px-2 text-lg font-medium border-b border-gray-800 pb-4">
+            <Link
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-gray-400 py-1"
+            >
+              Home
             </Link>
             <Link
               to="/#about-section"
-              className="hover:text-gray-400 cursor-pointer transition-all"
+              onClick={() => setIsOpen(false)}
+              className="hover:text-gray-400 py-1"
             >
               About
             </Link>
 
-            <div className="mt-2 mb-1 text-sm text-gray-500 tracking-widest font-bold uppercase">
+            <div className="text-sm text-gray-500 tracking-widest font-bold uppercase mt-2">
               Categories
             </div>
-            <Link to="/market?category=Visual Art">
-              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-                Visual Art
-              </li>
+            <Link
+              to="/market?category=Visual Art"
+              onClick={() => setIsOpen(false)}
+              className="text-base pl-2 text-gray-300 hover:text-white py-1"
+            >
+              · Visual Art
             </Link>
             <Link
               to={`/market?category=${encodeURIComponent("Craft & Handmade")}`}
+              onClick={() => setIsOpen(false)}
+              className="text-base pl-2 text-gray-300 hover:text-white py-1"
             >
-              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-                Craft & Handmade
-              </li>
+              · Craft & Handmade
             </Link>
             <Link
               to={`/market?category=${encodeURIComponent("Music & Sound")}`}
+              onClick={() => setIsOpen(false)}
+              className="text-base pl-2 text-gray-300 hover:text-white py-1"
             >
-              <li className="hover:text-gray-400 cursor-pointer transition-all pl-4 text-gray-300">
-                Music & Sound
-              </li>
+              · Music & Sound
             </Link>
-          </ul>
-
-          <div className="flex gap-4 mt-8 px-2">
-            <button className="bg-white text-black px-4 py-3 hover:bg-gray-300 transition-all w-full font-bold rounded-sm">
-              Login
-            </button>
-            <button className="bg-transparent text-white px-4 py-3 hover:bg-gray-800 transition-all w-full border border-white font-bold rounded-sm">
-              Register
-            </button>
           </div>
+
+          {/* 🌟 ส่วนควบคุมปุ่มตามสถานะล็อกอินจริง (ย้ายลงมาดักต่อท้ายด้านล่าง) */}
+          {!isLoggedIn ? (
+            // ---------- เคสมือถือ: ยังไม่ได้ล็อกอิน โชว์ปุ่ม Login / Register ----------
+            <div className="flex gap-4 mt-6 px-2">
+              <Link
+                to="/login"
+                className="w-full"
+                onClick={() => setIsOpen(false)}
+              >
+                <button className="bg-white text-black px-4 py-3 hover:bg-gray-300 transition-all w-full font-bold rounded-sm cursor-pointer">
+                  Login
+                </button>
+              </Link>
+              <Link
+                to="/register"
+                className="w-full"
+                onClick={() => setIsOpen(false)}
+              >
+                <button className="bg-transparent text-white px-4 py-3 hover:bg-gray-800 transition-all w-full border border-white font-bold rounded-sm cursor-pointer">
+                  Register
+                </button>
+              </Link>
+            </div>
+          ) : (
+            // ---------- เคสมือถือ: ล็อกอินแล้ว โชว์ Action ของบัญชี ----------
+            <div className="flex flex-col gap-3 mt-4 px-2">
+              <div className="flex flex-col gap-1 mt-2">
+                <div className="text-sm text-gray-500 tracking-widest font-bold uppercase">
+                  Account Actions
+                </div>
+                <div
+                  className={`text-base font-bold ${userRole === "admin" ? "text-red-400" : "text-purple-400"}`}
+                >
+                  {userRole === "admin"
+                    ? "Welcome, Admin ✨"
+                    : `Welcome, ${user?.username || "Member"} ✨`}
+                </div>
+              </div>
+
+              {userRole === "user" && (
+                <Link
+                  to="/cart"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-between text-white hover:text-purple-400 py-2 transition-colors border-t border-gray-900 mt-1"
+                >
+                  <span className="flex items-center gap-3 text-lg font-medium">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                      />
+                    </svg>
+                    My Cart
+                  </span>
+                  {cartCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      {cartCount} Items
+                    </span>
+                  )}
+                </Link>
+              )}
+
+              <Link
+                to={
+                  userRole === "admin" ? "/admin-dashboard" : "/user-dashboard"
+                }
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 text-white hover:text-purple-400 py-2 transition-colors text-lg font-medium"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className={`w-6 h-6 ${userRole === "admin" ? "text-red-500" : "text-purple-500"}`}
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {userRole === "admin" ? "Admin Dashboard" : "My Dashboard"}
+              </Link>
+
+              <button
+                onClick={handleLogoutClick}
+                className="flex items-center gap-3 text-red-400 hover:text-red-500 py-3 transition-colors text-lg font-bold border-t border-gray-900 mt-2 cursor-pointer w-full text-left bg-transparent"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
+                  />
+                </svg>
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       )}
     </nav>

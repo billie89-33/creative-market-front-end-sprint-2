@@ -22,23 +22,34 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-white border border-gray-300 flex flex-col group cursor-pointer hover:shadow-lg transition-shadow">
+    <div className="relative bg-white border border-gray-300 flex flex-col group cursor-pointer hover:shadow-lg transition-shadow rounded-xl overflow-hidden">
+      {/* Toast */}
+      {toast && (
+        <div
+          className={`absolute top-3 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full text-white text-xs font-semibold shadow-lg transition-all ${
+            toast === "success" ? "bg-green-500" : "bg-red-500"
+          }`}
+        >
+          {toast === "success" ? `✓ Added to cart!` : "✗ Failed, try again"}
+        </div>
+      )}
+
       {/* Image */}
       <div className="w-full aspect-square overflow-hidden border-b border-gray-300">
         <img
-          src={product.productImage}
+          src={productImgSrc}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col grow">
-        <h2 className="text-lg font-bold text-[#373373] text-center mb-2">
+      <div className="p-4 flex flex-col grow gap-2">
+        <h2 className="text-lg font-bold text-[#373373] text-center mb-1 truncate">
           {product.name}
         </h2>
-        <p className="text-xs text-gray-600 mb-4 line-clamp-4 leading-relaxed">
-          {product.description}
+        <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed min-h-[3.3rem]">
+          {product.description?.[0] || "ไม่มีคำอธิบายสินค้า"}
         </p>
 
         {/* Footer (Avatar, Tags, Price) */}
@@ -53,10 +64,29 @@ const ProductCard = ({ product }) => {
               {/* เรียกใช้ฟังก์ชัน renderTags ที่เราสร้างไว้ */}
               {renderTags(product.tags)}
             </div>
+            <span className="text-xl font-extrabold text-[#373373]">
+              ฿{product.price?.toLocaleString()}
+            </span>
           </div>
-          <span className="text-xl font-bold text-[#373373]">
-            {product.price}
-          </span>
+
+          <div className="flex flex-wrap gap-1">
+            {product.tags?.map((tag, index) => (
+              <span
+                key={index}
+                className="bg-purple-50 text-purple-600 text-[10px] px-2 py-0.5 rounded-full font-semibold border border-purple-100"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <button
+            onClick={handleAddToCart}
+            disabled={adding}
+            className="w-full bg-[#6D5DD3] hover:bg-[#5b4db8] disabled:opacity-60 text-white py-2.5 rounded-lg font-medium transition-colors duration-300 shadow-sm hover:cursor-pointer text-sm mt-1"
+          >
+            {adding ? "Adding..." : "Add to Cart"}
+          </button>
         </div>
 
         {/* Add to Cart Button */}
