@@ -13,13 +13,23 @@ const formatCurrency = (value, includePrefix = true) => {
 };
 
 const Sales = ({ stats, loading, error }) => {
+  const safeStats = {
+    totalSales: 0,
+    orderCount: 0,
+    itemSold: 0,
+    averageOrderValue: 0,
+    salesOverview: [],
+    categoryBreakdown: [],
+    ...(stats || {}),
+  };
+
   const summaryStats = [
-    { label: "TOTAL SALES", value: formatCurrency(stats.totalSales) },
-    { label: "ORDER", value: String(stats.orderCount) },
-    { label: "ITEM SOLD", value: String(stats.itemSold) },
+    { label: "TOTAL SALES", value: formatCurrency(safeStats.totalSales) },
+    { label: "ORDER", value: String(safeStats.orderCount) },
+    { label: "ITEM SOLD", value: String(safeStats.itemSold) },
     {
       label: "AVERAGE ORDER VALUE",
-      value: formatCurrency(stats.averageOrderValue, false),
+      value: formatCurrency(safeStats.averageOrderValue, false),
     },
   ];
 
@@ -54,8 +64,11 @@ const Sales = ({ stats, loading, error }) => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <SalesChart chartData={stats.salesOverview} />
-        <ProductBreakdown items={stats.categoryBreakdown} totalItems={stats.itemSold} />
+        <SalesChart chartData={safeStats.salesOverview} />
+        <ProductBreakdown
+          items={safeStats.categoryBreakdown}
+          totalItems={safeStats.itemSold}
+        />
       </div>
     </section>
   );
