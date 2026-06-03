@@ -58,8 +58,11 @@ export default function CheckoutSummary({
                 <div>
                   {/* ⭐️ แก้ไข: แสดง Tags แทนชื่อสินค้าเพื่อความสอดคล้อง */}
                   <h4 className="font-bold text-sm text-[#1E1B4B]">
-                    {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.name || item.name)}
+                    {product.name || item.name}
                   </h4>
+                  <p className="text-[10px] text-gray-400">
+                    {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.category || 'Digital Art')}
+                  </p>
                   <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
                 </div>
                 <p className="font-bold text-sm">฿ {((product.price || item.price || 0)).toLocaleString()}.-</p>
