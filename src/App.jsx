@@ -91,7 +91,7 @@ const router = createBrowserRouter([
         path: "/forgot-password",
         element: <ForgotPassword />,
       },
-     {
+      {
         path: "/reset-password/:token",
         element: <ResetPassword />,
       },
@@ -103,8 +103,11 @@ function App() {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // เคลื่อนไหวสมูทแบบอินเตอร์
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
+
+    // ➕ เพิ่มบรรทัดนี้: ผูก lenis เข้ากับ window object เพื่อให้ทุกหน้าในโปรเจกต์เรียกใช้ได้
+    window.lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -113,12 +116,11 @@ function App() {
 
     requestAnimationFrame(raf);
 
-    // เคลียร์ค่าทิ้งเมื่อ component ถูกทำลาย
     return () => {
       lenis.destroy();
+      window.lenis = null; // ➕ ล้างค่าออกเมื่อคอมโพเนนต์ถูกทำลาย
     };
   }, []);
-
   return <RouterProvider router={router} />;
 }
 
