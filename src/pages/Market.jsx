@@ -48,7 +48,8 @@ const Market = () => {
 
         if (debouncedSearch) {
           params.set("search", debouncedSearch);
-        } else if (activeCategory !== "All") {
+        }
+        if (activeCategory !== "All") {
           params.set("category", activeCategory);
         }
 
