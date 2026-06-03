@@ -13,9 +13,9 @@ export default function CartTable({ cartItems, updateQuantity, removeItem }) {
       {/* Product List */}
       <div className="space-y-6">
         {cartItems.map(item => {
-          const product = item.productId || {};
+          const product = item;
           const itemId = item._id || item.id;
-          const pId = product._id || product.id || itemId;
+          const pId = item.productId;
 
           return (
             <div key={itemId} className="grid grid-cols-12 items-center border-b border-purple-200 pb-6">
