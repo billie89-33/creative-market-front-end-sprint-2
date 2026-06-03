@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function CheckoutSummary({ 
   cartItems, 
   subtotal, 
-  selectedAddressId, 
+  hasAddress, 
   paymentMethod,
   onCreateOrder,
   loading,
@@ -13,15 +13,14 @@ export default function CheckoutSummary({
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
-    if (!selectedAddressId) {
-      alert("กรุณาเลือกที่อยู่สำหรับจัดส่ง");
+    if (!hasAddress) {
+      alert("กรุณาระบุที่อยู่สำหรับจัดส่ง");
       return;
     }
 
     try {
-      // 1. API: POST /api/orders/checkout - สร้างคำสั่งซื้อจริง
+      // 1. API: POST /api/orders/checkout - สร้างคำสั่งซื้อจริง (ไม่ต้องส่ง addressId แล้ว)
       const orderData = await onCreateOrder({
-        addressId: selectedAddressId,
         paymentMethod: paymentMethod.toLowerCase() 
       });
 

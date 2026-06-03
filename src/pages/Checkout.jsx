@@ -17,19 +17,10 @@ export default function Checkout() {
   } = useCheckoutActions();
   
   const [paymentMethod, setPaymentMethod] = useState("Promptpay");
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
-
-  // เมื่อโหลด addresses มาแล้ว ถ้ายังไม่มีการเลือก ให้เลือกตัวแรกให้ (หรือตัวที่เป็น isDefault)
-  useEffect(() => {
-    if (addresses.length > 0 && !selectedAddressId) {
-      const defaultAddr = addresses.find(a => a.isDefault) || addresses[0];
-      setSelectedAddressId(defaultAddr._id || defaultAddr.id);
-    }
-  }, [addresses, selectedAddressId]);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + (item.price || item.productId?.price || 0) * item.quantity,
@@ -52,8 +43,6 @@ export default function Checkout() {
               addresses={addresses} 
               onAddAddress={addAddress}
               onDeleteAddress={deleteAddress}
-              selectedAddressId={selectedAddressId} 
-              setSelectedAddressId={setSelectedAddressId} 
               loading={loadingActions}
             />
           </div>
@@ -61,7 +50,7 @@ export default function Checkout() {
             <CheckoutSummary
               cartItems={cartItems}
               subtotal={subtotal}
-              selectedAddressId={selectedAddressId}
+              hasAddress={addresses.length > 0}
               paymentMethod={paymentMethod}
               onCreateOrder={createOrder}
               loading={loadingActions}

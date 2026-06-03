@@ -5,7 +5,6 @@ import SuccessModal from "../Global/SuccessModal";
 export default function CheckoutForm({ 
   paymentMethod, setPaymentMethod, 
   addresses, onAddAddress, onDeleteAddress,
-  selectedAddressId, setSelectedAddressId,
   loading 
 }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -41,7 +40,6 @@ export default function CheckoutForm({
     const result = await onAddAddress(form);
 
     if (result) {
-      setSelectedAddressId(result._id || result.id);
       setIsEditing(false);
       setShowSuccessModal(true);
     }
@@ -51,7 +49,6 @@ export default function CheckoutForm({
     if (window.confirm("คุณต้องการลบที่อยู่จัดส่งนี้ใช่หรือไม่?")) {
       const success = await onDeleteAddress();
       if (success) {
-        setSelectedAddressId(null);
         setIsEditing(false);
       }
     }
