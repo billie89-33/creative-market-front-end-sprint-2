@@ -5,7 +5,6 @@ import SuccessModal from "../Global/SuccessModal";
 export default function CheckoutForm({ 
   paymentMethod, setPaymentMethod, 
   addresses, onAddAddress, onDeleteAddress,
-  selectedAddressId, setSelectedAddressId,
   loading 
 }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -41,7 +40,6 @@ export default function CheckoutForm({
     const result = await onAddAddress(form);
 
     if (result) {
-      setSelectedAddressId(result._id || result.id);
       setIsEditing(false);
       setShowSuccessModal(true);
     }
@@ -51,7 +49,6 @@ export default function CheckoutForm({
     if (window.confirm("คุณต้องการลบที่อยู่จัดส่งนี้ใช่หรือไม่?")) {
       const success = await onDeleteAddress();
       if (success) {
-        setSelectedAddressId(null);
         setIsEditing(false);
       }
     }
@@ -96,8 +93,21 @@ export default function CheckoutForm({
           </div>
         ) : null}
 
-        {/* 2. โหมดฟอร์ม (Add/Edit Mode) */}
-        {(!address || isEditing) && (
+        {/* 2. โหมดว่าง (Empty State) - เพิ่มใหม่ตามแบบหน้า Profile */}
+        {!address && !isEditing && (
+          <div className="flex flex-col items-center gap-4 rounded-xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-10">
+            <p className="text-gray-400 text-sm">ยังไม่มีข้อมูลที่อยู่สำหรับจัดส่ง</p>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="rounded-lg bg-[#4C1D95] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#312E81] transition-all cursor-pointer shadow-sm active:scale-95"
+            >
+              + เพิ่มที่อยู่ใหม่
+            </button>
+          </div>
+        )}
+
+        {/* 3. โหมดฟอร์ม (Add/Edit Mode) */}
+        {isEditing && (
           <div className="bg-purple-50/50 p-6 rounded-lg border border-purple-200 space-y-4">
             <h4 className="text-xs font-bold text-[#4C1D95] uppercase tracking-widest mb-2">
               {address ? "แก้ไขที่อยู่" : "เพิ่มที่อยู่ใหม่"}
@@ -160,14 +170,12 @@ export default function CheckoutForm({
               >
                 {loading ? "กำลังบันทึก..." : "ยืนยันที่อยู่"}
               </button>
-              {address && (
-                <button 
-                  onClick={() => setIsEditing(false)} 
-                  className="px-4 text-gray-500 text-sm hover:underline cursor-pointer"
-                >
-                  ยกเลิก
-                </button>
-              )}
+              <button 
+                onClick={() => setIsEditing(false)} 
+                className="px-4 text-gray-500 text-sm hover:underline cursor-pointer"
+              >
+                ยกเลิก
+              </button>
             </div>
           </div>
         )}

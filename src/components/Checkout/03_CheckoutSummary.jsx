@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function CheckoutSummary({ 
   cartItems, 
   subtotal, 
-  selectedAddressId, 
+  hasAddress, 
   paymentMethod,
   onCreateOrder,
   loading,
@@ -13,15 +13,14 @@ export default function CheckoutSummary({
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
-    if (!selectedAddressId) {
-      alert("กรุณาเลือกที่อยู่สำหรับจัดส่ง");
+    if (!hasAddress) {
+      alert("กรุณาระบุที่อยู่สำหรับจัดส่ง");
       return;
     }
 
     try {
-      // 1. API: POST /api/orders/checkout - สร้างคำสั่งซื้อจริง
+      // 1. API: POST /api/orders/checkout - สร้างคำสั่งซื้อจริง (ไม่ต้องส่ง addressId แล้ว)
       const orderData = await onCreateOrder({
-        addressId: selectedAddressId,
         paymentMethod: paymentMethod.toLowerCase() 
       });
 
@@ -58,8 +57,11 @@ export default function CheckoutSummary({
                 <div>
                   {/* ⭐️ แก้ไข: แสดง Tags แทนชื่อสินค้าเพื่อความสอดคล้อง */}
                   <h4 className="font-bold text-sm text-[#1E1B4B]">
-                    {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.name || item.name)}
+                    {product.name || item.name}
                   </h4>
+                  <p className="text-[10px] text-gray-400">
+                    {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.category || 'Digital Art')}
+                  </p>
                   <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
                 </div>
                 <p className="font-bold text-sm">฿ {((product.price || item.price || 0)).toLocaleString()}.-</p>

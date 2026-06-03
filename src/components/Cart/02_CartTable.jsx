@@ -33,9 +33,11 @@ export default function CartTable({ cartItems, updateQuantity, removeItem }) {
                   <div>
                     {/* ⭐️ แก้ไข: แสดง Tags แทนชื่อสินค้าตามที่ต้องการ */}
                     <h2 className="font-bold text-lg text-[#1E1B4B]">
-                      {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.name || item.name)}
+                      {product.name || item.name}
                     </h2>
-                    <p className="text-sm text-gray-400">{product.category || 'Digital Art'}</p>
+                    <p className="text-sm text-gray-400">
+                      {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.category || 'Digital Art')}
+                    </p>
                   </div>
                   <button 
                     onClick={() => removeItem(pId)} 
