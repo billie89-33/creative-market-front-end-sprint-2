@@ -46,9 +46,9 @@ export default function CheckoutSummary({
     <div className="space-y-4">
       <div className="border border-[#4C1D95] rounded-lg p-4 bg-white/50 space-y-4">
         {cartItems.map(item => {
-          const product = item.productId || {};
+          const product = item;
           return (
-            <div key={item._id || item.id || product._id || Math.random()} className="flex gap-4 border-b border-purple-200 pb-4 last:border-0 last:pb-0">
+            <div key={item._id || item.id || product.productId || Math.random()} className="flex gap-4 border-b border-purple-200 pb-4 last:border-0 last:pb-0">
               <img 
                 src={product.images?.[0] || item.image || "https://placehold.co/100x100"} 
                 alt={product.name || item.name}
