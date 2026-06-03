@@ -4,16 +4,15 @@ import ProductCard from "../components/Market/ProductCard";
 import MarketHeader from "../components/Market/MarketHeader";
 import { useAuth } from "../context/AuthContext";
 
-const PRODUCTS_PER_PAGE = 8;
+const PRODUCTS_PER_PAGE = 12;
 
 const serverBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
 
 const apiBaseUrl = `${serverBaseUrl}/api`;
 
 const Market = () => {
-  // 🌟 2. ดึงค่าสถานะสิทธิ์ที่แอบถอดรหัสจากคุกกี้จริงหลังบ้านมาใช้งานแทนค่าทดสอบเดิมจ้า
   const { isLoggedIn, userRole } = useAuth();
-
+  const [totalPages, setTotalPages] = useState(1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isFilterActive, setIsFilterActive] = useState(false);
@@ -22,8 +21,8 @@ const Market = () => {
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  // const [hasMore, setHasMore] = useState(false);
+  // const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const activeCategory = searchParams.get("category") || "All";
   const categories = ["All", "Visual Art", "Craft & Handmade", "Music & Sound"];
@@ -43,7 +42,7 @@ const Market = () => {
         setLoading(true);
 
         const params = new URLSearchParams({
-          page: "1",
+          page: String(page),
           limit: String(PRODUCTS_PER_PAGE),
         });
 
@@ -58,8 +57,7 @@ const Market = () => {
 
         if (data.success) {
           setProducts(data.data);
-          setHasMore(data.pagination?.hasMore || false);
-          setPage(1);
+          setTotalPages(data.pagination?.totalPages || 1);
         }
       } catch (err) {
         console.error("Fetch products failed:", err);
@@ -69,43 +67,44 @@ const Market = () => {
     };
 
     fetchProducts();
-  }, [debouncedSearch, activeCategory]);
+  }, [debouncedSearch, activeCategory, page]);
 
   const handleCategoryChange = (newCategory) => {
     setSearchParams({ category: newCategory });
+    setPage(1);
   };
 
-  const handleLoadMore = async () => {
-    try {
-      setIsLoadingMore(true);
+  // const handleLoadMore = async () => {
+  //   try {
+  //     setIsLoadingMore(true);
 
-      const nextPage = page + 1;
+  //     const nextPage = page + 1;
 
-      const params = new URLSearchParams({
-        page: String(nextPage),
-        limit: String(PRODUCTS_PER_PAGE),
-      });
+  //     const params = new URLSearchParams({
+  //       page: String(nextPage),
+  //       limit: String(PRODUCTS_PER_PAGE),
+  //     });
 
-      if (debouncedSearch) {
-        params.set("search", debouncedSearch);
-      } else if (activeCategory !== "All") {
-        params.set("category", activeCategory);
-      }
+  //     if (debouncedSearch) {
+  //       params.set("search", debouncedSearch);
+  //     } else if (activeCategory !== "All") {
+  //       params.set("category", activeCategory);
+  //     }
 
-      const res = await fetch(`${apiBaseUrl}/products?${params.toString()}`);
-      const data = await res.json();
+  //     const res = await fetch(`${apiBaseUrl}/products?${params.toString()}`);
+  //     const data = await res.json();
 
-      if (data.success) {
-        setProducts((prevProducts) => [...prevProducts, ...data.data]);
-        setHasMore(data.pagination?.hasMore || false);
-        setPage(nextPage);
-      }
-    } catch (err) {
-      console.error("Load more products failed:", err);
-    } finally {
-      setIsLoadingMore(false);
-    }
-  };
+  //     if (data.success) {
+  //       setProducts((prevProducts) => [...prevProducts, ...data.data]);
+  //       setHasMore(data.pagination?.hasMore || false);
+  //       setPage(nextPage);
+  //     }
+  //   } catch (err) {
+  //     console.error("Load more products failed:", err);
+  //   } finally {
+  //     setIsLoadingMore(false);
+  //   }
+  // };
 
   // ── Skeleton Cards ──
   const SkeletonCard = () => (
@@ -163,15 +162,46 @@ const Market = () => {
           )}
         </div>
 
-        {hasMore && !loading && (
-          <div className="mt-10 flex justify-center">
+        {/* ปุ่มควบคุมการแบ่งหน้า (Pagination Controls) */}
+        {!loading && totalPages > 1 && (
+          <div className="mt-10 flex justify-center items-center gap-2">
+            {/* ปุ่มย้อนกลับ (Previous) */}
             <button
               type="button"
-              onClick={handleLoadMore}
-              disabled={isLoadingMore}
-              className="rounded-lg bg-[#6D5DD3] px-8 py-3 font-semibold text-white transition hover:bg-[#5b4db8] disabled:opacity-60"
+              onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
             >
-              {isLoadingMore ? "Loading..." : "Load more"}
+              Previous
+            </button>
+
+            {/* วนลูปเสกปุ่มตามจำนวนหน้าทั้งหมดที่มี (เช่น มี 9 หน้า ก็เสกมา 9 ปุ่ม) */}
+            {Array.from({ length: totalPages }, (_, index) => {
+              const pageNum = index + 1;
+              return (
+                <button
+                  key={pageNum}
+                  type="button"
+                  onClick={() => setPage(pageNum)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition ${
+                    page === pageNum
+                      ? "bg-[#6D5DD3] text-white"
+                      : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {/* ปุ่มไปข้างหน้า (Next) */}
+            <button
+              type="button"
+              onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+              disabled={page === totalPages}
+              className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
+            >
+              Next
             </button>
           </div>
         )}
