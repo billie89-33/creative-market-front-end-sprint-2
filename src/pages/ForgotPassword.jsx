@@ -11,6 +11,8 @@ const ForgotPassword = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [blockEndTime, setBlockEndTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -18,8 +20,53 @@ const ForgotPassword = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const checkRateLimitStatus = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const response = await fetch(`${apiBaseUrl}/api/auth/forgot-password/status`);
+        const data = await response.json();
+
+        if (data.isBlocked) {
+          setBlockEndTime(Date.now() + (data.timeLeft * 1000));
+          setTimeLeft(data.timeLeft);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkRateLimitStatus();
+  }, []);
+
+  useEffect(() => {
+    if (!blockEndTime) return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      if (now >= blockEndTime) {
+        setBlockEndTime(null);
+        setTimeLeft(0);
+        setError("");
+        clearInterval(interval);
+      } else {
+        setTimeLeft(Math.ceil((blockEndTime - now) / 1000));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [blockEndTime]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   const handleRequestToken = async (e) => {
     e.preventDefault();
+    if (blockEndTime !== null) return;
+
     setError("");
     setSuccessMessage("");
 
@@ -31,11 +78,9 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      // ดึง URL จาก Environment Variable (หรือใช้ localhost เป็นตัวสำรอง)
       const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
       const apiUrl = `${apiBaseUrl}/api/auth/forgot-password`;
 
-      // ยิง API ไปที่ Backend
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { 
@@ -47,6 +92,21 @@ const ForgotPassword = () => {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 429) {
+          const resetTimeStr = response.headers.get("RateLimit-Reset");
+          const retryAfterStr = response.headers.get("Retry-After");
+
+          let waitTimeSeconds = 3 * 60;
+
+          if (resetTimeStr) {
+            waitTimeSeconds = parseInt(resetTimeStr, 10);
+          } else if (retryAfterStr) {
+            waitTimeSeconds = parseInt(retryAfterStr, 10);
+          }
+          
+          setBlockEndTime(Date.now() + (waitTimeSeconds * 1000));
+          setTimeLeft(waitTimeSeconds);
+        }
         throw new Error(data.message || "เกิดข้อผิดพลาดในการส่งข้อมูล");
       }
 
@@ -101,8 +161,8 @@ const ForgotPassword = () => {
                 <input
                   type="email"
                   placeholder="name@mail.com"
-                  disabled={isLoading}
-                  className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg translate-y-8 md:translate-y-5 ${error ? "border-red-500" : "border-white"} ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={isLoading || blockEndTime !== null}
+                  className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg translate-y-8 md:translate-y-5 ${error ? "border-red-500" : "border-white"} ${isLoading || blockEndTime !== null ? "opacity-50 cursor-not-allowed" : ""}`}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -118,10 +178,14 @@ const ForgotPassword = () => {
 
               <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full py-4 mt-6 bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150 text-white text-lg font-bold rounded-full shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 translate-y-7.5 md:translate-y-5"
+                disabled={isLoading || blockEndTime !== null}
+                className={`w-full py-4 mt-6 text-white text-lg font-bold rounded-full shadow-xl transition-all flex items-center justify-center gap-2 translate-y-7.5 md:translate-y-5 ${
+                  blockEndTime !== null 
+                    ? "bg-gray-500/80 cursor-not-allowed opacity-90" 
+                    : "bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150 active:scale-95"
+                }`}
               >
-                {isLoading ? "กำลังส่งอีเมล..." : "Request Reset Link"}
+                {isLoading ? "กำลังส่งอีเมล..." : (blockEndTime !== null ? `กรุณารอ ${formatTime(timeLeft)}` : "Request Reset Link")}
               </button>
             </form>
           </>

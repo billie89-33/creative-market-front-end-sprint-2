@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; 
+import { useNavigate, useParams, Link } from 'react-router-dom'; 
 
 import bgDesktop from "../assets/images/t_pages_login_destop_bg.jpg"; 
 import bgMobile from "../assets/images/t_pages_login_moble_bg.png"; 
@@ -8,20 +8,14 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const { token } = useParams(); 
   
-  const [tokenInput, setTokenInput] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    
-    if (token) {
-      setTokenInput(token); 
-    }
-  }, [token]);
+  const [blockEndTime, setBlockEndTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -29,13 +23,39 @@ const ResetPassword = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!blockEndTime) return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      if (now >= blockEndTime) {
+        setBlockEndTime(null);
+        setTimeLeft(0);
+        setErrors((prev) => ({ ...prev, global: null }));
+        clearInterval(interval);
+      } else {
+        setTimeLeft(Math.ceil((blockEndTime - now) / 1000));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [blockEndTime]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    if (blockEndTime !== null) return;
+
     setErrors({});
     
     let newErrors = {};
 
-    if (!tokenInput.trim()) newErrors.token = 'Please provide a reset token!';
+    if (!token) newErrors.token = 'Please provide a reset token!';
     if (!newPassword) newErrors.newPassword = 'Password cannot be empty!';
     else if (newPassword.length < 6) newErrors.newPassword = 'Password must be at least 6 characters!';
     if (newPassword !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match!';
@@ -46,6 +66,7 @@ const ResetPassword = () => {
     }
 
     setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     try {
       const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
@@ -57,7 +78,7 @@ const ResetPassword = () => {
           "Content-Type": "application/json" 
         },
         body: JSON.stringify({ 
-          token: tokenInput, 
+          token: token, 
           password: newPassword 
         })
       });
@@ -65,6 +86,9 @@ const ResetPassword = () => {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 429) {
+          setBlockEndTime(Date.now() + 3 * 60 * 1000);
+        }
         throw new Error(data.message || "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน");
       }
 
@@ -76,7 +100,7 @@ const ResetPassword = () => {
 
     } catch (err) {
       console.error("Reset Password Error:", err);
-      setErrors({ token: err.message || 'Token ไม่ถูกต้อง หรือหมดอายุแล้ว' });
+      setErrors({ global: err.message || 'ลิงก์นี้หมดอายุหรือถูกใช้งานไปแล้ว กรุณาทำรายการขอลืมรหัสผ่านใหม่อีกครั้ง' });
     } finally {
       setIsLoading(false);
     }
@@ -99,29 +123,38 @@ const ResetPassword = () => {
         </p>
         
         <form onSubmit={handleResetPassword} className="space-y-4 text-left relative z-20">
-          <div className={`relative transition-all duration-300 ${errors.token ? 'pb-5' : 'pb-0'}`}>
-            <label className="block text-white text-[15px] font-medium mb-1 pl-4 opacity-90">Reset Token</label>
+          {errors.global && (
+            <div className="bg-red-500/20 border border-red-500/50 text-[#ffebed] px-4 py-3 rounded-xl text-[14px] text-center font-medium shadow-sm animate-pulse leading-relaxed">
+              {errors.global}
+              
+              {(errors.global.includes('หมดอายุ') || errors.global.includes('ไม่ถูกต้อง')) && (
+                <span className="block mt-2">
+                  กรุณาทำการขอเปลี่ยนรหัสผ่านใหม่{" "}
+                  <Link 
+                    to="/forgot-password" 
+                    className="inline-block text-[#1e1a3d] bg-white/90 font-bold decoration-2 hover:bg-white hover:scale-105 px-3 py-1 rounded-full shadow-md transition-all duration-300 ml-1"
+                  >
+                    ที่นี่ค่ะ
+                  </Link>
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="hidden">
             <input 
-              type="text" 
-              placeholder="Paste your token here..." 
-              disabled={isLoading}
-              className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.token ? 'border-red-500' : 'border-white'} ${isLoading ? 'opacity-50' : ''}`}
-              value={tokenInput} 
-              onChange={(e) => {
-                setTokenInput(e.target.value);
-                if (errors.token) setErrors({ ...errors, token: null });
-              }} 
+              type="hidden" 
+              value={token || ''} 
             />
-            {errors.token && <p className="absolute left-1/2 -translate-x-1/2 -bottom-1 z-20 px-3 py-0 text-[14px] font-bold text-red-600 bg-white rounded-md border border-red-200 shadow-sm whitespace-nowrap">{errors.token}</p>}
           </div>
 
           <div className={`relative transition-all duration-300 ${errors.newPassword ? 'pb-5' : 'pb-0'}`}>
             <label className="block text-white text-[15px] font-medium mb-1 pl-4 opacity-90">New Password</label>
             <input 
               type="password" 
-              placeholder="••••••••" 
-              disabled={isLoading}
-              className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.newPassword ? 'border-red-500' : 'border-white'} ${isLoading ? 'opacity-50' : ''}`}
+              placeholder="กรอกรหัสผ่านใหม่.." 
+              disabled={isLoading || blockEndTime !== null}
+              className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.newPassword ? 'border-red-500' : 'border-white'} ${isLoading || blockEndTime !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
               value={newPassword} 
               onChange={(e) => {
                 setNewPassword(e.target.value);
@@ -135,9 +168,9 @@ const ResetPassword = () => {
             <label className="block text-white text-[15px] font-medium mb-1 pl-4 opacity-90">Confirm Password</label>
             <input 
               type="password" 
-              placeholder="••••••••" 
-              disabled={isLoading}
-              className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.confirmPassword ? 'border-red-500' : 'border-white'} ${isLoading ? 'opacity-50' : ''}`}
+              placeholder="ยืนยันรหัสผ่านใหม่.." 
+              disabled={isLoading || blockEndTime !== null}
+              className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.confirmPassword ? 'border-red-500' : 'border-white'} ${isLoading || blockEndTime !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
               value={confirmPassword} 
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
@@ -149,10 +182,14 @@ const ResetPassword = () => {
 
           <button 
             type="submit" 
-            disabled={isLoading}
-            className="w-full py-4 mt-6 bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150 text-white text-lg font-bold rounded-full shadow-xl transition-all active:scale-95 flex justify-center items-center"
+            disabled={isLoading || blockEndTime !== null}
+            className={`w-full py-4 mt-6 text-white text-lg font-bold rounded-full shadow-xl transition-all flex justify-center items-center ${
+              blockEndTime !== null 
+                ? 'bg-gray-500/80 cursor-not-allowed opacity-90' 
+                : 'bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150 active:scale-95'
+            }`}
           >
-            {isLoading ? 'Processing...' : 'Reset Password'}
+            {isLoading ? 'Processing...' : (blockEndTime !== null ? `กรุณารอ ${formatTime(timeLeft)}` : 'Reset Password')}
           </button>
         </form>
       </div>
