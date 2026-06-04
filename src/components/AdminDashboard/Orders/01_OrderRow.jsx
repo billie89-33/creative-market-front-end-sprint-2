@@ -50,6 +50,12 @@ const OrderRow = ({ order }) => {
   const primaryItem = order.items?.[0];
   const extraItems = order.items?.slice(1) || [];
   const canEditShipping = order.status === "paid";
+  const courierFieldClass = isEditing
+    ? "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+    : "w-full rounded-xl border border-transparent bg-transparent px-0 py-2 text-sm text-gray-700 outline-none";
+  const trackingFieldClass = isEditing
+    ? "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+    : "w-full rounded-xl border border-transparent bg-transparent px-0 py-2 text-sm text-gray-700 outline-none";
 
   if (!primaryItem) {
     return null;
@@ -99,16 +105,16 @@ const OrderRow = ({ order }) => {
       <tr className="align-top transition-colors hover:bg-gray-50/50">
         <td className="px-4 py-4 md:px-6">
           <div className="flex items-center gap-3">
-              {renderProductImage(primaryItem)}
-              <div>
-                <p className="text-sm font-medium text-gray-800">{primaryItem.name}</p>
-                <p className="mt-1 text-xs text-gray-500">by {primaryItem.artist}</p>
-                <p className="mt-2 text-sm text-gray-400">
-                  {primaryItem.quantity} item(s)
-                </p>
-                {extraItems.length > 0 ? (
-                  <button
-                    type="button"
+            {renderProductImage(primaryItem)}
+            <div>
+              <p className="text-sm font-medium text-gray-800">{primaryItem.name}</p>
+              <p className="mt-1 text-xs text-gray-500">by {primaryItem.artist}</p>
+              <p className="mt-2 text-sm text-gray-400">
+                {primaryItem.quantity} item(s)
+              </p>
+              {extraItems.length > 0 ? (
+                <button
+                  type="button"
                   onClick={() => setExpanded((value) => !value)}
                   className="mt-2 text-xs font-semibold text-violet-600 transition hover:text-violet-700"
                 >
@@ -121,7 +127,7 @@ const OrderRow = ({ order }) => {
           </div>
         </td>
         <td className="px-4 py-4 text-center text-sm text-gray-400">
-          {formatDate(order.date)}
+          {order.status === "paid" && order.paidAt ? formatDate(order.paidAt) : ""}
         </td>
         <td className="px-4 py-4 text-center text-sm font-medium text-gray-700">
           {formatAmount(primaryItem.price)}
@@ -142,19 +148,22 @@ const OrderRow = ({ order }) => {
         <td className="px-4 py-4">
           {canEditShipping ? (
             <div className="mx-auto min-w-[180px] max-w-[180px] text-center">
-              <select
-                value={courier}
-                onChange={(event) => setCourier(event.target.value)}
-                disabled={!isEditing}
-                className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
-              >
-                <option value="">Select courier</option>
-                {courierOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              {isEditing ? (
+                <select
+                  value={courier}
+                  onChange={(event) => setCourier(event.target.value)}
+                  className={courierFieldClass}
+                >
+                  <option value="">Select courier</option>
+                  {courierOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className={courierFieldClass}>{courier || "-"}</div>
+              )}
             </div>
           ) : null}
         </td>
@@ -167,7 +176,7 @@ const OrderRow = ({ order }) => {
                 onChange={(event) => setTrackingNumber(event.target.value)}
                 disabled={!isEditing}
                 placeholder="Enter tracking number"
-                className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+                className={trackingFieldClass}
               />
             </div>
           ) : null}

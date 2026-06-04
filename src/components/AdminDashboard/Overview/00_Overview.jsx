@@ -51,7 +51,10 @@ const Overview = ({ stats, loading, error, onOpenOrders }) => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <SalesChart chartData={stats.salesOverview} />
-        <ProductBreakdown items={stats.categoryBreakdown} totalItems={stats.itemSold} />
+        <ProductBreakdown
+          items={stats.categoryBreakdown}
+          totalItems={stats.itemSold}
+        />
       </div>
 
       <RecentOrders orders={stats.recentOrders} onOpenOrders={onOpenOrders} />

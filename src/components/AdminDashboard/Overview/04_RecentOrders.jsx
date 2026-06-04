@@ -63,12 +63,14 @@ const RecentOrders = ({ orders, onOpenOrders }) => {
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center text-sm text-gray-400">
-                    {formatDate(order.date)}
+                    {order.status === "paid" ? formatDate(order.date) : ""}
                   </td>
                   <td className="px-4 py-4 text-center text-sm font-medium text-gray-700">
                     {order.quantity}
                   </td>
-                  <td className="px-4 py-4 text-center text-sm text-gray-600">{order.customer}</td>
+                  <td className="px-4 py-4 text-center text-sm text-gray-600">
+                    {order.customer}
+                  </td>
                   <td className="px-4 py-4 text-center text-sm font-bold text-gray-900">
                     {formatAmount(order.amount)}
                   </td>

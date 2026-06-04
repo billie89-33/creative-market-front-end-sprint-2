@@ -16,10 +16,32 @@ const formatDate = (value) =>
 const formatAmount = (value) =>
   `฿${Number(value || 0).toLocaleString("en-US")}`;
 
+const getDateMeta = (order) => {
+  if (order.status === "paid") {
+    return {
+      label: "Payment Date",
+      value: order.paidAt || order.createdAt,
+    };
+  }
+
+  if (order.status === "cancelled") {
+    return {
+      label: "Cancelled Date",
+      value: order.createdAt,
+    };
+  }
+
+  return {
+    label: "Order Date",
+    value: order.createdAt,
+  };
+};
+
 const OrderCard = ({ order }) => {
   const [expanded, setExpanded] = useState(false);
   const primaryItem = order.items[0];
   const extraItems = order.items.slice(1);
+  const dateMeta = getDateMeta(order);
 
   if (!primaryItem) {
     return null;
@@ -49,13 +71,11 @@ const OrderCard = ({ order }) => {
       <div className="min-w-0 flex-1">
         <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>
         <p className="mt-1 text-sm text-gray-500">
-          {item.artist !== "-"
-            ? `by ${item.artist}`
-            : `Order #${order.orderId}`}
+          {item.artist !== "-" ? `by ${item.artist}` : `Order #${order.orderId}`}
         </p>
         <p className="mt-3 text-sm text-gray-400">{item.quantity} item(s)</p>
 
-        {isPrimary && extraItems.length > 0 && (
+        {isPrimary && extraItems.length > 0 ? (
           <button
             type="button"
             onClick={() => setExpanded((value) => !value)}
@@ -65,37 +85,37 @@ const OrderCard = ({ order }) => {
               ? "Hide additional items"
               : `View ${extraItems.length} more item(s)`}
           </button>
-        )}
+        ) : null}
       </div>
 
       <div className="grid shrink-0 gap-4 text-sm text-gray-500 md:min-w-105 md:grid-cols-4 lg:w-[760px] lg:grid-cols-[140px_100px_120px_110px_190px]">
         <div>
           <p
-            className={`text-xs uppercase tracking-[0.2em] text-gray-400 ${
+            className={`text-[10px] uppercase tracking-[0.18em] text-gray-400 ${
               isPrimary ? "" : "invisible"
             }`}
           >
-            Date
+            {dateMeta.label}
           </p>
           <p
-            className={`mt-1 font-semibold text-gray-900 ${
+            className={`mt-1 text-gray-900 ${
               isPrimary ? "" : "invisible"
             }`}
           >
-            {formatDate(order.createdAt)}
+            {formatDate(dateMeta.value)}
           </p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400">
             Price
           </p>
-          <p className="mt-1 font-semibold text-gray-900">
+          <p className="mt-1 text-gray-900">
             {formatAmount(item.price)}
           </p>
         </div>
         <div>
           <p
-            className={`text-xs uppercase tracking-[0.2em] text-gray-400 ${
+            className={`text-[10px] uppercase tracking-[0.18em] text-gray-400 ${
               isPrimary ? "" : "invisible"
             }`}
           >
@@ -111,7 +131,7 @@ const OrderCard = ({ order }) => {
         </div>
         <div>
           <p
-            className={`text-xs uppercase tracking-[0.2em] text-gray-400 ${
+            className={`text-[10px] uppercase tracking-[0.18em] text-gray-400 ${
               isPrimary ? "" : "invisible"
             }`}
           >
@@ -127,7 +147,7 @@ const OrderCard = ({ order }) => {
         </div>
         <div className="min-w-0">
           <p
-            className={`text-xs uppercase tracking-[0.2em] text-gray-400 ${
+            className={`text-[10px] uppercase tracking-[0.18em] text-gray-400 ${
               isPrimary ? "" : "invisible"
             }`}
           >
@@ -160,7 +180,7 @@ const OrderCard = ({ order }) => {
     <article className="rounded-2xl bg-white p-5 md:p-6">
       {renderOrderItem(primaryItem, true)}
 
-      {extraItems.length > 0 && (
+      {extraItems.length > 0 ? (
         <div
           className={`overflow-hidden border-t border-gray-100 transition-all duration-300 ease-out ${
             expanded
@@ -172,7 +192,7 @@ const OrderCard = ({ order }) => {
             {extraItems.map((item) => renderOrderItem(item))}
           </div>
         </div>
-      )}
+      ) : null}
     </article>
   );
 };

@@ -22,7 +22,7 @@ const CustomTooltip = ({ active, payload }) => {
       <p className="text-xs font-semibold text-gray-500">{point?.date}</p>
       <p className="mt-1 text-sm font-semibold text-gray-900">
         Sales:{" "}
-        {`THB ${Number(point?.sales || 0).toLocaleString("en-US", {
+        {`฿ ${Number(point?.sales || 0).toLocaleString("en-US", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`}
