@@ -19,7 +19,7 @@ export default function Checkout() {
     loading: loadingActions 
   } = useCheckoutActions();
   
-  const [paymentMethod, setPaymentMethod] = useState("Promptpay");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   useEffect(() => {
     fetchAddresses();
@@ -60,6 +60,7 @@ export default function Checkout() {
               cartItems={cartItems}
               subtotal={subtotal}
               hasAddress={addresses.length > 0}
+              address={addresses.length > 0 ? addresses[0] : null}
               paymentMethod={paymentMethod}
               onCreateOrder={createOrder}
               loading={loadingActions}
