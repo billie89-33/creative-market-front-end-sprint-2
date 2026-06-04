@@ -15,6 +15,28 @@ const ForgotPassword = () => {
   const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const response = await fetch(`${apiBaseUrl}/api/auth/me`, {
+          method: "GET",
+          credentials: "include"
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.user && data.user.role === "user") {
+            navigate("/");
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

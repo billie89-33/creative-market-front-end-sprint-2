@@ -10,13 +10,41 @@ const Register = () => {
   const [formData, setFormData] = useState({
     email: '', password: '', confirmPassword: ''
   });
-  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, userAnswer: '' });
+  
+  const [captcha, setCaptcha] = useState(() => ({
+    num1: Math.floor(Math.random() * 10) + 1,
+    num2: Math.floor(Math.random() * 10) + 1,
+    userAnswer: ''
+  }));
+  
   const [errors, setErrors] = useState({});
-
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // ควบคุมสถานะ Loading
+  const [isLoading, setIsLoading] = useState(false); 
+  const [blockEndTime, setBlockEndTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const response = await fetch(`${apiBaseUrl}/api/auth/me`, {
+          method: "GET",
+          credentials: "include"
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.user && data.user.role === "user") {
+            navigate("/");
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -24,13 +52,56 @@ const Register = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const generateCaptcha = () => {
-    const n1 = Math.floor(Math.random() * 10) + 1;
-    const n2 = Math.floor(Math.random() * 10) + 1;
-    setCaptcha({ num1: n1, num2: n2, userAnswer: '' });
+  useEffect(() => {
+    const checkRateLimitStatus = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const response = await fetch(`${apiBaseUrl}/api/users/register/status`);
+        const data = await response.json();
+
+        if (data.isBlocked) {
+          setBlockEndTime(Date.now() + (data.timeLeft * 1000));
+          setTimeLeft(data.timeLeft);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkRateLimitStatus();
+  }, []);
+
+  useEffect(() => {
+    if (!blockEndTime) return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      if (now >= blockEndTime) {
+        setBlockEndTime(null);
+        setTimeLeft(0);
+        setErrors((prev) => ({ ...prev, global: null }));
+        clearInterval(interval);
+      } else {
+        setTimeLeft(Math.ceil((blockEndTime - now) / 1000));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [blockEndTime]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  useEffect(() => { generateCaptcha(); }, []);
+  const generateCaptcha = () => {
+    setCaptcha({ 
+      num1: Math.floor(Math.random() * 10) + 1, 
+      num2: Math.floor(Math.random() * 10) + 1, 
+      userAnswer: '' 
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,21 +145,33 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (blockEndTime !== null) return;
     
     if (!validate()) return;
 
-    // เริ่มโหลดและล็อคปุ่ม
     setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:7777';
 
     try {
       const emailCheckRes = await fetch(`${API_URL}/api/users/check-email?email=${formData.email}`);
       const emailCheck = await emailCheckRes.json();
+
+      if (!emailCheckRes.ok) {
+        if (emailCheckRes.status === 429) {
+          const waitTimeSeconds = emailCheck.timeLeft || 180;
+          setBlockEndTime(Date.now() + (waitTimeSeconds * 1000));
+          setTimeLeft(waitTimeSeconds);
+        }
+        setErrors({ ...errors, email: emailCheck.message || 'Something went wrong' });
+        generateCaptcha(); 
+        return;
+      }
       
       if (emailCheck.exists) {
         setErrors({ ...errors, email: "Email already in use" });
-        generateCaptcha(); // รีเฟรช CAPTCHA เมื่ออีเมลซ้ำ
+        generateCaptcha(); 
         return;
       }
 
@@ -107,8 +190,13 @@ const Register = () => {
       const registerData = await registerRes.json();
 
       if (!registerRes.ok) {
+        if (registerRes.status === 429) {
+          const waitTimeSeconds = registerData.timeLeft || 180;
+          setBlockEndTime(Date.now() + (waitTimeSeconds * 1000));
+          setTimeLeft(waitTimeSeconds);
+        }
         setErrors({ ...errors, email: registerData.message || 'Something went wrong' });
-        generateCaptcha(); // รีเฟรช CAPTCHA เมื่อ Backend ส่ง Error แจ้งเตือนกลับมา
+        generateCaptcha(); 
         return;
       }
 
@@ -117,9 +205,8 @@ const Register = () => {
     } catch (error) {
       console.error("Registration error:", error);
       setErrors({ ...errors, email: "Failed to connect to the server" });
-      generateCaptcha(); // รีเฟรช CAPTCHA เมื่อเชื่อมต่อเซิร์ฟเวอร์ไม่ได้
+      generateCaptcha(); 
     } finally {
-      // ปลดล็อคปุ่มเสมอ
       setIsLoading(false);
     }
   };
@@ -157,8 +244,8 @@ const Register = () => {
                 type="email" 
                 name="email" 
                 placeholder="Enter your email address!!" 
-                disabled={isLoading}
-                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.email ? 'border-red-500' : 'border-white'} ${isLoading ? 'opacity-50' : ''}`}
+                disabled={isLoading || blockEndTime !== null}
+                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.email ? 'border-red-500' : 'border-white'} ${isLoading || blockEndTime !== null ? 'opacity-50' : ''}`}
                 value={formData.email} 
                 onChange={handleChange} 
               />
@@ -170,8 +257,8 @@ const Register = () => {
                 type="password" 
                 name="password" 
                 placeholder="Enter your password" 
-                disabled={isLoading}
-                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.password ? 'border-red-500' : 'border-white'} ${isLoading ? 'opacity-50' : ''}`}
+                disabled={isLoading || blockEndTime !== null}
+                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.password ? 'border-red-500' : 'border-white'} ${isLoading || blockEndTime !== null ? 'opacity-50' : ''}`}
                 value={formData.password} 
                 onChange={handleChange} 
               />
@@ -183,8 +270,8 @@ const Register = () => {
                 type="password" 
                 name="confirmPassword" 
                 placeholder="Enter password confirmation" 
-                disabled={isLoading}
-                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.confirmPassword ? 'border-red-500' : 'border-white'} ${isLoading ? 'opacity-50' : ''}`}
+                disabled={isLoading || blockEndTime !== null}
+                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${errors.confirmPassword ? 'border-red-500' : 'border-white'} ${isLoading || blockEndTime !== null ? 'opacity-50' : ''}`}
                 value={formData.confirmPassword} 
                 onChange={handleChange} 
               />
@@ -198,8 +285,8 @@ const Register = () => {
                 </span>
                 <input
                   type="number" name="userAnswer" placeholder="?"
-                  disabled={isLoading}
-                  className={`w-16 p-2 rounded-lg bg-white text-[#1e1a3d] text-center font-bold outline-none ${isLoading ? 'opacity-50' : ''}`}
+                  disabled={isLoading || blockEndTime !== null}
+                  className={`w-16 p-2 rounded-lg bg-white text-[#1e1a3d] text-center font-bold outline-none ${isLoading || blockEndTime !== null ? 'opacity-50' : ''}`}
                   value={captcha.userAnswer} onChange={handleChange}
                 />
               </div>
@@ -208,10 +295,10 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || blockEndTime !== null}
               className={`w-full py-5 mt-4 text-white text-xl font-bold rounded-full shadow-xl transition-all active:scale-95 flex justify-center items-center gap-2 
-                ${isLoading 
-                  ? 'bg-[#1e1a3d]/50 cursor-not-allowed' 
+                ${blockEndTime !== null 
+                  ? 'bg-gray-500/80 cursor-not-allowed opacity-90' 
                   : 'bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150' 
                 }`}
             >
@@ -224,7 +311,7 @@ const Register = () => {
                   Processing...
                 </>
               ) : (
-                'Create an account'
+                blockEndTime !== null ? `กรุณารอ ${formatTime(timeLeft)}` : 'Create an account'
               )}
             </button>
           </form>

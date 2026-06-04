@@ -18,9 +18,50 @@ const ResetPassword = () => {
   const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const response = await fetch(`${apiBaseUrl}/api/auth/me`, {
+          method: "GET",
+          credentials: "include"
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.user && data.user.role === "user") {
+            navigate("/");
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const checkRateLimitStatus = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const response = await fetch(`${apiBaseUrl}/api/auth/reset-password/status`);
+        const data = await response.json();
+
+        if (data.isBlocked) {
+          setBlockEndTime(Date.now() + (data.timeLeft * 1000));
+          setTimeLeft(data.timeLeft);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkRateLimitStatus();
   }, []);
 
   useEffect(() => {
@@ -87,7 +128,9 @@ const ResetPassword = () => {
 
       if (!response.ok) {
         if (response.status === 429) {
-          setBlockEndTime(Date.now() + 3 * 60 * 1000);
+          const waitTimeSeconds = data.timeLeft || 180;
+          setBlockEndTime(Date.now() + (waitTimeSeconds * 1000));
+          setTimeLeft(waitTimeSeconds);
         }
         throw new Error(data.message || "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน");
       }
