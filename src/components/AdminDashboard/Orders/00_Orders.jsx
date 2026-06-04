@@ -3,14 +3,29 @@ import { ShoppingCart } from "lucide-react";
 import OrderRow from "./01_OrderRow";
 
 const ORDERS_PER_PAGE = 10;
+const tabs = [
+  { label: "All", value: "All" },
+  { label: "รอดำเนินการ", value: "pending" },
+  { label: "สำเร็จแล้ว", value: "paid" },
+  { label: "ยกเลิก", value: "cancelled" },
+];
 
 const Orders = ({ summary, orders, loading, error }) => {
+  const [activeTab, setActiveTab] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(orders.length / ORDERS_PER_PAGE);
-  const paginatedOrders = orders.slice(
-    (currentPage - 1) * ORDERS_PER_PAGE,
-    currentPage * ORDERS_PER_PAGE,
+  const filteredOrders =
+    activeTab === "All"
+      ? orders
+      : orders.filter((order) => order.status === activeTab);
+
+  const totalPages = Math.ceil(filteredOrders.length / ORDERS_PER_PAGE);
+  const safeTotalPages = Math.max(totalPages, 1);
+  const visiblePage = Math.min(currentPage, safeTotalPages);
+
+  const paginatedOrders = filteredOrders.slice(
+    (visiblePage - 1) * ORDERS_PER_PAGE,
+    visiblePage * ORDERS_PER_PAGE,
   );
 
   const stats = [
@@ -60,6 +75,30 @@ const Orders = ({ summary, orders, loading, error }) => {
         ))}
       </div>
 
+      <div className="flex flex-wrap gap-2 md:gap-3">
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.value;
+
+          return (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => {
+                setActiveTab(tab.value);
+                setCurrentPage(1);
+              }}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition md:px-5 md:py-2.5 ${
+                isActive
+                  ? "bg-[#1e1b4b] text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
@@ -78,9 +117,20 @@ const Orders = ({ summary, orders, loading, error }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {paginatedOrders.map((order) => (
-                <OrderRow key={order.id} order={order} />
-              ))}
+              {paginatedOrders.length > 0 ? (
+                paginatedOrders.map((order) => (
+                  <OrderRow key={order.id} order={order} />
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="px-4 py-6 text-center text-sm text-gray-400 md:px-6"
+                  >
+                    No orders found for this filter.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -91,19 +141,19 @@ const Orders = ({ summary, orders, loading, error }) => {
           <button
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
+            disabled={visiblePage === 1}
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
             &lt;
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {Array.from({ length: safeTotalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               type="button"
               onClick={() => setCurrentPage(page)}
               className={`flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium transition ${
-                currentPage === page
+                visiblePage === page
                   ? "bg-[#8df0a9] text-gray-900"
                   : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
@@ -114,8 +164,8 @@ const Orders = ({ summary, orders, loading, error }) => {
 
           <button
             type="button"
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, safeTotalPages))}
+            disabled={visiblePage === safeTotalPages}
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
             &gt;
