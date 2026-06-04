@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import emailjs from "@emailjs/browser";
 
+// --- Import SuccessModal (สอดคล้องกับหน้า Login/Register) ---
+import SuccessModal from "../components/Global/SuccessModal";
+
+// --- Import รูปภาพ ---
 import bgDesktop from "../assets/images/j-login-bg.jpg";
 import bgMobile from "../assets/images/j-login-bg.jpg";
 
@@ -9,9 +12,23 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    // 1. สั่งหยุด Lenis ทันทีที่เข้าหน้านี้
+    if (window.lenis) window.lenis.stop();
+
+    // 2. ล็อกระดับ CSS body ไม่ให้สกรอลล์สำรองเด้ง (Bouncing)
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      // 3. ปลดล็อกคืนค่าให้หน้าอื่นเลื่อนได้ปกติ ตอนย้ายออกจากหน้านี้
+      if (window.lenis) window.lenis.start();
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -19,70 +36,50 @@ const ForgotPassword = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleRequestToken = (e) => {
+  const handleRequestToken = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccessMessage("");
 
     if (!email) {
       setError("Please enter your email address!!");
       return;
     }
 
-    // ตรวจสอบว่ามีอีเมลนี้สมัครไว้ในระบบจำลอง (LocalStorage) หรือไม่
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const userExists = storedUsers.some((user) => user.email === email);
-
-    if (!userExists) {
-      setError("This email address is not registered!!");
-      return;
-    }
-
     setIsLoading(true);
 
-    // 1. ตัวโปรแกรมของเราสร้าง (สุ่ม) Token 6 หลักขึ้นมาเอง
-    const mockToken = Math.floor(100000 + Math.random() * 900000).toString();
+    try {
+      const apiBaseUrl =
+        import.meta.env.VITE_API_URL || "http://localhost:7777";
+      const apiUrl = `${apiBaseUrl}/api/auth/forgot-password`;
 
-    // 2. เซฟเก็บไว้ในเครื่องเราชั่วคราว เพื่อเอาไว้เทียบตอนที่เขากดลิงก์กลับมา
-    localStorage.setItem(
-      "resetPasswordToken",
-      JSON.stringify({ email, token: mockToken }),
-    );
-
-    // 3. สร้างลิงก์ที่จะแนบไปในจดหมาย (พ่วงเอา Token แปะไปบน URL ด้วย)
-    const resetLink = `${window.location.origin}/reset-password?token=${mockToken}`;
-
-    // 4. เตรียมข้อมูลส่งให้พนักงาน (EmailJS) ถือไปส่ง
-    const templateParams = {
-      to_email: email,
-      reset_link: resetLink,
-    };
-
-    // 5. เรียกใช้ EmailJS เพื่อยิงอีเมลจริงออกไป
-    // *** อย่าลืมเอา KEY จริงจากเว็บ EmailJS มาใส่แทนที่อักษรตัวใหญ่ด้านล่างนะครับ ***
-    emailjs
-      .send(
-        "service_gbu9e6o", // Service ID ของเรา
-        "template_x07aydb", // Template ID ของเรา
-        templateParams,
-        "Ar5pOgj3RsyZ6mrUh", // Public Key ของเรา
-      )
-      .then((response) => {
-        console.log("SUCCESS!", response.status, response.text);
-        setSuccessMessage(
-          "ระบบได้ส่งลิงก์กู้คืนรหัสผ่านไปยังอีเมลของคุณเรียบร้อยแล้ว กรุณาเช็คที่กล่องข้อความของคุณครับ",
-        );
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error("FAILED...", err);
-        setError("เกิดข้อผิดพลาดในการส่งอีเมล กรุณาลองใหม่อีกครั้ง");
-        setIsLoading(false);
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "เกิดข้อผิดพลาดในการส่งข้อมูล");
+      }
+
+      setIsSuccess(true); // เปลี่ยนมาเปิด SuccessModal แทนการสลับ UI ในหน้าเดิม
+    } catch (err) {
+      console.error("FAILED...", err);
+      setError(
+        err.message || "เกิดข้อผิดพลาดในการส่งอีเมล กรุณาลองใหม่อีกครั้ง",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 h-screen flex items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat">
+      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500"
         style={{
@@ -92,73 +89,81 @@ const ForgotPassword = () => {
         }}
       />
 
-      <div className="scale-85 md:scale-75 relative z-10 bg-[#7b74c4]/60 backdrop-blur-md w-full max-w-[540px] h-auto min-h-[350px] md:min-h-[420px] rounded-[40px] shadow-2xl p-8 md:p-10 text-center border border-white/20 mx-6 -translate-y-10 md:-translate-y-15">
-        <h2 className="text-3xl font-bold text-white mb-6 -translate-y-0 md:-translate-y-2.5">
-          Forgot Password
+      {/* Main Container - ปรับเป็นสไตล์กระจกเงาเข้ม (bg-black/30 backdrop-blur-md) */}
+      <div className="scale-80 relative z-10 bg-black/30 backdrop-blur-md w-full max-w-[540px] md:max-w-[648px] h-auto p-8 md:p-10 text-center border border-white/20 shadow-2xl mx-4 flex flex-col justify-center">
+        <h2 className="!text-[36px] md:!text-[40px] font-bold text-white mb-6">
+          FORGOT PASSWORD
         </h2>
 
-        {successMessage ? (
-          <div className="text-left bg-green-500/20 border border-green-500/40 p-4 rounded-xl text-white space-y-4">
-            <p className="text-sm font-medium">{successMessage}</p>
-            <p className="text-xs text-white/70">
-              *ไปเปิดอีเมลแล้วคลิกลิงก์เพื่อตั้งรหัสผ่านใหม่ได้เลยครับ
-            </p>
+        <p className="text-white/80 text-sm mb-6 text-middle leading-relaxed">
+          Enter your email address, and a password reset link will be sent to
+          your email
+        </p>
+
+        <form onSubmit={handleRequestToken} className="space-y-4 text-left">
+          {/* <label className="block text-white !text-xl font-medium mb-1 pl-4 opacity-90">
+            Enter your email
+          </label> */}
+
+          {/* Email Input - จัดระเบียบการ Flow ของ Error แบบเดียวกับหน้า Login */}
+          <div className="flex flex-col">
+            <input
+              type="email"
+              placeholder="name@mail.com"
+              disabled={isLoading}
+              className={`w-full px-6 py-3 md:py-3.5 bg-black/60 placeholder-white/80 text-white outline-none focus:ring-1 text-sm shadow-lg border-2 transition-colors duration-300 ${
+                error
+                  ? "border-red-500 focus:ring-red-500/50"
+                  : "border-white/20 focus:ring-white"
+              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError("");
+              }}
+            />
+            {error && (
+              <p className="text-red-400 text-[14px] mt-1.5 pl-4 font-bold tracking-wide">
+                {error}
+              </p>
+            )}
           </div>
-        ) : (
-          <>
-            <p className="text-white/80 text-sm mb-6 text-left pl-2 translate-y-5 md:translate-y-1.5">
-              กรอกอีเมลของคุณ
-              ระบบจะส่งลิงก์สำหรับรีเซ็ตรหัสผ่านไปให้ทางอีเมลจริงครับ
-            </p>
 
-            <form onSubmit={handleRequestToken} className="space-y-4 text-left">
-              <label className="block text-white text-lg font-medium mb-1 pl-4 opacity-90 translate-y-7 md:translate-y-3.5">
-                Enter your email
-              </label>
-              <div
-                className={`relative transition-all duration-300 ${error ? "pb-5" : "pb-0"}`}
-              >
-                <input
-                  type="email"
-                  placeholder="name@mail.com"
-                  disabled={isLoading}
-                  className={`w-full px-6 py-3 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg translate-y-8 md:translate-y-5 ${error ? "border-red-500" : "border-white"} ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (error) setError("");
-                  }}
-                />
-                {error && (
-                  <p className="absolute left-1/2 -translate-x-1/2 -bottom-1 z-20 px-3 py-0 text-[14px] font-bold text-red-600 bg-white rounded-md border border-red-200 shadow-sm whitespace-nowrap translate-y-15 md:translate-y-7.5">
-                    {error}
-                  </p>
-                )}
-              </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-5 mt-6 bg-[#ffffff]  text-black text-xl font-bold shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            {isLoading ? "กำลังส่งอีเมล..." : "Request Reset Link"}
+          </button>
+        </form>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-4 mt-6 bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150 text-white text-lg font-bold rounded-full shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 translate-y-7.5 md:translate-y-5"
-              >
-                {isLoading ? "กำลังส่งอีเมล..." : "Request Reset Link"}
-              </button>
-            </form>
-          </>
-        )}
-
-        <div className="mt-6 text-sm text-white/90 translate-y-5 md:translate-y-5">
+        {/* Footer Link */}
+        <div className="mt-6 text-xs md:text-sm text-white/90">
           <p>
             Remember your password?{" "}
             <span
-              className="font-extrabold underline cursor-pointer hover:text-white "
+              className="font-extrabold underline cursor-pointer hover:text-white"
               onClick={() => navigate("/login")}
             >
-              Login
+              LOGIN
             </span>
           </p>
         </div>
       </div>
+
+      {/* เรียกใช้งาน Global SuccessModal เมื่อยิง API กู้คืนรหัสผ่านสำเร็จ */}
+      <SuccessModal
+        isOpen={isSuccess}
+        onClose={() => {
+          setIsSuccess(false);
+          navigate("/login");
+        }}
+        title="Email Sent!"
+        message="ระบบได้ส่งลิงก์กู้คืนรหัสผ่านไปยังอีเมลของคุณเรียบร้อยแล้ว กรุณาเช็คกล่องข้อความครับ"
+        buttonText="Go to Login"
+      />
     </div>
   );
 };
