@@ -8,17 +8,30 @@ import {
   YAxis,
 } from "recharts";
 
-const chartData = [
-  { label: "Mon", sales: 980 },
-  { label: "Tue", sales: 1124.5 },
-  { label: "Wed", sales: 1060 },
-  { label: "Thu", sales: 1240 },
-  { label: "Fri", sales: 1340 },
-  { label: "Sat", sales: 1370 },
-  { label: "Sun", sales: 1510 },
-];
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) {
+    return null;
+  }
 
-const SalesChart = () => {
+  const point = payload[0]?.payload;
+
+  return (
+    <div
+      className="rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.08)]"
+    >
+      <p className="text-xs font-semibold text-gray-500">{point?.date}</p>
+      <p className="mt-1 text-sm font-semibold text-gray-900">
+        Sales:{" "}
+        {`฿ ${Number(point?.sales || 0).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`}
+      </p>
+    </div>
+  );
+};
+
+const SalesChart = ({ chartData }) => {
   return (
     <article className="rounded-2xl bg-white p-5 md:p-6">
       <div className="flex items-start justify-between gap-4">
@@ -70,18 +83,7 @@ const SalesChart = () => {
             />
             <Tooltip
               cursor={{ stroke: "#c7d2fe", strokeWidth: 1 }}
-              formatter={(value) => [
-                `THB ${Number(value).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}`,
-                "Sales",
-              ]}
-              contentStyle={{
-                borderRadius: "16px",
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
-              }}
+              content={<CustomTooltip />}
             />
             <Area
               type="monotone"

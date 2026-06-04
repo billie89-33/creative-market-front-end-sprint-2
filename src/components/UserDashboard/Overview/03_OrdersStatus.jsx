@@ -1,20 +1,20 @@
-import { statusLabels } from "../../../data/dashboardOrders";
-
 const statusClasses = {
-  COMPLETED: "bg-emerald-100 text-emerald-600",
-  PAYABLE: "bg-amber-100 text-amber-600",
-  RECEIVABLE: "bg-sky-100 text-sky-600",
+  pending: "bg-amber-100 text-amber-600",
+  paid: "bg-emerald-100 text-emerald-600",
+  cancelled: "bg-rose-100 text-rose-600",
 };
 
+const formatAmount = (value) => `฿${Number(value || 0).toLocaleString("en-US")}`;
+
 const OrdersStatus = ({ orders, onOpenOrders }) => {
-  const recentOrders = orders.slice(0, 3);
+  const recentOrders = orders.slice(0, 6);
 
   return (
     <div>
       <div className="mb-5">
         <h3 className="text-xl font-bold text-gray-900">Orders status</h3>
         <p className="mt-1 text-sm text-gray-400">
-          Track your most recent purchases in one place.
+          สถานะคำสั่งซื้อที่กำลังดำเนินการ
         </p>
       </div>
 
@@ -33,35 +33,66 @@ const OrdersStatus = ({ orders, onOpenOrders }) => {
               </tr>
             </thead>
             <tbody>
-              {recentOrders.map((order) => (
-                <tr
-                  key={order.id}
-                  className="border-b border-gray-200 last:border-b-0"
-                >
-                  <td className="py-4 pl-4 md:pl-8">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={order.image}
-                        alt={order.product}
-                        className="h-12 w-12 rounded-2xl object-cover"
-                      />
-                      <span className="text-sm font-medium text-gray-800">
-                        {order.product}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClasses[order.status]}`}
+              {recentOrders.length > 0 ? (
+                recentOrders.map((order) => {
+                  const primaryItem = order.items[0];
+
+                  if (!primaryItem) {
+                    return null;
+                  }
+
+                  return (
+                    <tr
+                      key={order.id}
+                      className="border-b border-gray-200 last:border-b-0"
                     >
-                      {statusLabels[order.status]}
-                    </span>
-                  </td>
-                  <td className="py-4 pr-4 text-right text-sm font-semibold text-gray-900 md:pr-8">
-                    {order.price}
+                      <td className="py-4 pl-4 md:pl-8">
+                        <div className="flex items-center gap-3">
+                          {primaryItem.image ? (
+                            <img
+                              src={primaryItem.image}
+                              alt={primaryItem.name}
+                              className="h-12 w-12 rounded-2xl object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-100 text-sm font-semibold text-gray-500">
+                              {primaryItem.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div>
+                            <span className="text-sm font-medium text-gray-800">
+                              {primaryItem.name}
+                            </span>
+                            <p className="mt-1 text-xs text-gray-400">
+                              {order.totalQuantity} item
+                              {order.totalQuantity > 1 ? "s" : ""}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClasses[order.status]}`}
+                        >
+                          {order.statusLabel}
+                        </span>
+                      </td>
+                      <td className="py-4 pr-4 text-right text-sm font-semibold text-gray-900 md:pr-8">
+                        {formatAmount(order.totalAmount)}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td
+                    colSpan="3"
+                    className="px-4 py-6 text-center text-sm text-gray-400 md:px-8"
+                  >
+                    ไม่มีสถานะคำสั่งซื้อที่กำลังดำเนินการ
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

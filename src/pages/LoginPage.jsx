@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+// --- Import SuccessModal ---
+import SuccessModal from "../components/Global/SuccessModal"; // ปรับ Path ให้ตรงกับโปรเจกต์คุณ
 
 // --- Import รูปภาพ ---
 import bgDesktop from "../assets/images/j-login-bg.jpg";
@@ -8,6 +12,7 @@ import logoLogin from "../assets/icons/creative-logo.svg";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setIsLoggedIn, setUserRole } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -29,7 +34,9 @@ const LoginPage = () => {
         const response = await fetch(`${apiBaseUrl}/api/auth/status`);
         const data = await response.json();
         if (data.timeLeft > 0) setCountdown(Math.floor(data.timeLeft));
-      } catch (err) {}
+      } catch (err) {
+        console.error("Status Check Error:", err);
+      }
     };
     checkStatus();
   }, []);
@@ -57,10 +64,26 @@ const LoginPage = () => {
             navigate("/");
           }
         }
-      } catch (err) {}
+      } catch (err) {
+        console.error("Auth Check Error:", err);
+      }
     };
     checkAuth();
   }, [navigate]);
+
+  useEffect(() => {
+    // 1. สั่งหยุด Lenis ทันทีที่เข้าหน้านี้
+    if (window.lenis) window.lenis.stop();
+
+    // 2. ล็อกระดับ CSS body ไม่ให้สกรอลล์สำรองเด้ง (Bouncing)
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      // 3. ปลดล็อกคืนค่าให้หน้าอื่นเลื่อนได้ปกติ ตอนย้ายออกจากหน้านี้
+      if (window.lenis) window.lenis.start();
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -76,12 +99,12 @@ const LoginPage = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email) {
-      newErrors.email = "Please enter your email!!";
+      newErrors.email = "PLEASE ENTER YOUR EMAIL";
     } else if (!emailRegex.test(email)) {
-      newErrors.email = "Invalid email format (e.g. name@mail.com)";
+      newErrors.email = "INVALID EMAIL FORMAT (e.g. name@mail.com)";
     }
     if (!password) {
-      newErrors.password = "Please enter your password!!";
+      newErrors.password = "PLEASE ENTER YOUR PASSWORD";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -98,10 +121,12 @@ const LoginPage = () => {
       const apiUrl = `${apiBaseUrl}/api/auth/login`;
 
       const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -111,11 +136,14 @@ const LoginPage = () => {
         setErrors({ password: data.message || "Too many attempts, please wait." });
       } else if (response.ok) {
         setErrors({});
+        setIsLoggedIn(true);
+        setUserRole(data.role);
         setIsSuccess(true);
       } else {
         setErrors({ password: data.message || "Invalid email or password!!" });
       }
     } catch (error) {
+      console.error("Login Error:", error);
       setErrors({ password: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้" });
     }
   };
@@ -130,33 +158,104 @@ const LoginPage = () => {
           backgroundPosition: "center",
         }}
       />
-      <div className="flex flex-col justify-center relative z-10 w-full max-w-[540px] md:max-w-[648px] min-h-[600px] md:min-h-[709px] p-8 md:p-10 text-center bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl mx-4 scale-80">
+
+      <div className="flex flex-col justify-center relative z-10 w-full max-w-[540px] md:max-w-[648px] min-h-[600px] md:min-h-[709px] p-8 md:p-10 text-center bg-black/30 backdrop-blur-md border border-white/20 shadow-2xl mx-4 scale-[0.8]">
         <div className="mb-6 md:mb-8 flex justify-center">
           <img src={logoLogin} alt="Logo" className="w-[75%] md:w-[85%] h-auto object-contain" />
         </div>
+
         <form onSubmit={handleLogin} className="space-y-4 text-left">
-          <label className="block text-white !text-xl !md:text-2xl font-medium mb-1 pl-4 opacity-90">Enter your email</label>
-          <div className={`relative transition-all duration-300 ${errors.email ? "pb-5" : "pb-0"}`}>
-            <input type="email" placeholder="Enter your email address" className="w-full px-6 py-3 md:py-3.5 rounded-[16px] bg-black/50 placeholder-white/80 text-white border-2 border-white outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg" value={email} onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors({ ...errors, email: "" }); }} />
-            {errors.email && <p className="absolute left-1/2 -translate-x-1/2 -bottom-1 z-20 px-3 py-0 text-[14px] font-bold text-red-600 bg-white rounded-md border border-red-200 shadow-sm transition-all duration-300 mt-0 translate-y-0.75 md:translate-y-0.5 whitespace-nowrap leading-tight">{errors.email}</p>}
+          {/* Email Input */}
+          <div className="flex flex-col">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              disabled={countdown > 0 || isDelaying}
+              className={`w-full px-6 py-3 md:py-3.5 bg-black/30 placeholder-white/80 text-white outline-none focus:ring-1 text-sm shadow-lg border-2 transition-colors duration-300 ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-500/50"
+                  : "border-white/20 focus:ring-white"
+              } ${countdown > 0 || isDelaying ? "opacity-50 cursor-not-allowed" : ""}`}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errors.email) setErrors({ ...errors, email: "" });
+              }}
+            />
+            {errors.email && (
+              <p className="text-red-400 text-[14px] mt-1.5 pl-4 font-bold tracking-wide">
+                {errors.email}
+              </p>
+            )}
           </div>
-          <div className={`relative transition-all duration-300 ${errors.password ? "pb-5" : "pb-0"}`}>
-            <input type="password" placeholder="Enter your password" className="w-full px-6 py-3 md:py-3.5 rounded-[16px] bg-black/50 placeholder-white/80 text-white border-2 border-white outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg" value={password} onChange={(e) => { setPassword(e.target.value); if (errors.password) setErrors({ ...errors, password: "" }); }} />
-            {errors.password && <p className="absolute left-1/2 -translate-x-1/2 -bottom-1 z-20 px-3 py-0 text-[14px] font-bold text-red-600 bg-white rounded-md border border-red-200 shadow-sm transition-all duration-300 mt-0 translate-y-0.75 md:translate-y-0.5 whitespace-nowrap leading-tight">{errors.password}</p>}
+
+          {/* Password Input */}
+          <div className="flex flex-col mt-4">
+            <input
+              type="password"
+              placeholder="Enter your password"
+              disabled={countdown > 0 || isDelaying}
+              className={`w-full px-6 py-3 md:py-3.5 bg-black/30 placeholder-white/80 text-white outline-none focus:ring-1 text-sm shadow-lg border-2 transition-colors duration-300 ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500/50"
+                  : "border-white/20 focus:ring-white"
+              } ${countdown > 0 || isDelaying ? "opacity-50 cursor-not-allowed" : ""}`}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errors.password) setErrors({ ...errors, password: "" });
+              }}
+            />
+            {errors.password && (
+              <p className="text-red-400 text-[14px] mt-1.5 pl-4 font-bold tracking-wide">
+                {errors.password}
+              </p>
+            )}
           </div>
+
           <button
             type="submit"
             disabled={countdown > 0 || isDelaying}
-            className={`w-full py-5 mt-4 text-white text-xl font-bold rounded-[16px] shadow-xl transition-all active:scale-95 ${countdown > 0 || isDelaying ? "bg-gray-500 cursor-not-allowed" : "bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150"}`}
+            className={`w-full py-5 mt-6 text-xl font-bold shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 ${
+              countdown > 0 || isDelaying
+                ? "bg-gray-500 text-white cursor-not-allowed"
+                : "bg-[#ffffff] text-black hover:bg-gray-200"
+            }`}
           >
-            {isDelaying ? "Processing..." : countdown > 0 ? `Wait ${formatTime(countdown)}` : "Login"}
+            {isDelaying ? "PROCESSING..." : countdown > 0 ? `WAIT ${formatTime(countdown)}` : "LOGIN"}
           </button>
         </form>
+
         <div className="mt-6 text-xs md:text-sm text-white/90 space-y-2">
-          <p className="cursor-pointer hover:underline" onClick={() => navigate("/forgot-password")}>forgot your password?</p>
-          <p>Not have one ? <span className="font-extrabold underline cursor-pointer hover:text-white" onClick={() => navigate("/register")}>Register</span></p>
+          <p
+            className="cursor-pointer hover:underline"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forgot Your Password?
+          </p>
+          <p>
+            Not have one ?{" "}
+            <span
+              className="font-extrabold underline cursor-pointer hover:text-white"
+              onClick={() => navigate("/register")}
+            >
+              REGISTER
+            </span>
+          </p>
         </div>
       </div>
+
+      {/* ใช้งาน SuccessModal */}
+      <SuccessModal
+        isOpen={isSuccess}
+        onClose={() => {
+          setIsSuccess(false);
+          window.location.href = "/";
+        }}
+        title="Welcome back!"
+        message="Login Successful."
+        buttonText="OK"
+      />
     </div>
   );
 };

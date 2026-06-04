@@ -1,163 +1,261 @@
-import { useState } from "react";
-import { statusLabels } from "../../../data/dashboardOrders";
+import { Fragment, useState } from "react";
+
+const serverBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
 
 const statusClasses = {
-  COMPLETED: "bg-emerald-50 text-emerald-600",
-  PAYABLE: "bg-amber-50 text-amber-600",
-  RECEIVABLE: "bg-sky-50 text-sky-600",
+  paid: "bg-emerald-50 text-emerald-600",
+  pending: "bg-amber-50 text-amber-600",
+  cancelled: "bg-rose-50 text-rose-600",
 };
 
-const OrderRow = ({ order, onSaveOrder, placeEditButtonRight = false }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [formValues, setFormValues] = useState({
-    courier: order.courier || "",
-    trackingNumber: order.trackingNumber || "",
+const courierOptions = ["Thailand post", "Flash express", "E-mail"];
+
+const formatDate = (value) =>
+  new Date(value).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
 
-  const handleStartEdit = () => {
-    setFormValues({
-      courier: order.courier || "",
-      trackingNumber: order.trackingNumber || "",
-    });
-    setIsEditing(true);
-  };
+const formatAmount = (value) =>
+  `฿${Number(value || 0).toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })}`;
 
-  const handleSave = () => {
-    onSaveOrder(order.id, {
-      courier: formValues.courier.trim(),
-      trackingNumber: formValues.trackingNumber.trim(),
-    });
-    setIsEditing(false);
-  };
+const renderProductImage = (item) =>
+  item.image ? (
+    <img
+      src={item.image}
+      alt={item.name}
+      className="h-10 w-10 rounded-xl bg-gray-100 object-cover"
+    />
+  ) : (
+    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-sm font-semibold text-gray-500">
+      {item.name.charAt(0).toUpperCase()}
+    </div>
+  );
 
-  const courier = order.courier || "-";
-  const trackingNumber = order.trackingNumber || "-";
-  const courierClassName = order.courier
-    ? "font-semibold text-gray-900"
-    : "font-semibold text-gray-300";
-  const trackingClassName = order.trackingNumber
-    ? "font-semibold text-gray-900"
-    : "font-semibold text-gray-300";
+const OrderRow = ({ order }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [courier, setCourier] = useState(order.courier || "");
+  const [trackingNumber, setTrackingNumber] = useState(
+    order.trackingNumber || "",
+  );
+  const [isEditing, setIsEditing] = useState(
+    !order.courier && !order.trackingNumber,
+  );
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("success");
+
+  const primaryItem = order.items?.[0];
+  const extraItems = order.items?.slice(1) || [];
+  const canEditShipping = order.status === "paid";
+  const courierFieldClass = isEditing
+    ? "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+    : "w-full rounded-xl border border-transparent bg-transparent px-0 py-2 text-sm text-gray-700 outline-none";
+  const trackingFieldClass = isEditing
+    ? "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none transition focus:border-violet-300"
+    : "w-full rounded-xl border border-transparent bg-transparent px-0 py-2 text-sm text-gray-700 outline-none";
+
+  if (!primaryItem) {
+    return null;
+  }
+
+  const handleSaveShipping = async () => {
+    try {
+      setSaving(true);
+      setMessage("");
+
+      const response = await fetch(
+        `${serverBaseUrl}/api/admin-dashboard/orders/${order.orderId}/shipping`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            courier,
+            trackingNumber,
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to update shipping details");
+      }
+
+      setCourier(result.data?.courier || "");
+      setTrackingNumber(result.data?.trackingNumber || "");
+      setMessage("Saved");
+      setMessageType("success");
+      setIsEditing(false);
+    } catch (error) {
+      setMessage(error.message || "Failed to update shipping details");
+      setMessageType("error");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
-    <tr className="align-top transition-colors hover:bg-gray-50/50">
-      <td className="px-4 py-4 md:px-6">
-        <div className="flex items-center gap-3">
-          <img
-            src={order.image}
-            alt={order.product}
-            className="h-10 w-10 rounded-xl bg-gray-100 object-cover"
-          />
-          <div>
-            <p className="text-sm font-medium text-gray-800">{order.product}</p>
-            <p className="mt-1 text-xs text-gray-500">by {order.artist}</p>
-          </div>
-        </div>
-      </td>
-      <td className="px-4 py-4 text-sm text-gray-400">{order.date}</td>
-      <td className="px-4 py-4 text-sm font-medium text-gray-700">
-        {order.items}
-      </td>
-      <td className="px-4 py-4 text-sm text-gray-600">{order.customer}</td>
-      <td className="px-4 py-4 text-right text-sm font-bold text-gray-900">
-        {order.price}
-      </td>
-      <td className="px-4 py-4">
-        <span
-          className={`inline-block rounded-full px-3 py-1 text-[10px] font-bold tracking-wide ${statusClasses[order.status]}`}
-        >
-          {statusLabels[order.status]}
-        </span>
-      </td>
-      <td className="px-4 py-4">
-        <div className="min-w-[180px]">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
-            Courier
-          </p>
-          {isEditing ? (
-            <input
-              type="text"
-              value={formValues.courier}
-              onChange={(event) =>
-                setFormValues((currentValues) => ({
-                  ...currentValues,
-                  courier: event.target.value,
-                }))
-              }
-              placeholder="Add courier"
-              className="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-900 outline-none transition focus:border-violet-300"
-            />
-          ) : (
-            <p className={`mt-2 text-sm ${courierClassName}`}>{courier}</p>
-          )}
-        </div>
-      </td>
-      <td className="px-4 py-4 md:px-6">
-        <div className="min-w-[220px]">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
-              Tracking Number
-            </p>
-            {placeEditButtonRight && !isEditing ? (
-              <button
-                type="button"
-                onClick={handleStartEdit}
-                className="text-xs font-semibold text-violet-600 transition hover:text-violet-700"
-              >
-                Edit
-              </button>
-            ) : null}
-          </div>
-          {isEditing ? (
-            <>
-              <input
-                type="text"
-                value={formValues.trackingNumber}
-                onChange={(event) =>
-                  setFormValues((currentValues) => ({
-                    ...currentValues,
-                    trackingNumber: event.target.value,
-                  }))
-                }
-                placeholder="Add tracking number"
-                className="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-900 outline-none transition focus:border-violet-300"
-              />
-              <div className="mt-3 flex justify-end gap-2">
+    <Fragment>
+      <tr className="align-top transition-colors hover:bg-gray-50/50">
+        <td className="px-4 py-4 md:px-6">
+          <div className="flex items-center gap-3">
+            {renderProductImage(primaryItem)}
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                {primaryItem.name}
+              </p>
+              <p className="mt-1 text-xs text-gray-500">
+                by {primaryItem.artist}
+              </p>
+              <p className="mt-2 text-sm text-gray-400">
+                {primaryItem.quantity} item(s)
+              </p>
+              {extraItems.length > 0 ? (
                 <button
                   type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-600 transition hover:bg-gray-50"
+                  onClick={() => setExpanded((value) => !value)}
+                  className="mt-2 text-xs font-semibold text-violet-600 transition hover:text-violet-700"
                 >
-                  Cancel
+                  {expanded
+                    ? "Hide additional items"
+                    : `View ${extraItems.length} more item(s)`}
                 </button>
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  className="rounded-xl bg-[#1e1b4b] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#2b2670]"
+              ) : null}
+            </div>
+          </div>
+        </td>
+        <td className="px-4 py-4 text-center text-sm text-gray-400">
+          {order.status === "paid" && order.paidAt
+            ? formatDate(order.paidAt)
+            : ""}
+        </td>
+        <td className="px-4 py-4 text-center text-sm font-medium text-gray-700">
+          {formatAmount(primaryItem.price)}
+        </td>
+        <td className="px-4 py-4 text-center text-sm text-gray-600">
+          {order.customer}
+        </td>
+        <td className="px-4 py-4 text-center text-sm font-bold text-gray-900">
+          {formatAmount(order.totalAmount)}
+        </td>
+        <td className="px-4 py-4 text-center">
+          <span
+            className={`inline-block rounded-full px-3 py-1 text-[10px] font-bold tracking-wide ${statusClasses[order.status]}`}
+          >
+            {order.statusLabel}
+          </span>
+        </td>
+        <td className="px-4 py-4">
+          {canEditShipping ? (
+            <div className="mx-auto min-w-45 max-w-45 text-center">
+              {isEditing ? (
+                <select
+                  value={courier}
+                  onChange={(event) => setCourier(event.target.value)}
+                  className={courierFieldClass}
                 >
-                  Save
-                </button>
-              </div>
-            </>
-          ) : (
-            <p className={`mt-2 text-sm ${trackingClassName}`}>
-              {trackingNumber}
-            </p>
-          )}
-          {!placeEditButtonRight && !isEditing ? (
-            <div className="mt-3 flex justify-end">
-              <button
-                type="button"
-                onClick={handleStartEdit}
-                className="text-xs font-semibold text-violet-600 transition hover:text-violet-700"
-              >
-                Edit
-              </button>
+                  <option value="">Select courier</option>
+                  {courierOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className={courierFieldClass}>{courier || "-"}</div>
+              )}
             </div>
           ) : null}
-        </div>
-      </td>
-    </tr>
+        </td>
+        <td className="px-4 py-4 md:px-6">
+          {canEditShipping ? (
+            <div className="mx-auto min-w-55 max-w-55 text-center">
+              <input
+                type="text"
+                value={trackingNumber}
+                onChange={(event) => setTrackingNumber(event.target.value)}
+                disabled={!isEditing}
+                placeholder="Enter tracking number"
+                className={trackingFieldClass}
+              />
+            </div>
+          ) : null}
+        </td>
+        <td className="px-4 py-4 md:px-6">
+          {canEditShipping ? (
+            <div className="mx-auto flex min-w-24 max-w-24 flex-col items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (isEditing) {
+                    handleSaveShipping();
+                    return;
+                  }
+
+                  setIsEditing(true);
+                  setMessage("");
+                }}
+                disabled={saving}
+                className="w-full rounded-xl bg-violet-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {saving ? "Saving..." : isEditing ? "Save" : "Edit"}
+              </button>
+              {message ? (
+                <span
+                  className={`text-center text-xs ${
+                    messageType === "success"
+                      ? "text-emerald-600"
+                      : "text-rose-500"
+                  }`}
+                >
+                  {message}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+        </td>
+      </tr>
+
+      {extraItems.map((item) => (
+        <tr
+          key={item.id}
+          className={`align-top transition-all duration-300 ease-out ${
+            expanded ? "opacity-100" : "hidden opacity-0"
+          }`}
+        >
+          <td className="px-4 py-4 pl-10 md:px-6 md:pl-12">
+            <div className="flex items-center gap-3">
+              {renderProductImage(item)}
+              <div>
+                <p className="text-sm font-medium text-gray-800">{item.name}</p>
+                <p className="mt-1 text-xs text-gray-500">by {item.artist}</p>
+                <p className="mt-2 text-sm text-gray-400">
+                  {item.quantity} item(s)
+                </p>
+              </div>
+            </div>
+          </td>
+          <td className="px-4 py-4 text-center text-sm text-gray-300" />
+          <td className="px-4 py-4 text-center text-sm font-medium text-gray-700">
+            {formatAmount(item.price)}
+          </td>
+          <td className="px-4 py-4 text-center text-sm text-gray-300" />
+          <td className="px-4 py-4 text-center text-sm text-gray-300" />
+          <td className="px-4 py-4 text-center text-sm text-gray-300" />
+          <td className="px-4 py-4 text-center text-sm text-gray-300" />
+          <td className="px-4 py-4 text-center text-sm text-gray-300 md:px-6" />
+          <td className="px-4 py-4 text-center text-sm text-gray-300 md:px-6" />
+        </tr>
+      ))}
+    </Fragment>
   );
 };
 

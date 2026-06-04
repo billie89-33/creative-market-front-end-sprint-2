@@ -1,17 +1,22 @@
-import { useMemo, useState } from "react";
-import { statusLabels } from "../../../data/dashboardOrders";
+import { useState } from "react";
 import OrderCard from "./01_OrderCard";
 
 const tabs = [
   { label: "All", value: "All" },
-  { label: "ที่ต้องชำระ", value: "PAYABLE" },
-  { label: "ที่ต้องได้รับ", value: "RECEIVABLE" },
-  { label: "สำเร็จแล้ว", value: "COMPLETED" },
+  { label: "รอดำเนินการ", value: "pending" },
+  { label: "สำเร็จแล้ว", value: "paid" },
+  { label: "ยกเลิก", value: "cancelled" },
 ];
 
 const ordersPerPage = 5;
 
-const MyOrders = ({ orders }) => {
+const formatCurrency = (value) =>
+  new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value || 0);
+
+const MyOrders = ({ orders, summary, loading, error }) => {
   const [activeTab, setActiveTab] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -21,35 +26,29 @@ const MyOrders = ({ orders }) => {
       : orders.filter((order) => order.status === activeTab);
 
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-  const paginatedOrders = filteredOrders.slice(
-    (currentPage - 1) * ordersPerPage,
-    currentPage * ordersPerPage,
-  );
+  const safeTotalPages = Math.max(totalPages, 1);
+  const visiblePage = Math.min(currentPage, safeTotalPages);
 
-  const totalSpend = useMemo(
-    () =>
-      orders
-        .reduce(
-          (sum, order) => sum + Number(order.price.replace(/[^\d.]/g, "")),
-          0,
-        )
-        .toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-    [orders],
+  const paginatedOrders = filteredOrders.slice(
+    (visiblePage - 1) * ordersPerPage,
+    visiblePage * ordersPerPage,
   );
 
   const orderStats = [
-    { label: "Total orders", value: String(orders.length) },
-    { label: "Total spend", value: `฿${totalSpend}` },
-    {
-      label: "Completed",
-      value: String(
-        orders.filter((order) => order.status === "COMPLETED").length,
-      ),
-    },
+    { label: "Total orders", value: String(summary.totalOrders) },
+    { label: "Total spend", value: `฿${formatCurrency(summary.totalSpend)}` },
+    { label: "Orders Complete", value: String(summary.completedOrders) },
   ];
+
+  if (loading) {
+    return (
+      <section className="text-sm text-gray-500">Loading orders...</section>
+    );
+  }
+
+  if (error) {
+    return <section className="text-sm text-red-500">{error}</section>;
+  }
 
   return (
     <section className="space-y-6">
@@ -57,7 +56,9 @@ const MyOrders = ({ orders }) => {
         <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
           My Orders
         </h1>
-        <p className="mt-1 text-sm text-gray-400">คำสั่งซื้อของฉัน</p>
+        <p className="mt-1 text-sm text-gray-400">
+          Order items from your account
+        </p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -99,13 +100,15 @@ const MyOrders = ({ orders }) => {
       </div>
 
       <div className="space-y-4">
-        {paginatedOrders.map((order) => (
-          <OrderCard
-            key={order.id}
-            order={order}
-            statusLabel={statusLabels[order.status]}
-          />
-        ))}
+        {paginatedOrders.length > 0 ? (
+          paginatedOrders.map((order) => (
+            <OrderCard key={order.id} order={order} />
+          ))
+        ) : (
+          <div className="rounded-2xl bg-white p-6 text-sm text-gray-400">
+            No orders found for this filter.
+          </div>
+        )}
       </div>
 
       {totalPages > 1 && (
@@ -113,15 +116,15 @@ const MyOrders = ({ orders }) => {
           <button
             type="button"
             onClick={() => setCurrentPage((page) => Math.max(page - 1, 1))}
-            disabled={currentPage === 1}
+            disabled={visiblePage === 1}
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
             &lt;
           </button>
 
-          {Array.from({ length: totalPages }, (_, index) => {
+          {Array.from({ length: safeTotalPages }, (_, index) => {
             const page = index + 1;
-            const isActive = currentPage === page;
+            const isActive = visiblePage === page;
 
             return (
               <button
@@ -142,9 +145,9 @@ const MyOrders = ({ orders }) => {
           <button
             type="button"
             onClick={() =>
-              setCurrentPage((page) => Math.min(page + 1, totalPages))
+              setCurrentPage((page) => Math.min(page + 1, safeTotalPages))
             }
-            disabled={currentPage === totalPages}
+            disabled={visiblePage === safeTotalPages}
             className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
             &gt;
