@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import CartHeader from "../components/Cart/01_CartHeader";
 import CartTable from "../components/Cart/02_CartTable";
 import CartSummary from "../components/Cart/03_CartSummary";
