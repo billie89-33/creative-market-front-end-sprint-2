@@ -71,19 +71,19 @@ const Register = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
-      newErrors.email = "Please enter your email!!";
+      newErrors.email = "PLEASE ENTER YOUR EMAIL";
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = "Invalid email format (e.g. name@mail.com)";
     }
 
     if (!formData.password) {
-      newErrors.password = "Please enter your password!!";
+      newErrors.password = "PLEASE ENTER YOUR PASSWORD";
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters!!";
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     if (formData.confirmPassword !== formData.password) {
-      newErrors.confirmPassword = "Passwords do not match!!";
+      newErrors.confirmPassword = "PASSWORDS DO NOT MATCH";
     }
 
     if (parseInt(captcha.userAnswer) !== captcha.num1 + captcha.num2) {
@@ -162,7 +162,7 @@ const Register = () => {
       />
 
       {/* ปรับกล่องหลักให้เป็น bg-black/30 backdrop-blur-md และ border-white/20 เพื่อล้อกับหน้า Login */}
-      <div className="scale-80 relative z-10 bg-black/30 backdrop-blur-md w-full max-w-[400px] md:max-w-[1096px] min-h-[500px] md:min-h-[688px] h-auto shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/20 mx-auto py-10 px-6 md:p-0">
+      <div className="scale-80 relative z-10 bg-cm-glass backdrop-blur-md  border-cm-border w-full max-w-[400px] md:max-w-[1096px] min-h-[500px] md:min-h-[688px] h-auto shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/20 mx-auto py-10 px-6 md:p-0">
         {/* รูปด้านซ้าย */}
         <div className="hidden md:block w-1/2 p-6">
           <img
@@ -184,9 +184,9 @@ const Register = () => {
               <input
                 type="email"
                 name="email"
-                placeholder="Enter your email address!!"
+                placeholder="Enter your email address"
                 disabled={isLoading}
-                className={`w-full px-6 py-3 md:py-3.5 bg-black/50 placeholder-white/80 text-white outline-none focus:ring-2 text-sm shadow-lg border-2 transition-colors duration-300 ${
+                className={`w-full px-6 py-3 md:py-3.5 bg-black/40 placeholder-white/80 text-cm-text outline-none focus:ring-2 text-sm shadow-lg border-2 transition-colors duration-300 ${
                   errors.email
                     ? "border-red-500 focus:ring-red-500/50"
                     : "border-white focus:ring-white"

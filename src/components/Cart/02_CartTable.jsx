@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 export default function CartTable({ cartItems, updateQuantity, removeItem }) {
   return (
-    <div className="mb-8">
+    <div className="mb-8 bg-black/10 p-8 border-1 border-violet-600 rounded-xl">
       {/* Table Headers */}
-      <div className="grid grid-cols-12 text-sm font-semibold border-b border-purple-200 pb-3 mb-6 text-gray-600">
+      <div className="grid grid-cols-12 text-sm font-semibold border-b border-violet-300 pb-3 mb-6 text-white">
         <div className="col-span-6">Product</div>
         <div className="col-span-3 text-center">Quantity</div>
         <div className="col-span-3 text-right">Price</div>
@@ -12,35 +12,39 @@ export default function CartTable({ cartItems, updateQuantity, removeItem }) {
 
       {/* Product List */}
       <div className="space-y-6">
-        {cartItems.map(item => {
+        {cartItems.map((item) => {
           const product = item;
           const itemId = item._id || item.id;
           const pId = item.productId?._id || item.productId;
 
           return (
-            <div key={itemId || pId} className="grid grid-cols-12 items-center border-b border-purple-200 pb-6">
+            <div
+              key={itemId || pId}
+              className="grid grid-cols-12 items-center border-b border-violet-300 pb-6"
+            >
               {/* Product Info */}
               <div className="col-span-6 flex gap-5">
-                
                 <div className="w-24 h-24 bg-gray-100 rounded-sm overflow-hidden border border-purple-100">
-                  <img 
-                    src={product.images?.[0] || "/placeholder-image.png"} 
-                    alt={product.name} 
+                  <img
+                    src={product.images?.[0] || "/placeholder-image.png"}
+                    alt={product.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="flex flex-col justify-between py-1">
                   <div>
                     {/* ⭐️ แก้ไข: แสดง Tags แทนชื่อสินค้าตามที่ต้องการ */}
-                    <h2 className="font-bold text-lg text-[#1E1B4B]">
+                    <h2 className="font-bold text-lg text-white">
                       {product.name || item.name}
                     </h2>
                     <p className="text-sm text-gray-400">
-                      {product.tags && product.tags.length > 0 ? product.tags.join(" ") : (product.category || 'Digital Art')}
+                      {product.tags && product.tags.length > 0
+                        ? product.tags.join(" ")
+                        : product.category || "Digital Art"}
                     </p>
                   </div>
-                  <button 
-                    onClick={() => removeItem(pId)} 
+                  <button
+                    onClick={() => removeItem(pId)}
                     className="text-xs text-red-500 hover:text-red-700 underline text-left cursor-pointer"
                   >
                     Remove
@@ -50,25 +54,32 @@ export default function CartTable({ cartItems, updateQuantity, removeItem }) {
 
               {/* Quantity Control */}
               <div className="col-span-3 flex justify-center">
-                <div className="flex border border-[#4C1D95] rounded overflow-hidden h-9">
-                  <button 
-                    onClick={() => updateQuantity(pId, -1)} 
-                    className="px-3 bg-white hover:bg-purple-100 font-bold text-[#1E1B4B] cursor-pointer"
-                  >-</button>
-                  <div className="px-5 bg-white border-x border-[#4C1D95] text-sm flex items-center justify-center min-w-[40px]">
+                <div className="flex border border-white/30 rounded overflow-hidden h-9">
+                  <button
+                    onClick={() => updateQuantity(pId, -1)}
+                    className="px-3 bg-violet-600 hover:bg-violet-300 font-bold text-[#ffffff] cursor-pointer"
+                  >
+                    -
+                  </button>
+                  <div className="px-5 bg-[#151516] border-x border-white/20 text-sm text-white flex items-center justify-center min-w-[40px]">
                     {item.quantity}
                   </div>
-                  <button 
-                    onClick={() => updateQuantity(pId, 1)} 
-                    className="px-3 bg-white hover:bg-purple-100 font-bold text-[#1E1B4B] cursor-pointer"
-                  >+</button>
+                  <button
+                    onClick={() => updateQuantity(pId, 1)}
+                    className="px-3 bg-violet-600 hover:bg-purple-100 font-bold text-[#ffffff] cursor-pointer"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
 
               {/* Price */}
               <div className="col-span-3 text-right">
-                <p className="font-bold text-2xl text-[#1E1B4B]">
-                  {((product.price || item.price || 0) * item.quantity).toLocaleString()}.-
+                <p className="font-bold text-2xl text-[#ffffff]">
+                  {(
+                    (product.price || item.price || 0) * item.quantity
+                  ).toLocaleString()}
+                  .-
                 </p>
               </div>
             </div>

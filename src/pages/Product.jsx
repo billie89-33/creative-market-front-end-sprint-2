@@ -115,17 +115,15 @@ const Product = () => {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
-        <p className="text-lg font-semibold text-[#2f2b78]">
-          Loading product...
-        </p>
+      <main className="flex min-h-screen items-center justify-center bg-cm-bg">
+        <p className="text-lg font-semibold text-cm-text">Loading product...</p>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
+      <main className="flex min-h-screen items-center justify-center bg-cm-bg">
         <p className="text-lg font-semibold text-red-500">{error}</p>
       </main>
     );
@@ -133,16 +131,14 @@ const Product = () => {
 
   if (!product) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#eeecfb]">
-        <p className="text-lg font-semibold text-[#2f2b78]">
-          Product not found
-        </p>
+      <main className="flex min-h-screen items-center justify-center bg-cm-bg">
+        <p className="text-lg font-semibold text-cm-text">Product not found</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen w-full bg-[#eeecfb]">
+    <main className="min-h-screen w-full bg-[#161a1c]">
       <ProductHeaderBar category={product.category} />
 
       <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-10 sm:px-6 md:gap-8 md:px-8 md:pb-12">

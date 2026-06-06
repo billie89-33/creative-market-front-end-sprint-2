@@ -1,26 +1,33 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import PaymentGateway from "../components/Payment/01_PaymentGateway";
-import CheckoutSummary from "../components/Checkout/03_CheckoutSummary"; 
+import CheckoutSummary from "../components/Checkout/03_CheckoutSummary";
 import { useCart } from "../context/CartContext";
 
 export default function Payment() {
   const location = useLocation();
   // ⭐️ รับ orderItemsSnapshot มาจากหน้า Checkout
-  const { orderId, amount, orderItemsSnapshot } = location.state || { orderId: null, amount: 0, orderItemsSnapshot: null };
+  const { orderId, amount, orderItemsSnapshot } = location.state || {
+    orderId: null,
+    amount: 0,
+    orderItemsSnapshot: null,
+  };
 
   const { cartItems } = useCart();
 
   // ⭐️ ถ้ามี Snapshot ให้ใช้ Snapshot ก่อน ถ้าไม่มีค่อยไปดึงตะกร้าสด
   const displayItems = orderItemsSnapshot || cartItems;
 
-  const subtotal = amount || displayItems.reduce(
-    (acc, item) => acc + (item.price || item.productId?.price || 0) * item.quantity,
-    0,
-  );
+  const subtotal =
+    amount ||
+    displayItems.reduce(
+      (acc, item) =>
+        acc + (item.price || item.productId?.price || 0) * item.quantity,
+      0,
+    );
 
   return (
-    <div className="min-h-screen bg-[#F3EFFF]">
+    <div className="min-h-screen bg-[#161615]">
       <main className="max-w-6xl w-full mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-6">
           <div className="lg:col-span-7">
@@ -31,7 +38,7 @@ export default function Payment() {
             <CheckoutSummary
               cartItems={displayItems}
               subtotal={subtotal}
-              isPaymentPage={true} 
+              isPaymentPage={true}
             />
           </div>
         </div>
@@ -39,5 +46,3 @@ export default function Payment() {
     </div>
   );
 }
-
-

@@ -1,6 +1,6 @@
 const FormInput = ({
   label,
-  description, // 1. เพิ่ม Prop สำหรับรับข้อความอธิบาย
+  description,
   name,
   value,
   onChange,
@@ -9,27 +9,34 @@ const FormInput = ({
   type = "text",
   inputMode,
   required,
-  isTextArea = false, // 2. เพิ่ม Prop เพื่อเช็คว่าอยากให้เรนเดอร์เป็น Textarea ไหม
-  rows = 4, // ควบคุมจำนวนบรรทัดเริ่มต้นของ Textarea
+  isTextArea = false,
+  rows = 4,
   wrapperClass = "",
   inputWidthClass = "w-full",
+  textColor = "text-gray-800",
+  labelColor = "text-black",
+  bgColor = "bg-white",
+  hoverClass = "hover:border-gray-500",
+  focusClass = "focus:border-black focus:ring-1 focus:ring-black",
+  roundedClass = "", // 1. เพิ่ม Prop รับค่าความมนของขอบ (Default เป็น rounded-md)
 }) => {
-  const baseClass =
-    "p-3 outline-none focus:ring-1 placeholder-gray-400 text-gray-800 transition-colors duration-200";
+  // 2. เปลี่ยนคำว่า rounded-md เป็นตัวแปร ${roundedClass}
+  const baseClass = `p-3 outline-none placeholder-gray-400 ${textColor} ${bgColor} transition-all duration-200 ${roundedClass}`;
+
   const inputClass = error
     ? `${inputWidthClass} ${baseClass} border-2 border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50`
-    : `${inputWidthClass} ${baseClass} border border-gray-400 focus:border-black focus:ring-black`;
+    : `${inputWidthClass} ${baseClass} border border-gray-400 ${hoverClass} ${focusClass}`;
 
   return (
     <div className={wrapperClass}>
       {/* ส่วน Label */}
       {label && (
-        <label className="block text-base font-bold text-black mb-1">
+        <label className={`block text-base font-bold mb-1 ${labelColor}`}>
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
 
-      {/* ส่วน Description (เรนเดอร์เฉพาะตอนที่มีการส่งค่าเข้ามา) */}
+      {/* ส่วน Description */}
       {description && (
         <span className="block text-sm text-gray-500 mb-3">{description}</span>
       )}
