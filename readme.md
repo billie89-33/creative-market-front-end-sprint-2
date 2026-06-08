@@ -5,6 +5,7 @@
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-brightgreen?style=for-the-badge&logo=vercel)](https://creative-market-front-end-sprint-2-mu.vercel.app/)
 [![Documentation](https://img.shields.io/badge/Project%20Docs-Google%20Docs-4285F4?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs.google.com/document/d/1CdNxqwrQUCS4ei0iBF1PQaGILajpYmAmKfzmL8m9FXM/edit?usp=sharing)
 [![Architecture](https://img.shields.io/badge/Architecture-Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/board/knELaqlKa8ARUQofT0FwEE/Commit-no-Jutsu?node-id=480-986&t=c1UFc62fAUL5XE5Y-0)
+[![Backend Repo](https://img.shields.io/badge/Backend%20Repo-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/AshaJenvasu/creative-market-back-end)
 
 ---
 
@@ -47,7 +48,6 @@ Today's online marketplaces don't distinguish between AI-generated work and huma
 |---|---|
 | Node.js + Express.js | REST API server |
 | MongoDB + Mongoose | NoSQL database with schema modeling |
-| Multer | File upload handling |
 | Cloudinary | Cloud-based image storage |
 | Rate Limiting Middleware | API abuse protection |
 | Render | Backend deployment |
@@ -91,6 +91,7 @@ creative-market/
 | 📝 Project Documentation (Vision, Goals, Features) | [Google Docs](https://docs.google.com/document/d/1CdNxqwrQUCS4ei0iBF1PQaGILajpYmAmKfzmL8m9FXM/edit?usp=sharing) |
 | 🗂️ Software Architecture & System Blueprint | [Figma Board](https://www.figma.com/board/knELaqlKa8ARUQofT0FwEE/Commit-no-Jutsu?node-id=480-986&t=c1UFc62fAUL5XE5Y-0) |
 | 🌐 Live Application | [creative-market-front-end-sprint-2-mu.vercel.app](https://creative-market-front-end-sprint-2-mu.vercel.app/) |
+| ⚙️ Backend Repository | [creative-market-back-end](https://github.com/AshaJenvasu/creative-market-back-end) |
 
 ---
 
@@ -102,7 +103,7 @@ This project was built in a Scrum environment across two sprints by a cross-func
 |---|---|
 | [@lattawanksp](https://github.com/lattawanksp) | Team Member |
 | [@Wathisa](https://github.com/Wathisa) | Team Member |
-| [@AshaJenvasu](https://github.com/AshaJenvasu) | Scrum Master |
+| [@AshaJenvasu](https://github.com/AshaJenvasu) | **Scrum Master** |
 | [@devmontri-github](https://github.com/devmontri-github) | Team Member |
 | [@jolynestarchaser](https://github.com/jolynestarchaser) | Team Member |
 | [@billie89-33](https://github.com/billie89-33) | Team Member |
