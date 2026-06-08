@@ -22,7 +22,9 @@ const Overview = ({ stats, loading, error, onOpenOrders }) => {
   ];
 
   if (loading) {
-    return <section className="text-sm text-gray-500">Loading dashboard...</section>;
+    return (
+      <section className="text-sm text-gray-500">Loading dashboard...</section>
+    );
   }
 
   if (error) {

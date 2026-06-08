@@ -41,7 +41,7 @@ const Overview = ({
 
       <div className="grid gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-[1.4fr_0.8fr_0.8fr]">
         <UserCard profile={profile} />
-        <StatsCard label="Total Orders" value={summary.totalOrders} />
+        <StatsCard label="Orders Complete" value={summary.totalOrders} />
         <StatsCard
           label="Total Spend"
           value={`฿ ${formatCurrency(summary.totalSpend)}`}
