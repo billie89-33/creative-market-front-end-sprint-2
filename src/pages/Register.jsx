@@ -28,12 +28,13 @@ const Register = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const apiBaseUrl =
+          import.meta.env.VITE_API_URL || "http://localhost:7777";
         const response = await fetch(`${apiBaseUrl}/api/auth/me`, {
           method: "GET",
-          credentials: "include"
+          credentials: "include",
         });
-        
+
         if (response.ok) {
           const data = await response.json();
           if (data.success && data.user && data.user.role === "user") {
@@ -81,12 +82,13 @@ const Register = () => {
   useEffect(() => {
     const checkRateLimitStatus = async () => {
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
+        const apiBaseUrl =
+          import.meta.env.VITE_API_URL || "http://localhost:7777";
         const response = await fetch(`${apiBaseUrl}/api/users/register/status`);
         const data = await response.json();
 
         if (data.isBlocked) {
-          setBlockEndTime(Date.now() + (data.timeLeft * 1000));
+          setBlockEndTime(Date.now() + data.timeLeft * 1000);
           setTimeLeft(data.timeLeft);
         }
       } catch (error) {
@@ -118,7 +120,7 @@ const Register = () => {
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
   const handleChange = (e) => {
@@ -164,11 +166,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (blockEndTime !== null) return;
-    
+
     if (!validate()) return;
 
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:7777";
 
@@ -181,17 +183,20 @@ const Register = () => {
       if (!emailCheckRes.ok) {
         if (emailCheckRes.status === 429) {
           const waitTimeSeconds = emailCheck.timeLeft || 180;
-          setBlockEndTime(Date.now() + (waitTimeSeconds * 1000));
+          setBlockEndTime(Date.now() + waitTimeSeconds * 1000);
           setTimeLeft(waitTimeSeconds);
         }
-        setErrors({ ...errors, email: emailCheck.message || 'Something went wrong' });
-        generateCaptcha(); 
+        setErrors({
+          ...errors,
+          email: emailCheck.message || "Something went wrong",
+        });
+        generateCaptcha();
         return;
       }
-      
+
       if (emailCheck.exists) {
         setErrors({ ...errors, email: "Email already in use" });
-        generateCaptcha(); 
+        generateCaptcha();
         return;
       }
 
@@ -212,11 +217,14 @@ const Register = () => {
       if (!registerRes.ok) {
         if (registerRes.status === 429) {
           const waitTimeSeconds = registerData.timeLeft || 180;
-          setBlockEndTime(Date.now() + (waitTimeSeconds * 1000));
+          setBlockEndTime(Date.now() + waitTimeSeconds * 1000);
           setTimeLeft(waitTimeSeconds);
         }
-        setErrors({ ...errors, email: registerData.message || 'Something went wrong' });
-        generateCaptcha(); 
+        setErrors({
+          ...errors,
+          email: registerData.message || "Something went wrong",
+        });
+        generateCaptcha();
         return;
       }
 
@@ -224,7 +232,7 @@ const Register = () => {
     } catch (error) {
       console.error("Registration error:", error);
       setErrors({ ...errors, email: "Failed to connect to the server" });
-      generateCaptcha(); 
+      generateCaptcha();
     } finally {
       setIsLoading(false);
     }
@@ -240,7 +248,6 @@ const Register = () => {
           backgroundPosition: "center",
         }}
       />
-
 
       {/* ปรับกล่องหลักให้เป็น bg-black/30 backdrop-blur-md และ border-white/20 เพื่อล้อกับหน้า Login */}
       <div className="scale-80 relative z-10 bg-cm-glass backdrop-blur-md  border-cm-border w-full max-w-[400px] md:max-w-[1096px] min-h-[500px] md:min-h-[688px] h-auto shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/20 mx-auto py-10 px-6 md:p-0">
@@ -260,33 +267,20 @@ const Register = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Field */}
+            {/* Email Field - ใช้ดีไซน์แคปซูลของเพื่อน */}
             <div className="flex flex-col">
               <input
                 type="email"
                 name="email"
                 placeholder="Enter your email address"
-                disabled={isLoading}
+                disabled={isLoading || blockEndTime !== null}
                 className={`w-full px-6 py-3 md:py-3.5 bg-black/40 placeholder-white/80 text-cm-text outline-none focus:ring-2 text-sm shadow-lg border-2 transition-colors duration-300 ${
                   errors.email
                     ? "border-red-500 focus:ring-red-500/50"
                     : "border-white focus:ring-white"
-                } ${isLoading ? "opacity-50" : ""}`}
+                } ${isLoading || blockEndTime !== null ? "opacity-50 cursor-not-allowed" : ""}`}
                 value={formData.email}
                 onChange={handleChange}
-            
-            {/* Email Field - ใช้ดีไซน์แคปซูลของเพื่อน */}
-            <div className="relative pb-2">
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Enter your email address!!" 
-                disabled={isLoading || blockEndTime !== null}
-                className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${
-                  errors.email ? 'border-red-500' : 'border-white'
-                } ${isLoading || blockEndTime !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
-                value={formData.email} 
-                onChange={handleChange} 
               />
               {errors.email && (
                 <p className="text-red-400 text-[14px] mt-1.5 pl-4 font-bold tracking-wide">
@@ -297,16 +291,16 @@ const Register = () => {
 
             {/* Password Field - ใช้ดีไซน์แคปซูลของเพื่อน */}
             <div className="relative pb-2">
-              <input 
-                type="password" 
-                name="password" 
-                placeholder="Enter your password" 
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
                 disabled={isLoading || blockEndTime !== null}
                 className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${
-                  errors.password ? 'border-red-500' : 'border-white'
-                } ${isLoading || blockEndTime !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
-                value={formData.password} 
-                onChange={handleChange} 
+                  errors.password ? "border-red-500" : "border-white"
+                } ${isLoading || blockEndTime !== null ? "opacity-50 cursor-not-allowed" : ""}`}
+                value={formData.password}
+                onChange={handleChange}
               />
               {errors.password && (
                 <p className="text-red-400 text-[14px] mt-1.5 pl-4 font-bold tracking-wide">
@@ -317,16 +311,16 @@ const Register = () => {
 
             {/* Confirm Password Field - ใช้ดีไซน์แคปซูลของเพื่อน */}
             <div className="relative pb-2">
-              <input 
-                type="password" 
-                name="confirmPassword" 
-                placeholder="Enter password confirmation" 
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Enter password confirmation"
                 disabled={isLoading || blockEndTime !== null}
                 className={`w-full px-6 py-3 md:py-3.5 rounded-full bg-[#a9a4e4] placeholder-white/80 text-white border-2 outline-none focus:ring-4 focus:ring-white/50 text-sm shadow-lg ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-white'
-                } ${isLoading || blockEndTime !== null ? 'opacity-50 cursor-not-allowed' : ''}`}
-                value={formData.confirmPassword} 
-                onChange={handleChange} 
+                  errors.confirmPassword ? "border-red-500" : "border-white"
+                } ${isLoading || blockEndTime !== null ? "opacity-50 cursor-not-allowed" : ""}`}
+                value={formData.confirmPassword}
+                onChange={handleChange}
               />
               {errors.confirmPassword && (
                 <p className="text-red-400 text-[14px] mt-1.5 pl-4 font-bold tracking-wide">
@@ -346,14 +340,16 @@ const Register = () => {
                   {captcha.num1} + {captcha.num2} =
                 </span>
                 <input
-                  type="number" 
-                  name="userAnswer" 
+                  type="number"
+                  name="userAnswer"
                   placeholder="?"
                   disabled={isLoading || blockEndTime !== null}
                   className={`w-16 p-2 rounded-md bg-white text-[#1e1a3d] text-center font-bold outline-none ${
-                    isLoading || blockEndTime !== null ? 'opacity-50 cursor-not-allowed' : ''
+                    isLoading || blockEndTime !== null
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
                   }`}
-                  value={captcha.userAnswer} 
+                  value={captcha.userAnswer}
                   onChange={handleChange}
                 />
               </div>
@@ -369,9 +365,10 @@ const Register = () => {
               type="submit"
               disabled={isLoading || blockEndTime !== null}
               className={`w-full py-5 mt-4 text-white text-xl font-bold rounded-full shadow-xl transition-all active:scale-95 flex justify-center items-center gap-2 
-                ${blockEndTime !== null 
-                  ? 'bg-gray-500/80 cursor-not-allowed opacity-90' 
-                  : 'bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150' 
+                ${
+                  blockEndTime !== null
+                    ? "bg-gray-500/80 cursor-not-allowed opacity-90"
+                    : "bg-[#1e1a3d] hover:bg-[#2d2859] hover:brightness-150"
                 }`}
             >
               {isLoading ? (
@@ -382,13 +379,26 @@ const Register = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                   >
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Processing...
                 </>
+              ) : blockEndTime !== null ? (
+                `กรุณารอ ${formatTime(timeLeft)}`
               ) : (
-                blockEndTime !== null ? `กรุณารอ ${formatTime(timeLeft)}` : 'Create an account'
+                "Create an account"
               )}
             </button>
           </form>
