@@ -2,14 +2,22 @@ import React, { useState } from "react";
 import FormInput from "../Global/FormInput";
 import SuccessModal from "../Global/SuccessModal";
 
-export default function CheckoutForm({ 
-  paymentMethod, setPaymentMethod, 
-  addresses, onAddAddress, onDeleteAddress,
-  loading 
+export default function CheckoutForm({
+  paymentMethod,
+  setPaymentMethod,
+  addresses,
+  onAddAddress,
+  onDeleteAddress,
+  loading,
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [form, setForm] = useState({ 
-    recipientName: "", phone: "", street: "", district: "", province: "", postcode: "" 
+  const [form, setForm] = useState({
+    recipientName: "",
+    phone: "",
+    street: "",
+    district: "",
+    province: "",
+    postcode: "",
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -30,7 +38,7 @@ export default function CheckoutForm({
     if (!form.district) errors.district = "กรุณาระบุเขต/อำเภอ";
     if (!form.province) errors.province = "กรุณาระบุจังหวัด";
     if (!form.postcode) errors.postcode = "กรุณาระบุรหัสไปรษณีย์";
-    
+
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;
@@ -56,47 +64,68 @@ export default function CheckoutForm({
 
   return (
     <div className="space-y-6">
-      <SuccessModal 
+      <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
         title="บันทึกที่อยู่สำเร็จ!"
         message="ที่อยู่ของคุณถูกอัปเดตในระบบเรียบร้อยแล้ว"
       />
 
-      <div className="border border-[#4C1D95] rounded-lg p-5 bg-white/50">
+      <div className="border border-white/20 rounded-lg p-5 bg-[#151516]">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-bold text-[#1E1B4B]">ที่อยู่สำหรับจัดส่ง</h3>
+          <h3 className="font-bold text-white">ที่อยู่สำหรับจัดส่ง</h3>
           {address && !isEditing && (
             <div className="flex gap-3">
-              <button onClick={handleEdit} className="text-[#4C1D95] text-xs font-bold hover:underline cursor-pointer">แก้ไข</button>
-              <button onClick={handleDelete} className="text-red-500 text-xs font-bold hover:underline cursor-pointer">ลบ</button>
+              <button
+                onClick={handleEdit}
+                className="text-violet-400 text-xs font-bold hover:underline cursor-pointer"
+              >
+                แก้ไข
+              </button>
+              <button
+                onClick={handleDelete}
+                className="text-red-500 text-xs font-bold hover:underline cursor-pointer"
+              >
+                ลบ
+              </button>
             </div>
           )}
         </div>
 
         {/* 1. โหมดแสดงผลที่อยู่ (View Mode) */}
         {address && !isEditing ? (
-          <div className="bg-white/80 border border-purple-100 p-4 rounded-lg shadow-sm">
+          <div className="bg-[#161a1c] border border-white/40 p-4 rounded-lg shadow-sm">
             <div className="flex gap-3">
-               <div className="mt-1">
-                  <input type="radio" checked={true} readOnly className="accent-[#4C1D95]" />
-               </div>
-               <div>
-                  <h4 className="font-bold text-[#1E1B4B]">{address.recipientName}</h4>
-                  <p className="text-sm text-[#4C1D95] font-medium">{address.phone}</p>
-                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                    {address.street}, {address.district},<br />
-                    {address.province} {address.postcode}
-                  </p>
-               </div>
+              <div className="mt-1">
+                <input
+                  type="radio"
+                  checked={true}
+                  readOnly
+                  className="accent-[#4C1D95]"
+                />
+              </div>
+              <div>
+                <h4 className="font-bold text-white">
+                  {address.recipientName}
+                </h4>
+                <p className="text-sm text-white/80 font-medium">
+                  {address.phone}
+                </p>
+                <p className="text-xs text-white/60 mt-1 leading-relaxed">
+                  {address.street}, {address.district},<br />
+                  {address.province} {address.postcode}
+                </p>
+              </div>
             </div>
           </div>
         ) : null}
 
         {/* 2. โหมดว่าง (Empty State) - เพิ่มใหม่ตามแบบหน้า Profile */}
         {!address && !isEditing && (
-          <div className="flex flex-col items-center gap-4 rounded-xl border-2 border-dashed border-purple-200 bg-purple-50/50 p-10">
-            <p className="text-gray-400 text-sm">ยังไม่มีข้อมูลที่อยู่สำหรับจัดส่ง</p>
+          <div className="flex flex-col items-center gap-4 rounded-xl border-2 border border-white/20 bg-[#151516] p-10">
+            <p className="text-white/80 text-sm">
+              ยังไม่มีข้อมูลที่อยู่สำหรับจัดส่ง
+            </p>
             <button
               onClick={() => setIsEditing(true)}
               className="rounded-lg bg-[#4C1D95] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#312E81] transition-all cursor-pointer shadow-sm active:scale-95"
@@ -108,20 +137,32 @@ export default function CheckoutForm({
 
         {/* 3. โหมดฟอร์ม (Add/Edit Mode) */}
         {isEditing && (
-          <div className="bg-purple-50/50 p-6 rounded-lg border border-purple-200 space-y-4">
-            <h4 className="text-xs font-bold text-[#4C1D95] uppercase tracking-widest mb-2">
+          <div className=" p-6 rounded-lg border border-white/20 space-y-4">
+            <h4 className="text-xs font-bold text-[#ffffff] uppercase tracking-widest mb-2">
               {address ? "แก้ไขที่อยู่" : "เพิ่มที่อยู่ใหม่"}
             </h4>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <FormInput
                 label="ชื่อผู้รับ"
+                textColor="text-white"
+                labelColor="text-white"
+                bgColor="bg-transparent"
+                hoverClass="hover:border-gray-500"
+                focusClass="focus:border-white focus:ring-1 focus:ring-black"
                 value={form.recipientName}
-                onChange={(e) => setForm({ ...form, recipientName: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, recipientName: e.target.value })
+                }
                 error={fieldErrors.recipientName}
                 required
               />
               <FormInput
+                textColor="text-white"
+                labelColor="text-white"
+                bgColor="bg-transparent"
+                hoverClass="hover:border-gray-500"
+                focusClass="focus:border-white focus:ring-1 focus:ring-black"
                 label="เบอร์โทรศัพท์"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -131,6 +172,11 @@ export default function CheckoutForm({
             </div>
 
             <FormInput
+              textColor="text-white"
+              labelColor="text-white"
+              bgColor="bg-transparent"
+              hoverClass="hover:border-gray-500"
+              focusClass="focus:border-white focus:ring-1 focus:ring-black"
               label="ที่อยู่ (บ้านเลขที่, ถนน, ซอย)"
               value={form.street}
               onChange={(e) => setForm({ ...form, street: e.target.value })}
@@ -140,6 +186,11 @@ export default function CheckoutForm({
 
             <div className="grid grid-cols-3 gap-2">
               <FormInput
+                textColor="text-white"
+                labelColor="text-white"
+                bgColor="bg-transparent"
+                hoverClass="hover:border-gray-500"
+                focusClass="focus:border-white focus:ring-1 focus:ring-black"
                 label="เขต/อำเภอ"
                 value={form.district}
                 onChange={(e) => setForm({ ...form, district: e.target.value })}
@@ -147,6 +198,11 @@ export default function CheckoutForm({
                 required
               />
               <FormInput
+                textColor="text-white"
+                labelColor="text-white"
+                bgColor="bg-transparent"
+                hoverClass="hover:border-gray-500"
+                focusClass="focus:border-white focus:ring-1 focus:ring-black"
                 label="จังหวัด"
                 value={form.province}
                 onChange={(e) => setForm({ ...form, province: e.target.value })}
@@ -154,6 +210,11 @@ export default function CheckoutForm({
                 required
               />
               <FormInput
+                textColor="text-white"
+                labelColor="text-white"
+                bgColor="bg-transparent"
+                hoverClass="hover:border-gray-500"
+                focusClass="focus:border-white focus:ring-1 focus:ring-black"
                 label="รหัสไปรษณีย์"
                 value={form.postcode}
                 onChange={(e) => setForm({ ...form, postcode: e.target.value })}
@@ -163,16 +224,16 @@ export default function CheckoutForm({
             </div>
 
             <div className="flex gap-3 pt-2">
-              <button 
-                onClick={handleSave} 
+              <button
+                onClick={handleSave}
                 disabled={loading}
                 className="flex-grow bg-[#4C1D95] text-white py-2.5 rounded font-bold hover:bg-[#312E81] disabled:opacity-50 transition-all cursor-pointer"
               >
                 {loading ? "กำลังบันทึก..." : "ยืนยันที่อยู่"}
               </button>
-              <button 
-                onClick={() => setIsEditing(false)} 
-                className="px-4 text-gray-500 text-sm hover:underline cursor-pointer"
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-4 text-white/80 text-sm hover:underline cursor-pointer"
               >
                 ยกเลิก
               </button>
@@ -181,30 +242,42 @@ export default function CheckoutForm({
         )}
       </div>
 
-      <div className="border border-[#4C1D95] rounded-lg p-5 bg-white/50">
-        <h3 className="font-bold mb-4 text-[#1E1B4B]">เลือกวิธีชำระเงิน</h3>
+      <div className="border border-white/20 rounded-lg p-5 bg-[#151516]">
+        <h3 className="font-bold mb-4 text-white">เลือกวิธีชำระเงิน</h3>
         <div className="space-y-3">
           {/* PromptPay - Active Selection */}
-          <div 
+          <div
             onClick={() => setPaymentMethod("promptpay")}
             className={`flex items-center justify-between p-4 rounded-lg border-2 cursor-pointer transition-all ${
-              paymentMethod === "promptpay" 
-                ? "border-[#4C1D95] bg-purple-50 shadow-sm" 
-                : "border-gray-200 bg-white/50 hover:border-purple-200"
+              paymentMethod === "promptpay"
+                ? "border-white/60 shadow-sm"
+                : "border-white/20 hover:border-purple-200"
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                paymentMethod === "promptpay" ? "border-[#4C1D95]" : "border-gray-300"
-              }`}>
-                {paymentMethod === "promptpay" && <div className="w-2 h-2 rounded-full bg-[#4C1D95]"></div>}
+              <div
+                className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                  paymentMethod === "promptpay"
+                    ? "border-[#4C1D95]"
+                    : "border-gray-300"
+                }`}
+              >
+                {paymentMethod === "promptpay" && (
+                  <div className="w-2 h-2 rounded-full bg-[#4C1D95]"></div>
+                )}
               </div>
               <div>
-                <span className="text-sm font-bold text-[#1E1B4B]">Promptpay (พร้อมเพย์)</span>
-                <p className="text-[10px] text-gray-400 font-medium">สแกน QR Code เพื่อชำระเงินทันที</p>
+                <span className="text-sm font-bold text-white">
+                  Promptpay (พร้อมเพย์)
+                </span>
+                <p className="text-[10px] text-gray-400 font-medium">
+                  สแกน QR Code เพื่อชำระเงินทันที
+                </p>
               </div>
             </div>
-            <div className="bg-[#00427a] px-2 py-1 rounded text-[8px] text-white font-bold tracking-wider">PROMPTPAY</div>
+            <div className="bg-[#00427a] px-2 py-1 rounded text-[8px] text-white font-bold tracking-wider">
+              PROMPTPAY
+            </div>
           </div>
 
           {/* Placeholder: Credit Card */}
@@ -212,8 +285,12 @@ export default function CheckoutForm({
             <div className="flex items-center gap-3">
               <div className="w-4 h-4 rounded-full border-2 border-gray-200"></div>
               <div>
-                <span className="text-sm font-bold text-gray-400">Credit / Debit Card</span>
-                <p className="text-[10px] text-gray-300 font-medium">เร็วๆ นี้ (Coming Soon)</p>
+                <span className="text-sm font-bold text-gray-400">
+                  Credit / Debit Card
+                </span>
+                <p className="text-[10px] text-gray-300 font-medium">
+                  เร็วๆ นี้ (Coming Soon)
+                </p>
               </div>
             </div>
           </div>

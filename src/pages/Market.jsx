@@ -144,7 +144,7 @@ const Market = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] py-8 px-4 md:px-12 font-['Anuphan',sans-serif]">
+    <div className="min-h-screen bg-[#18181B] py-8 px-4 md:px-12 font-['Anuphan',sans-serif]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <MarketHeader
@@ -173,9 +173,9 @@ const Market = () => {
               </Link>
             ))
           ) : (
-            <div className="col-span-full text-center py-20 bg-white rounded-xl border-2 border-dashed border-gray-200">
-              <p className="text-gray-500 text-lg">
-                Didn't found what you were looking for
+            <div className="col-span-full text-center py-20 bg-[#151516] rounded-xl border-2 border- border-white/20">
+              <p className="text-gray-300 text-lg">
+                Did not found what you were looking for ?
               </p>
             </div>
           )}
@@ -190,7 +190,7 @@ const Market = () => {
               <button
                 onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                 disabled={page === 1}
-                className="px-3 py-1.5 rounded-lg border text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="px-3 py-1.5 border-white/40 text-white rounded-lg border text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-600"
               >
                 Previous
               </button>
@@ -200,7 +200,7 @@ const Market = () => {
                 <>
                   <button
                     onClick={() => setPage(1)}
-                    className="px-3 py-1.5 rounded-lg border text-sm font-semibold text-[#373373]"
+                    className="px-3 py-1.5 rounded-lg border text-sm font-semibold text-violet-400"
                   >
                     1
                   </button>
@@ -215,8 +215,8 @@ const Market = () => {
                   onClick={() => setPage(pageNumber)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all ${
                     page === pageNumber
-                      ? "bg-[#6D5DD3] text-white border-[#6D5DD3]" // สีตอนกำลังเปิดหน้านั้นอยู่
-                      : "bg-white text-[#373373] border-gray-200 hover:bg-[#EBE9FF]"
+                      ? "bg-violet-600 text-white border-violet-300" // สีตอนกำลังเปิดหน้านั้นอยู่
+                      : "bg-white text-[#373373] border-gray-200 hover:bg-violet-300 "
                   }`}
                 >
                   {pageNumber}
@@ -229,7 +229,7 @@ const Market = () => {
                   <span className="text-gray-400 px-1">...</span>
                   <button
                     onClick={() => setPage(totalPages)}
-                    className="px-3 py-1.5 rounded-lg border text-sm font-semibold text-[#373373]"
+                    className="px-3 py-1.5 rounded-lg border text-sm font-semibold text-violet-400"
                   >
                     {totalPages}
                   </button>
@@ -242,7 +242,7 @@ const Market = () => {
                   setPage((prev) => Math.min(prev + 1, totalPages))
                 }
                 disabled={page === totalPages}
-                className="px-3 py-1.5 rounded-lg border text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="px-3 py-1.5 border-white/40 rounded-lg text-white border text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-violet-600"
               >
                 Next
               </button>

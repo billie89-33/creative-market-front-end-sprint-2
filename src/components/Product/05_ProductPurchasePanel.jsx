@@ -23,7 +23,7 @@ const ProductPurchasePanel = ({
               <Link
                 key={tag}
                 to={`/market?category=${encodeURIComponent(category)}`}
-                className="inline-flex min-w-28 items-center justify-center rounded-md border border-[#b7b2d7] px-3 py-2 text-[11px] font-medium tracking-[0.01em] text-[#5a5596] transition hover:bg-[#f5f3ff] sm:min-w-32 sm:px-4 sm:text-sm"
+                className="inline-flex min-w-28 items-center justify-center rounded-md border-1 bg-black/20 border-white/40 px-3 py-2 text-[11px] font-medium tracking-[0.01em] text-white transition hover:bg-black/80 sm:min-w-32 sm:px-4 sm:text-sm"
               >
                 {tag}
               </Link>
@@ -33,10 +33,10 @@ const ProductPurchasePanel = ({
 
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-[#2f2b78] sm:text-5xl md:text-[3.5rem]">
+            <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-white sm:text-5xl md:text-[3.5rem]">
               {price}.-
             </p>
-            <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-[#2f2b78] sm:text-5xl md:text-[3.5rem]">
+            <p className="text-4xl font-semibold leading-none tracking-[-0.04em] text-white sm:text-5xl md:text-[3.5rem]">
               บาท
             </p>
           </div>

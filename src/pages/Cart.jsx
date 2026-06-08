@@ -47,14 +47,14 @@ export default function Cart() {
 
   if (loadingCart) {
     return (
-      <div className="pt-20 text-center min-h-screen bg-[#F3EFFF]">
-        <p className="text-[#4C1D95] font-bold">กำลังโหลดตะกร้าสินค้า...</p>
+      <div className="pt-20 text-center min-h-screen bg-[#161a1c]">
+        <p className="text-white font-bold">กำลังโหลดตะกร้าสินค้า...</p>
       </div>
     );
   }
 
   return (
-    <div className="pt-5 min-h-screen flex flex-col bg-[#F3EFFF]">
+    <div className="pt-5 min-h-screen flex flex-col bg-[#18181B]">
       <main className=" grow max-w-5xl w-full  mx-auto p-6">
         <CartHeader />
 
@@ -66,8 +66,8 @@ export default function Cart() {
               removeItem={handleRemoveItem}
             />
           ) : (
-            <div className="text-center py-20 bg-white/50 rounded-xl border border-dashed border-purple-300">
-              <p className="text-gray-500">ไม่มีสินค้าในตะกร้า</p>
+            <div className="text-center py-20 bg-[#151516] rounded-xl border border-white/20">
+              <p className="text-gray-300">ไม่มีสินค้าในตะกร้า</p>
             </div>
           )}
         </div>

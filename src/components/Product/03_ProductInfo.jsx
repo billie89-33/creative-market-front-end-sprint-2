@@ -11,16 +11,16 @@ const ProductInfo = ({ product }) => {
     <section className="w-full text-[#2f2b78]">
       <div className="flex flex-col gap-4 md:gap-5">
         <div className="flex flex-col gap-4 border-b-2 border-[#6b648b] pb-4 md:pb-5 lg:flex-row lg:items-end lg:justify-between">
-          <h2 className="text-3xl font-semibold tracking-[-0.03em] text-[#2f2b78] sm:text-4xl md:text-[2.75rem]">
+          <h2 className="text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl md:text-[2.75rem]">
             {product?.name || "Cybernecklace"}
           </h2>
 
-          <p className="text-base font-medium tracking-[-0.01em] text-[#4b45a3] sm:text-lg lg:text-right">
+          <p className="text-base font-medium tracking-[-0.01em] text-white sm:text-lg lg:text-right">
             {product?.artist || "Starchaser"}
           </p>
         </div>
 
-        <div className="space-y-3 text-[13px] font-normal leading-6 text-[#3e3a55] sm:text-[15px] md:text-base md:leading-7">
+        <div className="space-y-3 text-[13px] font-normal leading-6 text-white/80 sm:text-[15px] md:text-base md:leading-7">
           {description.map((text) => (
             <p key={text}>{text}</p>
           ))}

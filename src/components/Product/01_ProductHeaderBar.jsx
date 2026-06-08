@@ -52,7 +52,7 @@ const ProductHeaderBar = ({ category = "Craft & Handmade" }) => {
   }, [trimmedSearch]);
 
   return (
-    <section className="w-full bg-[#eeecfb]">
+    <section className="w-full bg-[#161a1c]">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 md:gap-6 md:px-8 md:py-8">
         <div className="flex flex-col items-stretch gap-4 md:flex-row md:items-center md:justify-between">
           <form
@@ -63,7 +63,7 @@ const ProductHeaderBar = ({ category = "Craft & Handmade" }) => {
               Search product
             </label>
 
-            <div className="flex items-center rounded-xl border-2 border-[#393276] bg-white px-3 py-2.5 md:px-4 md:py-3">
+            <div className="flex items-center border-2 border-[#393276] bg-white px-3 py-2.5 md:px-4 md:py-3">
               <input
                 id="product-search"
                 type="text"
@@ -144,7 +144,7 @@ const ProductHeaderBar = ({ category = "Craft & Handmade" }) => {
             )}
           </form>
 
-          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-[#4b45a3] sm:text-4xl md:flex-1 md:text-right">
+          <h1 className="text-center text-[1.85rem] font-semibold tracking-[-0.02em] text-white sm:text-4xl md:flex-1 md:text-right">
             {category}
           </h1>
         </div>
