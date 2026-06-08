@@ -69,7 +69,7 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
   };
 
   return (
-    <div className="relative bg-white border border-gray-300 flex flex-col group cursor-pointer hover:shadow-lg transition-shadow rounded-xl overflow-hidden">
+    <div className="relative bg-[#151516] border border-white/20 flex flex-col group cursor-pointer hover:shadow-lg transition-shadow rounded-xl overflow-hidden">
       {/* Toast */}
       {toast && (
         <div
@@ -82,7 +82,7 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
       )}
 
       {/* Image */}
-      <div className="w-full aspect-square overflow-hidden border-b border-gray-300">
+      <div className="w-full aspect-square overflow-hidden border-b border-white/20">
         <img
           src={productImgSrc}
           alt={product.name}
@@ -92,10 +92,10 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
 
       {/* Content */}
       <div className="p-4 flex flex-col grow gap-2">
-        <h2 className="text-lg font-bold text-[#373373] text-center mb-1 truncate">
+        <h2 className="text-lg font-bold text-white text-center mb-1 truncate">
           {product.name}
         </h2>
-        <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed min-h-[3.3rem]">
+        <p className="text-xs text-white/50 line-clamp-3 leading-relaxed min-h-[3.3rem]">
           {product.description?.[0] || "ไม่มีคำอธิบายสินค้า"}
         </p>
 
@@ -107,7 +107,7 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
               <span className="text-[11px] text-gray-400 font-medium">
                 Artist
               </span>
-              <span className="text-xs font-bold text-gray-700 truncate max-w-[120px]">
+              <span className="text-xs font-bold text-gray-100 truncate max-w-[120px]">
                 by {product.artist}
               </span>
               {/* 2. เพิ่มการโชว์จำนวนสินค้าคงเหลือ (Quantity) ตามที่เธอต้องการ */}
@@ -123,7 +123,7 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
             </div>
 
             {/* ราคาด้านขวาคงเดิมสวยๆ อยู่แล้วค่ะ */}
-            <span className="text-xl font-extrabold text-[#373373]">
+            <span className="text-xl font-extrabold text-white">
               ฿{product.price?.toLocaleString()}
             </span>
           </div>
@@ -132,7 +132,7 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
             {product.tags?.map((tag, index) => (
               <span
                 key={index}
-                className="bg-purple-50 text-purple-600 text-[10px] px-2 py-0.5 rounded-full font-semibold border border-purple-100"
+                className="bg-black/30 text-white/80 text-[10px] px-2 py-0.5 rounded-2xl border border-white/20 font-semibold"
               >
                 {tag}
               </span>
@@ -145,7 +145,7 @@ const ProductCard = ({ product, isLoggedIn, userRole, onAddToCartSuccess }) => {
             className={`w-full py-2.5 rounded-lg font-medium transition-colors duration-300 shadow-sm text-sm mt-1 text-white ${
               product.quantity <= 0
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#6D5DD3] hover:bg-[#5b4db8] hover:cursor-pointer" //
+                : "bg-violet-600 hover:bg-violet-800 hover:cursor-pointer" //
             } disabled:opacity-60`}
           >
             {product.quantity <= 0

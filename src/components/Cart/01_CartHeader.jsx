@@ -1,9 +1,9 @@
-import React from 'react';
-import { ShoppingCart, User } from 'lucide-react';
+import React from "react";
+import { ShoppingCart, User } from "lucide-react";
 
 export default function CartHeader() {
   return (
-    <div className="flex items-center justify-center gap-3 text-sm text-[#4C1D95]">
+    <div className="flex items-center justify-center gap-3 text-sm text-violet-600">
       <ShoppingCart size={20} />
       <div className="w-12 h-[2px] bg-gray-300"></div> {/* เส้นสีอ่อน */}
       <div className="w-2 h-2 rounded-full bg-gray-300"></div>

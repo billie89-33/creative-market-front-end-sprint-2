@@ -10,15 +10,15 @@ import useCheckoutActions from "../components/Checkout/useCheckoutActions";
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, loadingCart } = useCart();
-  const { 
-    addresses, 
-    fetchAddresses, 
-    addAddress, 
-    deleteAddress, 
+  const {
+    addresses,
+    fetchAddresses,
+    addAddress,
+    deleteAddress,
     createOrder,
-    loading: loadingActions 
+    loading: loadingActions,
   } = useCheckoutActions();
-  
+
   const [paymentMethod, setPaymentMethod] = useState("");
 
   useEffect(() => {
@@ -26,21 +26,27 @@ export default function Checkout() {
   }, [fetchAddresses]);
 
   const subtotal = cartItems.reduce(
-    (acc, item) => acc + (item.price || item.productId?.price || 0) * item.quantity,
+    (acc, item) =>
+      acc + (item.price || item.productId?.price || 0) * item.quantity,
     0,
   );
 
   if (loadingCart) {
-    return <div className="pt-20 text-center min-h-screen bg-[#F3EFFF]">กำลังโหลดข้อมูล...</div>;
+    return (
+      <div className="pt-20 text-center min-h-screen bg-[#F3EFFF]">
+        กำลังโหลดข้อมูล...
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-[#F3EFFF]">
+    <div className="min-h-screen bg-[#151516]">
       <main className="max-w-5xl w-full mx-auto p-6">
-        <button 
-          className="text-blue-500 text-xs flex items-center gap-1 hover:underline cursor-pointer mb-6" 
-          onClick={() => navigate('/cart')}>
-          <ArrowLeft size={16}/>
+        <button
+          className="text-violet-600 text-xs flex items-center gap-1 hover:underline cursor-pointer mb-6"
+          onClick={() => navigate("/cart")}
+        >
+          <ArrowLeft size={16} />
           RETURN TO CART
         </button>
         <CheckoutHeader />
@@ -49,7 +55,7 @@ export default function Checkout() {
             <CheckoutForm
               paymentMethod={paymentMethod}
               setPaymentMethod={setPaymentMethod}
-              addresses={addresses} 
+              addresses={addresses}
               onAddAddress={addAddress}
               onDeleteAddress={deleteAddress}
               loading={loadingActions}
@@ -71,4 +77,3 @@ export default function Checkout() {
     </div>
   );
 }
-
