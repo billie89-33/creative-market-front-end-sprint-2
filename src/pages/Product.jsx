@@ -24,6 +24,11 @@ const Product = () => {
   const serverBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:7777";
   const apiBaseUrl = `${serverBaseUrl}/api`;
 
+  const audioPreviewMap = {
+    "buddhism-worldwide": "/audio/demosong.mp3",
+    ST4R: "/audio/demosong.mp3",
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -144,7 +149,10 @@ const Product = () => {
       <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 pb-10 sm:px-6 md:gap-8 md:px-8 md:pb-12">
         <div className="grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-[1.02fr_1fr] lg:items-start">
           <div className="w-full">
-            <ProductGallery images={product.images} />
+            <ProductGallery
+              images={product.images}
+              audioSrc={audioPreviewMap[product.slug]}
+            />
           </div>
 
           <div className="flex w-full flex-col gap-6 md:gap-8">
